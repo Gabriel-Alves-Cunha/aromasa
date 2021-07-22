@@ -1,20 +1,45 @@
 {
-  "name": "react-setup",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "11.0.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
-  },
-  "devDependencies": {
-    "eslint": "7.30.0",
-    "eslint-config-next": "11.0.1"
-  }
+	"name": "react-setup",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"server": "json-server -p 3333 -d 1000 server.json"
+	},
+	"dependencies": {
+		"@material-ui/core": "^4.12.2",
+		"@vercel/node": "^1.11.1",
+		"axios": "^0.21.1",
+		"classnames": "^2.3.1",
+		"embla-carousel": "^4.5.3",
+		"mongodb": "^3.6.10",
+		"mongoose": "^5.13.2",
+		"next": "11.0.1",
+		"next-auth": "^3.27.3",
+		"next-compose-plugins": "^2.2.1",
+		"nookies": "^2.5.2",
+		"react": "17.0.2",
+		"react-dom": "17.0.2",
+		"react-google-login": "^5.2.2",
+		"react-hook-form": "^7.10.1",
+		"react-icons": "^4.2.0",
+		"styled-components": "^5.3.0",
+		"swr": "^0.5.6"
+	},
+	"devDependencies": {
+		"@types/cookie": "^0.4.1",
+		"@types/mongodb": "^3.6.20",
+		"@types/node": "^16.3.0",
+		"@types/react": "^17.0.14",
+		"@types/react-dom": "^17.0.9",
+		"@types/styled-components": "^5.1.11",
+		"babel-plugin-inline-react-svg": "^2.0.1",
+		"eslint": "7.30.0",
+		"eslint-config-next": "11.0.1",
+		"json-server": "^0.16.3",
+		"typescript": "^4.3.5"
+	}
 }
