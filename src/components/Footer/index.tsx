@@ -2,7 +2,7 @@ import { BsChevronRight } from "react-icons/bs";
 import Image from "next/image";
 import Link from "next/link";
 
-import Sublogo from "../../assets/logos/Sublogo preto.png";
+import Sublogo from "../../assets/logos/sublogo_preto.png";
 
 import {
 	LogoContainer,
@@ -89,14 +89,14 @@ const informationOptions = [
 	},
 	{
 		title: "Fale conosco",
-		link: "",
+		link: "/",
 	},
 	{
 		title: "Entregas e devoluções",
-		link: "",
+		link: "/",
 	},
 	{
-		title: "Política de privacidade",
+		title: "Política de privacidade e termos de uso",
 		link: "/privacy-policy"
 	}
 ];

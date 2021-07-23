@@ -3,10 +3,6 @@ import { IconButton } from "@material-ui/core";
 
 import theme from "../../styles/theme";
 
-type IconButtonProps = {
-	active?: boolean;
-};
-
 const { primary: f_primary, secondary: f_secondary } = theme.fonts;
 const { text } = theme.colors.light;
 
@@ -35,8 +31,6 @@ export const Container = styled.header`
 
 export const LogoContainer = styled.div`
 	margin: 1rem 6rem;
-
-	cursor: pointer;
 
 	width: 100%;
 

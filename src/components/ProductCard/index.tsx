@@ -1,5 +1,5 @@
 import { FaCartPlus } from "react-icons/fa";
-// import Image from "next/image";
+import Image from "next/image";
 
 import { Product } from "../../models/Product";
 
@@ -10,7 +10,7 @@ export function ProductCard(product: Product) {
 
 	return (
 		<Container>
-			<img src={product.images[0] as string} />
+			<Image src={product.images[0] as string} layout="fill" />
 
 			<Info>
 				<Title>{product.title}</Title>

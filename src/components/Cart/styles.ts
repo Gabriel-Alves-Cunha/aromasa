@@ -37,26 +37,21 @@ export const Header = styled.div`
 `;
 
 export const ImgContainer = styled.div`
-	width: 80px;
-	height: 100px;
+	position: relative;
+	height: 100%;
+	width: auto;
 
-	margin-right: 40px;
-	margin-bottom: 20px;
+	margin-right: 20px;
 
 	justify-content: center;
 	align-items: center;
-
-	img {
-		max-width: 80px;
-		object-fit: cover;
-	}
 `;
 
 export const Content = styled.div`
 	display: flex;
 	flex-direction: row;
 
-	margin: 30px;
+	margin: 20px 30px;
 
 	border-bottom: 1px solid lightgray;
 	padding-bottom: 20px;

@@ -8,20 +8,18 @@ if (!cached) cached = global.mongoose = { conn: null, promise: null };
 export default async function dbConnect() {
 	if (cached.conn) return cached.conn;
 
-	if (!cached.promise) {
-		const options = {
-			useNewUrlParse: true,
-			useUnifiedTopology: true,
-			bufferCommands: false,
-			bufferMaxEntries: 0,
-			useFindAndModify: false,
-			useCreateIndex: true,
-		};
-
+	if (!cached.promise)
 		cached.promise = mongoose
-			.connect(db_uri, options)
+			.connect(db_uri, {
+				useNewUrlParser: true,
+				useUnifiedTopology: true,
+				bufferCommands: false,
+				bufferMaxEntries: 0,
+				useFindAndModify: false,
+				useCreateIndex: true,
+				autoIndex: false,
+			})
 			.then(mongoose => mongoose);
-	}
 
 	cached.conn = await cached.promise;
 

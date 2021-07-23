@@ -2,14 +2,14 @@ import { useCallback, useState } from "react";
 
 import fakeProducts from "../../products_example.json";
 
-import { ClientSideProduct } from "../models/Product";
+import { ClientChosenProduct } from "../models/Product";
 
 export function useCart() {
 	const [cartProducts, setCartProducts] = useState(
-		fakeProducts as ClientSideProduct[]
+		fakeProducts as unknown as ClientChosenProduct[]
 	);
 
-	const handleAddToCart = useCallback((newProduct: ClientSideProduct) => {
+	const handleAddToCart = useCallback((newProduct: ClientChosenProduct) => {
 		const isProductInCart = cartProducts.find(
 			product => product.id === newProduct.id
 		);
@@ -29,7 +29,7 @@ export function useCart() {
 			]);
 	}, []);
 
-	const handleSubtractAmount = useCallback((product: ClientSideProduct) => {
+	const handleSubtractAmount = useCallback((product: ClientChosenProduct) => {
 		setCartProducts(oldValues =>
 			oldValues.map(item => {
 				if (item.id === product.id && (item.amount ?? 1) > 1)
@@ -39,7 +39,7 @@ export function useCart() {
 		);
 	}, []);
 
-	const handleRemoveFromCart = useCallback((product: ClientSideProduct) => {
+	const handleRemoveFromCart = useCallback((product: ClientChosenProduct) => {
 		setCartProducts(oldValues =>
 			oldValues.filter(item => item.id !== product.id)
 		);

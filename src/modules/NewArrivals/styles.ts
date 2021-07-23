@@ -21,7 +21,6 @@ export const SliderContainer = styled.div`
 
 	float: left;
 	width: 60%;
-	height: 100vh;
 	object-fit: cover;
 `;
 

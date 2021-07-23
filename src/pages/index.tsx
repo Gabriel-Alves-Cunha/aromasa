@@ -1,25 +1,53 @@
-import { FormEvent } from "react";
+import { useState, useEffect, FormEvent, ReactNode } from "react";
 import Image from "next/image";
 import Head from "next/head";
 
 import bg from "../assets/bg.jpg";
 
+import { ShowProductsSlider } from "../components/ShowProductsSlider";
+import { HeroContainer, Container } from "../styles/pages";
 import { NewArrivals } from "../modules/NewArrivals";
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
-
-import {
-	HeroContainer,
-	Container,
-} from "../styles/pages";
 import { Instagram } from "../components/Instagram";
+import { useAxios } from "../hooks/useAxios";
+import { Product } from "../models/Product";
+import Layout from "../components/Layout";
 
-export default function Home() {
-	function handleSignUpToNewsletter(event: FormEvent) {
-		event.preventDefault();
+type UseAxiosResponse = {
+	success: boolean;
+	data: Product[];
+};
 
-		// axios.post("/api/subscribe", { email });
-	}
+function Home() {
+	// const { data, error } = useAxios<UseAxiosResponse>("GET", "api/products");
+
+	// const [allProducts, setAllProducts] = useState([] as Product[]);
+
+	// useEffect(() => {
+	// 	if (data?.data) {
+	// 		const { data: products } = data.data;
+	// 		console.log(products);
+	// 		setAllProducts(products);
+	// 	}
+
+	// 	if (error) console.error(error);
+	// }, [data, error]);
+
+	// async function insertProduct(event: FormEvent) {
+	// 	event.preventDefault();
+
+	// 	const res = await useAxios<Product>("POST", "api/products", {
+	// 		description: "Produto false nº 1",
+	// 		category: "Falsiane",
+	// 		images: [],
+	// 		title: "Falsê",
+	// 		price: "100,00",
+	// 		availableAmount: 100,
+	// 		isAvailable: true,
+	// 	});
+
+	// 	console.log(JSON.stringify(res));
+	// 	console.log("Hello");
+	// }
 
 	return (
 		<Container>
@@ -28,8 +56,6 @@ export default function Home() {
 				<meta name="description" content="Homepage of Aromasa Decor" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-
-			<Header currentPage="Home" />
 
 			<HeroContainer>
 				<Image
@@ -53,8 +79,12 @@ export default function Home() {
 			<NewArrivals />
 
 			<Instagram />
-
-			<Footer />
 		</Container>
 	);
 }
+
+Home.getLayout = (page: ReactNode) => (
+	<Layout currentPage="Home">{page}</Layout>
+);
+
+export default Home;

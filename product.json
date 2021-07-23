@@ -1,0 +1,107 @@
+{
+	"1": {
+		"description": {
+			"type": "String",
+			"required": [true, "Uma descrição do produto é necessária!"],
+			"unique": true,
+			"trim": true,
+			"maxlength": [2000, "A descrição não pode ter mais de 2.000 caracteres!"]
+		},
+		"category": {
+			"type": "String",
+			"required": [true, "Uma categoria do produto é necessária!"],
+			"unique": false,
+			"trim": true,
+			"maxlength": [200, "A descrição não pode ter mais de 200 caracteres!"]
+		},
+		"images": {
+			"type": [],
+			"required": [true, "Imagens do produto são necessárias!"]
+		},
+		"title": {
+			"type": "String",
+			"required": [true, "Um título para o produto é necessário!"],
+			"unique": true,
+			"trim": true,
+			"maxlength": [200, "O título não pode ter mais de 200 caracteres!"]
+		},
+		"price": {
+			"type": "String",
+			"required": [true, "Um preço para o produto é necessário!"],
+			"unique": false,
+			"trim": true,
+			"maxlength": [20, "O preço não pode ter mais de 20 caracteres!"]
+		},
+		"availableAmount": {
+			"type": "Number",
+			"required": [true, "A quantidade disponível deste produto é necessária!"]
+		},
+		"isAvailable": {
+			"type": "Boolean",
+			"required": true
+		}
+	},
+	"2": {
+		"descrição": {
+			"type": "String",
+			"required": [true, "Uma descrição do produto é necessária!"],
+			"unique": true,
+			"trim": true,
+			"maxlength": [2000, "A descrição não pode ter mais de 2.000 caracteres!"]
+		},
+		"categoria": {
+			"type": "String",
+			"required": [true, "Uma categoria do produto é necessária!"],
+			"unique": false,
+			"trim": true,
+			"maxlength": [200, "A descrição não pode ter mais de 200 caracteres!"]
+		},
+
+		"imagens": {
+			"type": [],
+			"required": [true, "Imagens do produto são necessárias!"]
+		},
+		"título": {
+			"type": "String",
+			"required": [true, "Um título para o produto é necessário!"],
+			"unique": true,
+			"trim": true,
+			"maxlength": [200, "O título não pode ter mais de 200 caracteres!"]
+		},
+		"preço": {
+			"type": "String",
+			"required": [true, "Um preço para o produto é necessário!"],
+			"unique": false,
+			"trim": true,
+			"maxlength": [20, "O preço não pode ter mais de 20 caracteres!"]
+		},
+		"quantidadeDisponível": {
+			"type": "Number",
+			"required": [true, "A quantidade disponível deste produto é necessária!"]
+		},
+		"temProdutoDisponível?": {
+			"type": "Boolean",
+			"required": true
+		}
+	},
+	"3": [
+		{
+			"descrição": "Descrição do produto X",
+			"categoria": "Categoria do Produto (Perfume de lençol)",
+			"imagens": ["imagem1.png", "imagem2.png"],
+			"título": "Perfume de Bamboo",
+			"preço": "100,00",
+			"quantidadeDisponível": 50,
+			"temProdutoDisponível?": true
+		},
+		{
+			"descrição": "Descrição do produto X",
+			"categoria": "Categoria do Produto (Perfume de lençol)",
+			"imagens": ["imagem1.png", "imagem2.png"],
+			"título": "Perfume de Bamboo",
+			"preço": "100,00",
+			"quantidadeDisponível": 50,
+			"temProdutoDisponível?": true
+		}
+	]
+}

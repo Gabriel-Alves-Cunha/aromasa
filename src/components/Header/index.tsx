@@ -1,5 +1,7 @@
 import headerData, { HeaderData } from "./header.data";
 import { BsFillPersonFill } from "react-icons/bs";
+import { makeStyles } from "@material-ui/core";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import cx from "classnames";
@@ -8,17 +10,15 @@ import AromasaLogo from "../../assets/logos/AromasaLogo.webp";
 
 import { Cart } from "../Cart";
 
+import theme from "../../styles/theme";
 import {
 	CartContainer,
 	LogoContainer,
+	StyledButton,
 	Container,
 	Options,
 	Option,
-	StyledButton,
 } from "./styles";
-import { useState } from "react";
-import theme from "../../styles/theme";
-import { makeStyles } from "@material-ui/core";
 
 type Props = {
 	currentPage?: HeaderData["label"];

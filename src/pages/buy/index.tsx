@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Head from "next/head";
 
+import { ShowProductsSlider } from "../../components/ShowProductsSlider";
+import { getLayout } from "../../components/Layout";
 import { useCart } from "../../hooks/useCart";
-import { Footer } from "../../components/Footer";
-import { Header } from "../../components/Header";
 
-import { Container } from "./styles";
+import { Container, SliderContainer, FirstPart } from "./styles";
 
-export default function Buy() {
+function Buy() {
 	const {
 		getSubtotal,
 		cartProducts,
@@ -24,11 +24,15 @@ export default function Buy() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			<Header />
-
-			<div></div>
-
-			<Footer />
+			<FirstPart>
+				<SliderContainer>
+					<ShowProductsSlider products={cartProducts} />
+				</SliderContainer>
+			</FirstPart>
 		</Container>
 	);
 }
+
+Buy.getLayout = getLayout;
+
+export default Buy;

@@ -1,4 +1,7 @@
 import { ServerStyleSheet } from "styled-components";
+import { ServerStyleSheets as MUIServerStyleSheets } from "@material-ui/core/styles";
+// import flush from "styled-jsx/server";
+
 import Document, {
 	DocumentInitialProps,
 	DocumentContext,
@@ -13,12 +16,14 @@ export default class MyDocument extends Document {
 		ctx: DocumentContext
 	): Promise<DocumentInitialProps> {
 		const sheet = new ServerStyleSheet();
+		const muiSheet = new MUIServerStyleSheets();
 		const originalRenderPage = ctx.renderPage;
 
 		try {
 			ctx.renderPage = () =>
 				originalRenderPage({
-					enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
+					enhanceApp: App => props =>
+						sheet.collectStyles(muiSheet.collect(<App {...props} />)),
 				});
 
 			const initialProps = await Document.getInitialProps(ctx);
@@ -29,6 +34,8 @@ export default class MyDocument extends Document {
 					<>
 						{initialProps.styles}
 						{sheet.getStyleElement()}
+						{muiSheet.getStyleElement()}
+						{/* {flush() || null} */}
 					</>
 				),
 			};
@@ -52,6 +59,7 @@ export default class MyDocument extends Document {
 
 					<link rel="icon" href="favicon.png" type="image/x-icon" />
 				</Head>
+
 				<body>
 					<Main />
 					<NextScript />

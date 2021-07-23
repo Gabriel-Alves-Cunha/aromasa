@@ -1,16 +1,16 @@
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FiTrash2 } from "react-icons/fi";
-// import Image from "next/image";
+import Image from "next/image";
 
-import { ClientSideProduct } from "../../models/Product";
+import { ClientChosenProduct } from "../../models/Product";
 
 import { ImgContainer, StyledButton, Title, Content, Amount } from "./styles";
 
 type Props = {
-	handleSubtractAmount(product: ClientSideProduct): void;
-	handleRemoveFromCart(product: ClientSideProduct): void;
-	handleAddToCart(product: ClientSideProduct): void;
-	product: ClientSideProduct;
+	handleSubtractAmount(product: ClientChosenProduct): void;
+	handleRemoveFromCart(product: ClientChosenProduct): void;
+	handleAddToCart(product: ClientChosenProduct): void;
+	product: ClientChosenProduct;
 };
 
 export function CardContainer({
@@ -22,7 +22,12 @@ export function CardContainer({
 	return (
 		<Content>
 			<ImgContainer>
-				<img src={product.images[0] as string} />
+				<Image
+					src={product.images[0] as string}
+					height={200}
+					width={200}
+					objectFit="contain"
+				/>
 			</ImgContainer>
 
 			<div style={{ width: "100%" }}>
@@ -63,8 +68,10 @@ export function CardContainer({
 	);
 }
 
-function getPrice(product: ClientSideProduct) {
-	return ((product.amount ?? 1) * Number(product.price))
+function getPrice(product: ClientChosenProduct) {
+	if (product.amount === undefined || product.amount < 1) product.amount = 1;
+
+	return ((product.amount) * Number(product.price))
 		.toFixed(2)
 		.replace(".", ",");
 }

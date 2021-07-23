@@ -6,7 +6,11 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.div`
+	position: relative;
+
+	top: 6rem;
 	margin: 3rem;
+	margin-bottom: 3rem;
 
 	border: 1px solid #dee2e6;
 	padding: 32px;

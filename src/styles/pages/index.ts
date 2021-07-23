@@ -3,11 +3,10 @@ import styled from "styled-components";
 import theme from "../theme";
 
 const { primary: f_primary, secondary: f_secondary } = theme.fonts;
-const { background, primary, text, secondary, text_light } = theme.colors.light;
+const { background, primary, text, text_light } = theme.colors.light;
 const {
 	background: background_dark,
 	primary: primary_dark,
-	secondary: secondary_dark,
 	text: text_dark,
 } = theme.colors.dark;
 
