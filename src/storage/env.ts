@@ -1,3 +1,11 @@
+const mercadoPagoAccessToke = process.env.MERCADO_PAGO_ACCESS_TOKEN ?? "";
+if (!mercadoPagoAccessToke)
+	throw new Error("There is not MERCADO_PAGO_PUBLIC_KEY on enviroment!");
+
+const mercadoPagoPublicKey = process.env.MERCADO_PAGO_PUBLIC_KEY ?? "";
+if (!mercadoPagoPublicKey)
+	throw new Error("There is not MERCADO_PAGO_PUBLIC_KEY on enviroment!");
+
 const clientId = process.env.GOOGLE_CLIENT_ID ?? "";
 if (!clientId) throw new Error("There is not GOOGLE_CLIENT_ID on enviroment!");
 
