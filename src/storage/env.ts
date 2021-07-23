@@ -1,24 +1,35 @@
-const mercadoPagoAccessToke = process.env.MERCADO_PAGO_ACCESS_TOKEN ?? "";
-if (!mercadoPagoAccessToke)
-	throw new Error("There is not MERCADO_PAGO_PUBLIC_KEY on enviroment!");
+let mercadoPagoAccessToken;
+let mercadoPagoPublicKey;
+let clientId;
+let db_uri;
 
-const mercadoPagoPublicKey = process.env.MERCADO_PAGO_PUBLIC_KEY ?? "";
+if (process.env.NODE_ENV === "development") {
+	mercadoPagoAccessToken = process.env.MERCADO_PAGO_ACCESS_TOKEN_TEST ?? "";
+
+	mercadoPagoPublicKey = process.env.MERCADO_PAGO_PUBLIC_KEY_TEST ?? "";
+
+	db_uri = process.env.MONGODB_URI_DEVELOPMENT ?? "";
+
+	clientId = process.env.GOOGLE_CLIENT_ID ?? "";
+} else if (process.env.NODE_ENV === "production") {
+	mercadoPagoAccessToken =
+		process.env.MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION ?? "";
+
+	mercadoPagoPublicKey = process.env.MERCADO_PAGO_PUBLIC_KEY_PRODUCTION ?? "";
+
+	db_uri = process.env.MONGODB_URI_PRODUCTION ?? "";
+
+	clientId = process.env.GOOGLE_CLIENT_ID ?? "";
+}
+
+if (!mercadoPagoAccessToken)
+	throw new Error("There is not MERCADO_PAGO_PUBLIC_KEY_ on enviroment!");
+
 if (!mercadoPagoPublicKey)
-	throw new Error("There is not MERCADO_PAGO_PUBLIC_KEY on enviroment!");
+	throw new Error("There is not MERCADO_PAGO_PUBLIC_KEY_ on enviroment!");
 
-const clientId = process.env.GOOGLE_CLIENT_ID ?? "";
 if (!clientId) throw new Error("There is not GOOGLE_CLIENT_ID on enviroment!");
 
-const db_uri =
-	process.env.NODE_ENV === "development"
-		? process.env.MONGODB_URI_DEVELOPMENT ?? ""
-		: process.env.NODE_ENV === "production"
-		? process.env.MONGODB_URI_PRODUCTION ?? ""
-		: "";
+if (!db_uri) throw new Error("there is no MONGODB_URI_ from process.env!");
 
-if (!db_uri)
-	throw new Error(
-		"\n[ERROR] at subscribe.ts: there is no db_uri from process.env!"
-	);
-
-export { clientId, db_uri };
+export { clientId, db_uri, mercadoPagoAccessToken, mercadoPagoPublicKey };
