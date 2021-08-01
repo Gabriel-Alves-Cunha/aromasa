@@ -1,68 +1,66 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import { NextApiRequest, NextApiResponse } from "next";
 
-import { Product, product_collection_name } from "../../../models/Product";
+import { ProductModel } from "../../../models/Product";
 import connectToDatabase from "../../../utils/connectToMongoDB";
 
-export default async function onlyUseThisFunctionIfYouAreAnAdmin(
-	req: VercelRequest,
-	res: VercelResponse
+export default async function talkToDbWithId(
+	req: NextApiRequest,
+	res: NextApiResponse
 ) {
-	const db = await connectToDatabase();
-	const productsCollection = db.collection<Product>(product_collection_name);
+	await connectToDatabase();
 
 	const {
-		query: { id },
+		query: { _id },
 		method,
 	} = req;
-	const query = { id };
 
 	switch (method) {
 		case "GET" || undefined:
 			try {
-				const product = productsCollection.find(query);
+				const product = await ProductModel.findById(_id);
 
-				return res
-					.status(product ? 200 : 400)
-					.json({ success: true, data: product });
-			} catch (error) {
-				console.error(error);
+				return res.status(200).json({ success: true, data: product });
+			} catch (err) {
+				console.error("\n[talkToDbWithId on api/products/[id].ts in GET]", err);
 
-				return res.status(400).json({ success: false, data: error });
+				return res.status(400).json({ success: false, data: err });
 			}
 		///////////////////////////////////////////////
 		case "PUT": // update
 			try {
-				const updatedProduct = await productsCollection.updateOne(
-					query,
+				const updatedProduct = await ProductModel.findByIdAndUpdate(
+					_id,
 					req.body,
 					{
+						runValidators: true,
 						upsert: false, // Don't create a new product if nothing found.
+						lean: true, // return a json
+						new: true, // return updated object
 					}
 				);
 
-				return res
-					.status(updatedProduct.modifiedCount === 1 ? 200 : 400)
-					.json({ success: true, data: updatedProduct.result });
-			} catch (error) {
-				console.error(error);
+				return res.status(200).json({ success: true, data: updatedProduct });
+			} catch (err) {
+				console.error("\n[talkToDbWithId on api/products/[id].ts in PUT]", err);
 
-				return res.status(400).json({ success: false, data: error });
+				return res.status(400).json({ success: false, data: err });
 			}
 		///////////////////////////////////////////////
 		case "DELETE":
 			try {
-				const deletedProduct = await productsCollection.deleteOne(query);
+				const deletedProduct = await ProductModel.findByIdAndRemove(_id);
 
-				return res.status(deletedProduct.deletedCount === 1 ? 200 : 400).json({
+				return res.status(204).json({
 					success: true,
-					data: {
-						result: deletedProduct.result,
-					},
+					data: deletedProduct,
 				});
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				console.error(
+					"\n[talkToDbWithId on api/products/[id].ts in DELETE]",
+					err
+				);
 
-				return res.status(400).json({ success: false, data: error });
+				return res.status(400).json({ success: false, data: err });
 			}
 		///////////////////////////////////////////////
 		default:

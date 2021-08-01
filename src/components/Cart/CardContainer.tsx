@@ -42,7 +42,7 @@ export function CardContainer({
 					</StyledButton>
 
 					<Amount>
-						R$ {product.price} <span>× {product.amount ?? 1}</span>
+						R$ {product.price} <span>× {product.amountThatWillBeBought ?? 1}</span>
 					</Amount>
 
 					<StyledButton
@@ -69,9 +69,9 @@ export function CardContainer({
 }
 
 function getPrice(product: ClientChosenProduct) {
-	if (product.amount === undefined || product.amount < 1) product.amount = 1;
+	if (product.amountThatWillBeBought === undefined || product.amountThatWillBeBought < 1) product.amountThatWillBeBought = 1;
 
-	return ((product.amount) * Number(product.price))
+	return ((product.amountThatWillBeBought) * Number(product.price))
 		.toFixed(2)
 		.replace(".", ",");
 }

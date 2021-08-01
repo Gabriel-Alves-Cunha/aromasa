@@ -1,13 +1,19 @@
-import styled from "styled-components";
+import { makeStyles } from "@material-ui/core/styles";
 
-export const Container = styled.div`
-	width: 100%;
-`;
-
-export const Info = styled.div``;
-
-export const Title = styled.h3``;
-
-export const Description = styled.p``;
-
-export const Price = styled.h2``;
+export default makeStyles(() => ({
+	root: {
+		maxWidth: "100%",
+	},
+	media: {
+		height: 0,
+		paddingTop: "56.25%", // 16:9
+	},
+	cardActions: {
+		display: "flex",
+		justifyContent: "flex-end",
+	},
+	cardContent: {
+		display: "flex",
+		justifyContent: "space-between",
+	},
+}));

@@ -1,31 +1,44 @@
-import { MongoClient, Db } from "mongodb";
-import { URL } from "url";
+import mongoose from "mongoose";
 
-import { db_uri } from "../storage/env";
+import { envVariables } from "../storage/env";
 
-let cached_database_connection: Db;
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections growing exponentially
+ * during API Route usage.
+ */
+// @ts-ignore
+let cached = global.mongoose;
+// @ts-ignore
+if (!cached) cached = global.mongoose = { conn: null, promise: null };
 
 export default async function connectToDatabase() {
-	console.log("\n[LOG] Connecting to database...");
+	if (cached.conn) return cached.conn;
 
-	if (cached_database_connection) return cached_database_connection;
+	if (!cached.promise) {
+		cached.promise = mongoose
+			.connect(envVariables.db_uri, {
+				dbName: envVariables.db_name,
+				useUnifiedTopology: true,
+				useFindAndModify: false,
+				bufferCommands: false,
+				useNewUrlParser: true,
+				useCreateIndex: true,
+				bufferMaxEntries: 0,
+			})
+			.then(mongoose => mongoose)
+			.catch(err =>
+				console.error("\n[connectToMongoDB in 'if (!cached.promise)']", err)
+			);
+	}
 
-	const client = await MongoClient.connect(db_uri, {
-		appname: "Aromasa Decor website",
-		useUnifiedTopology: true,
-		connectTimeoutMS: 6000,
-		useNewUrlParser: true,
-		validateOptions: true,
-		numberOfRetries: 3,
-	}); // acessar o servidor
+	mongoose.connection.on("error", err =>
+		console.error("\n[connectToMongoDB on connection]", err)
+	);
 
-	const db_name = new URL(db_uri).pathname.substr(1);
-	console.log(`\n[LOG] database name = ${db_name}`);
+	cached.conn = await cached.promise;
+	// console.log("\n[LOG] cached.conn =", cached.conn);
+	console.log("\nSuccessfully connected to database.\n");
 
-	const db = client.db(db_name);
-	cached_database_connection = db;
-
-	// console.log("\n[LOG] MongoDB database: \n\n", db);
-
-	return db;
+	return cached.conn;
 }

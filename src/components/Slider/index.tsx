@@ -20,30 +20,36 @@ export function Slider({
 	loop = false,
 	slides,
 }: Props) {
-	const [viewportRef, embla] = useEmblaCarousel({ loop });
+	const [viewportRef, emblaApi] = useEmblaCarousel({ loop });
 
 	const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
 	const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
 
-	const scrollPrev = useCallback(() => embla && embla.scrollPrev(), [embla]);
-	const scrollNext = useCallback(() => embla && embla.scrollNext(), [embla]);
+	const scrollPrev = useCallback(
+		() => emblaApi && emblaApi.scrollPrev(),
+		[emblaApi]
+	);
+	const scrollNext = useCallback(
+		() => emblaApi && emblaApi.scrollNext(),
+		[emblaApi]
+	);
 	const scrollTo = useCallback(
-		index => embla && embla.scrollTo(index),
-		[embla]
+		index => emblaApi && emblaApi.scrollTo(index),
+		[emblaApi]
 	);
 
 	const onSelect = useCallback(() => {
-		if (!embla) return;
-		setSelectedIndex(embla.selectedScrollSnap());
-		setPrevBtnEnabled(embla.canScrollPrev());
-		setNextBtnEnabled(embla.canScrollNext());
-	}, [embla, setSelectedIndex]);
+		if (!emblaApi) return;
+		setSelectedIndex(emblaApi.selectedScrollSnap());
+		setPrevBtnEnabled(emblaApi.canScrollPrev());
+		setNextBtnEnabled(emblaApi.canScrollNext());
+	}, [emblaApi, setSelectedIndex]);
 
 	useEffect(() => {
-		if (!embla) return;
+		if (!emblaApi) return;
 		onSelect();
-		embla.on("select", onSelect);
-	}, [embla, onSelect]);
+		emblaApi.on("select", onSelect);
+	}, [emblaApi, onSelect]);
 
 	return (
 		<Embla>

@@ -11,29 +11,29 @@ export function useCart() {
 
 	const handleAddToCart = useCallback((newProduct: ClientChosenProduct) => {
 		const isProductInCart = cartProducts.find(
-			product => product.id === newProduct.id
+			product => product._id === newProduct._id
 		);
 
 		if (isProductInCart)
 			setCartProducts(oldValues =>
 				oldValues.map(item =>
-					item.id === newProduct.id
-						? { ...item, amount: (item.amount ?? 1) + 1 }
+					item._id === newProduct._id
+						? { ...item, amountThatWillBeBought: (item.amountThatWillBeBought ?? 1) + 1 }
 						: item
 				)
 			);
 		else
 			setCartProducts(oldValues => [
 				...oldValues,
-				{ ...newProduct, amount: 1 },
+				{ ...newProduct, amountThatWillBeBought: 1 },
 			]);
 	}, []);
 
 	const handleSubtractAmount = useCallback((product: ClientChosenProduct) => {
 		setCartProducts(oldValues =>
 			oldValues.map(item => {
-				if (item.id === product.id && (item.amount ?? 1) > 1)
-					return { ...product, amount: (item.amount ?? 1) - 1 };
+				if (item._id === product._id && (item.amountThatWillBeBought ?? 1) > 1)
+					return { ...product, amountThatWillBeBought: (item.amountThatWillBeBought ?? 1) - 1 };
 				else return item;
 			})
 		);
@@ -41,19 +41,18 @@ export function useCart() {
 
 	const handleRemoveFromCart = useCallback((product: ClientChosenProduct) => {
 		setCartProducts(oldValues =>
-			oldValues.filter(item => item.id !== product.id)
+			oldValues.filter(item => item._id !== product._id)
 		);
 	}, []);
 
-	const getSubtotal = () => {
-		return cartProducts
+	const getSubtotal = () =>
+		cartProducts
 			.reduce((accumulator, currentProduct) => {
-				const { amount, price } = currentProduct;
-				return accumulator + (amount ?? 1) * Number(price);
+				const { amountThatWillBeBought: amount, price } = currentProduct;
+				return accumulator + (amount ?? 1) * price;
 			}, 0)
 			.toFixed(2)
 			.replace(".", ",");
-	};
 
 	return {
 		getSubtotal,

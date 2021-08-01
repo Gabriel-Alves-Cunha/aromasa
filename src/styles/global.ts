@@ -23,9 +23,10 @@ export default createGlobalStyle`
 	body {
 		background: ${({ theme }) => theme.colors.light.background};
 		color: ${({ theme }) => theme.colors.light.text};
+		height: 100%;
 
-  overflow-y: scroll; /* Show vertical scrollbar */
-  overflow-x: hidden; /* Show horizontal scrollbar */
+  	overflow-y: scroll; /* Show vertical scrollbar */
+  	overflow-x: hidden; /* Show horizontal scrollbar */
 	}
 
 	::selection {
@@ -33,23 +34,23 @@ export default createGlobalStyle`
     color: #ffffff;
 	}
 
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-}
+	/* width */
+	::-webkit-scrollbar {
+		width: 5px;
+	}
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
+	/* Track */
+	::-webkit-scrollbar-track {
+		background: #f1f1f1;
+	}
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: ${theme.colors.light.primary};
-}
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background: ${theme.colors.light.primary};
+	}
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+		background: #555;
+	}
 `;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
 	.embla__slide--thumb {
-		padding-left: 8px;
+		padding-left: 0px;
 		min-width: 20%;
 	}
 
@@ -13,26 +13,6 @@ export const Container = styled.div`
 	.embla--thumb {
 		padding-top: 0;
 		margin-top: 2px;
-	}
-
-	.embla-slide-img {
-		position: absolute;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		right: 0;
-		box-sizing: border-box;
-		padding: 0;
-		border: none;
-		margin: auto;
-		display: block;
-		width: 0;
-		height: 0;
-		min-width: 100%;
-		max-width: 100%;
-		min-height: 100%;
-		max-height: 100%;
-		object-fit: contain;
 	}
 
 	.embla-slide-thumb-img {
@@ -52,8 +32,7 @@ export const Container = styled.div`
 export const Embla = styled.div`
 	position: relative;
 	background-color: white;
-	padding: 20px;
-	max-width: 670px;
+	max-width: 90%;
 	margin-left: auto;
 	margin-right: auto;
 `;
@@ -79,6 +58,7 @@ export const EmblaContainer = styled.div`
 	-khtml-user-select: none;
 	-webkit-tap-highlight-color: transparent;
 	margin-left: -10px;
+	margin-top: 5px;
 
 	.embla__container--thumb {
 		cursor: default;
@@ -109,10 +89,4 @@ export const EmblaSlideButton = styled.button.attrs({ type: "button" })`
 	position: relative;
 	display: block;
 	overflow: hidden;
-`;
-
-export const EmblaSlideInner = styled.div`
-	position: relative;
-	overflow: hidden;
-	height: 72vh;
 `;

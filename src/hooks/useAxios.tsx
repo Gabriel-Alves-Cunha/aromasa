@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import assert from "node:assert";
 import useSWR from "swr";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
@@ -7,7 +8,7 @@ type ApiUrl = "api/products" | "api/test" | "api/products/:id";
 export function useAxios<DataFormat = any>(
 	method: Method,
 	url: ApiUrl,
-	data_?: any
+	reqData?: any
 ) {
 	const { data, error, mutate } = useSWR<AxiosResponse<DataFormat>>(
 		url,
@@ -16,7 +17,7 @@ export function useAxios<DataFormat = any>(
 				url,
 				method,
 				timeout: 10000,
-				data: data_ ?? {},
+				data: reqData ?? {},
 				headers: { Authorization: "Bearer" },
 			}),
 		{
@@ -26,5 +27,7 @@ export function useAxios<DataFormat = any>(
 		}
 	);
 
-	return { data, error, mutate };
+	const data_ = data?.data;
+
+	return { data_, error, mutate };
 }

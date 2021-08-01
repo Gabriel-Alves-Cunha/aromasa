@@ -8,6 +8,8 @@ const theme = {
 			primary: "#017785",
 
 			footer: "#02C4DB",
+
+			navbar: "#11101d"
 		},
 		light: {
 			background: "white",
@@ -17,6 +19,8 @@ const theme = {
 			primary: "#017785",
 
 			footer: "#02C4DB",
+
+			navbar: "#11101d"
 		},
 	},
 	fonts: {

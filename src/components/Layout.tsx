@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 
 import { HeaderData } from "./Header/header.data";
-import { Header } from "./Header";
 import { Footer } from "./Footer";
+import Header from "./Header";
 
 type Props = {
 	currentPage?: HeaderData["label"];
@@ -21,6 +21,20 @@ function Layout({ children, currentPage }: Props) {
 	);
 }
 
+function FooterlessLayout({ children, currentPage }: Props) {
+	return (
+		<>
+			<Header currentPage={currentPage} />
+
+			<main>{children}</main>
+		</>
+	);
+}
+
 export const getLayout = (page: ReactNode) => <Layout>{page}</Layout>;
+
+export const getFooterlessLayout = (page: ReactNode) => (
+	<FooterlessLayout>{page}</FooterlessLayout>
+);
 
 export default Layout;

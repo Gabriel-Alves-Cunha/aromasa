@@ -24,9 +24,10 @@ type Props = {
 	currentPage?: HeaderData["label"];
 };
 
-export function Header({ currentPage }: Props) {
-	const classes = useStyles();
+export default function Header({ currentPage }: Props) {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const classes = useStyles();
+	// console.log(`currentPage = ${currentPage}`);
 
 	return (
 		<Container>

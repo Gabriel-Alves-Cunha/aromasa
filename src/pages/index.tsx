@@ -1,37 +1,16 @@
-import { useState, useEffect, FormEvent, ReactNode } from "react";
+import { ReactNode } from "react";
 import Image from "next/image";
 import Head from "next/head";
 
 import bg from "../assets/bg.jpg";
 
-import { ShowProductsSlider } from "../components/ShowProductsSlider";
 import { HeroContainer, Container } from "../styles/pages";
 import { NewArrivals } from "../modules/NewArrivals";
 import { Instagram } from "../components/Instagram";
-import { useAxios } from "../hooks/useAxios";
 import { Product } from "../models/Product";
 import Layout from "../components/Layout";
 
-type UseAxiosResponse = {
-	success: boolean;
-	data: Product[];
-};
-
 function Home() {
-	// const { data, error } = useAxios<UseAxiosResponse>("GET", "api/products");
-
-	// const [allProducts, setAllProducts] = useState([] as Product[]);
-
-	// useEffect(() => {
-	// 	if (data?.data) {
-	// 		const { data: products } = data.data;
-	// 		console.log(products);
-	// 		setAllProducts(products);
-	// 	}
-
-	// 	if (error) console.error(error);
-	// }, [data, error]);
-
 	// async function insertProduct(event: FormEvent) {
 	// 	event.preventDefault();
 

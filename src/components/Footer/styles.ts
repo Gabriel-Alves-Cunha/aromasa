@@ -5,11 +5,13 @@ import theme from "../../styles/theme";
 const { footer } = theme.colors.light;
 
 export const Container = styled.footer`
-	display: flex;
-	flex-direction: row;
-
+	position: static;
+	bottom: 0;
 	width: 100vw;
 	height: 45vh;
+
+	display: flex;
+	flex-direction: row;
 
 	justify-content: space-around;
 
@@ -31,6 +33,8 @@ export const Container = styled.footer`
 export const LogoContainer = styled.div`
 	width: 20vw;
 	height: auto;
+
+	align-self: center;
 `;
 
 export const Social = styled.div`

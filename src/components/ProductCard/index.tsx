@@ -1,27 +1,53 @@
-import { FaCartPlus } from "react-icons/fa";
-import Image from "next/image";
+import { AddShoppingCart } from "@material-ui/icons";
+import { memo } from "react";
+import {
+	CardActions,
+	CardContent,
+	IconButton,
+	Typography,
+	CardMedia,
+	Card,
+} from "@material-ui/core";
 
-import { Product } from "../../models/Product";
+import { Product as Product } from "../../models/Product";
 
-import { Container, Info, Title, Description, Price } from "./styles";
+import useStyles from "./styles";
 
-export function ProductCard(product: Product) {
-	function handleAddToCart(product: Product) {}
+type Props = {
+	product: Product;
+};
+
+function _ProductCard({ product }: Props) {
+	const classes = useStyles();
 
 	return (
-		<Container>
-			<Image src={product.images[0] as string} layout="fill" />
-
-			<Info>
-				<Title>{product.title}</Title>
-				<Description>{product.description}</Description>
-				<Price>R$ {product.price}</Price>
-			</Info>
-
-			<FaCartPlus
-				onClick={() => handleAddToCart(product)}
-				data-tip="Add to cart"
+		<Card className={classes.root}>
+			<CardMedia
+				className={classes.media}
+				image={product.images[0]}
+				title={product.title}
 			/>
-		</Container>
+
+			<CardContent>
+				<div className={classes.cardContent}>
+					<Typography variant="h5" gutterBottom>
+						{product.title}
+					</Typography>
+					<Typography variant="h5">{product.price}</Typography>
+				</div>
+
+				<Typography variant="body2" color="textSecondary">
+					{product.description}
+				</Typography>
+			</CardContent>
+
+			<CardActions disableSpacing className={classes.cardActions}>
+				<IconButton aria-label="Adicionar ao carrinho">
+					<AddShoppingCart />
+				</IconButton>
+			</CardActions>
+		</Card>
 	);
 }
+
+export const ProductCard = memo(_ProductCard);

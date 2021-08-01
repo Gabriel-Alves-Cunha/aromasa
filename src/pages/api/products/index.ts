@@ -1,39 +1,44 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import { NextApiRequest, NextApiResponse } from "next";
 
-import { product_collection_name } from "./../../../models/Product";
-import { Product } from "../../../models/Product";
+import { ProductModel } from "../../../models/Product";
 import connectToDatabase from "../../../utils/connectToMongoDB";
 
 export default async function talkToDB(
-	req: VercelRequest,
-	res: VercelResponse
+	req: NextApiRequest,
+	res: NextApiResponse
 ) {
-	const db = await connectToDatabase();
-	const productsCollection = db.collection<Product>(product_collection_name);
+	await connectToDatabase();
+
+	console.log("\nreq.body =", req.body);
 
 	const { method } = req;
 
 	switch (method) {
-		case "GET" || undefined:
+		case "GET" || undefined: // Find all products
 			try {
-				const result = await productsCollection.find().toArray();
+				const products = await ProductModel.find({});
 
-				return res.status(200).json({ success: true, data: result });
-			} catch (error) {
-				console.error(error);
+				return res.status(200).json({ success: true, data: products });
+			} catch (err) {
+				console.error("\n[talkToDB on api/products/index.ts in GET]", err);
 
-				return res.status(400).json({ success: false, data: error });
+				return res.status(400).json({ success: false, data: err });
 			}
 		///////////////////////////////////////////////
-		case "POST": // create
+		case "POST": // Create a new product
 			try {
-				const newProduct = await productsCollection.insertOne(req.body);
+				const newProduct = await ProductModel.create(req.body, {
+					validateBeforeSave: true,
+					timestamps: true,
+					checkKeys: true,
+					safe: true,
+				});
 
 				return res.status(201).json({ success: true, data: newProduct });
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				console.error("\n[talkToDB on api/products/index.ts in POST]", err);
 
-				return res.status(400).json({ success: false, data: error });
+				return res.status(400).json({ success: false, data: err });
 			}
 		///////////////////////////////////////////////
 		default:

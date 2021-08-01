@@ -7,7 +7,7 @@ const test_connectToDatabase = async (
 	req: VercelRequest,
 	res: VercelResponse
 ) => {
-	const db = await connectToDatabase();
+	await connectToDatabase();
 
 	// const collection = db.collection(products_collection_name); // It's going to be created by Mongo
 	// await collection.insertOne({
