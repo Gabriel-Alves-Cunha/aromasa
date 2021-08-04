@@ -38,6 +38,7 @@ export default async function connectToDatabase() {
 
 	cached.conn = await cached.promise;
 	// console.log("\n[LOG] cached.conn =", cached.conn);
+	// console.log("\n[LOG] db =", cached.conn.connections[0].db);
 	console.log("\nSuccessfully connected to database.\n");
 
 	return cached.conn;

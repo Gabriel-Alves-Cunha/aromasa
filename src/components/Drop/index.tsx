@@ -1,15 +1,13 @@
 import { FileError, useDropzone } from "react-dropzone";
 import React, { useState } from "react";
+import { IoIosClose } from "react-icons/io";
 import prettyBytes from "pretty-bytes";
-// import {} from "react-icons/"
-
-import { FileToSend } from "../../modules/AddAProduct";
 
 import { Container, Rejectd, TrashTheImg } from "./styles";
 
 type Props = {
-	setFiles: React.Dispatch<React.SetStateAction<FileToSend[]>>;
-	files: FileToSend[];
+	setFiles: React.Dispatch<React.SetStateAction<File[]>>;
+	files: File[];
 };
 
 type Preview = {
@@ -17,7 +15,7 @@ type Preview = {
 	name: string;
 };
 
-export function MyDropzone({ files, setFiles }: Props) {
+export default function MyDropzone({ files, setFiles }: Props) {
 	const [previews, setPreviews] = useState([] as Preview[]);
 
 	const { getRootProps, getInputProps, fileRejections } = useDropzone({
@@ -29,13 +27,7 @@ export function MyDropzone({ files, setFiles }: Props) {
 				reader.onabort = () => console.log("file reading was aborted");
 				reader.onerror = () => console.log("file reading has failed");
 				reader.onload = () => {
-					setFiles(oldFiles => [
-						...oldFiles,
-						{
-							arrayBufferToSend: reader.result as ArrayBuffer,
-							name: file.name,
-						},
-					]);
+					setFiles(oldFiles => [...oldFiles, file]);
 					setPreviews(oldValues => [
 						...oldValues,
 						{ name: file.name, preview: URL.createObjectURL(file) },
@@ -106,7 +98,9 @@ export function MyDropzone({ files, setFiles }: Props) {
 							oldPreviews.filter(oldPreview => oldPreview.name !== file.name)
 						);
 					}}
-				></TrashTheImg>
+				>
+					<IoIosClose size={20} />
+				</TrashTheImg>
 				<img
 					src={file.preview}
 					style={{

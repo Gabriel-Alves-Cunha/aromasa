@@ -1,24 +1,21 @@
+import { InputAdornment, TextField, CircularProgress } from "@material-ui/core";
+import { useFieldArray, Controller, useForm } from "react-hook-form";
+import { toast as doToast, ToastContainer } from "react-toastify";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import { InputAdornment, TextField } from "@material-ui/core";
-import { useForm, Controller } from "react-hook-form";
 import { useState, Fragment } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-toastify";
+import { useEffect } from "react";
+import { green } from "@material-ui/core/colors";
 import * as yup from "yup";
-import axios from "axios";
 
-import { MyDropzone } from "../../components/Drop";
-import { Product } from "../../models/Product";
-import connectToDatabase from "../../utils/connectToMongoDB";
+import { Product as NotToUseProductModel } from "../../models/Product";
+import { ConfirmationModal } from "./modal";
+import { MyDropzone } from "../../components";
 
 import { Container, Bottle, Button, BorderBottom } from "./styles";
+import "react-toastify/dist/ReactToastify.css";
 
-type ProductToAdd = Exclude<Product, "_id" | "isAvailable">;
-
-export type FileToSend = {
-	arrayBufferToSend: ArrayBuffer;
-	name: string;
-};
+export type ProductToAdd = Omit<NotToUseProductModel, "_id">;
 
 const schema = yup.object().shape({
 	title: yup
@@ -38,31 +35,68 @@ const schema = yup.object().shape({
 	description: yup
 		.string()
 		.trim()
-		.max(200, "A descrição não pode ter mais de 2.000 caracteres!")
+		.max(2000, "A descrição não pode ter mais de 2.000 caracteres!")
 		.required("Uma descrição do produto é necessária!"),
-	available_bottles: yup.object().shape({
-		available_quantity: yup
-			.number()
-			.integer()
-			.positive("A quantidade disponível deve um número positivo!")
-			.min(0)
-			.required("A quantidade disponível deste produto é necessária!"),
-		bottle_format: yup
-			.string()
-			.trim()
-			.max(50, "O volume não pode ter mais 50 caracteres!"),
-		volume: yup.number().positive("O volume deve um número positivo!").min(0.0),
-		weight: yup.number().positive("O peso deve um número positivo!").min(0.0),
-	}),
+	available_bottles: yup.array(
+		yup.object().shape({
+			available_quantity: yup
+				.number()
+				.integer()
+				.positive("A quantidade disponível deve um número positivo!")
+				.min(0)
+				.required("A quantidade disponível deste produto é necessária!"),
+			bottle_format: yup
+				.string()
+				.trim()
+				.max(50, "O volume não pode ter mais 50 caracteres!"),
+			volume: yup
+				.number()
+				.positive("O volume deve um número positivo!")
+				.min(0.0),
+			weight: yup.number().positive("O peso deve um número positivo!").min(0.0),
+		})
+	),
 });
+export const myFormId = "add-product-form";
 
 export function AddAProduct() {
 	const classes = useStyles();
 
-	const [numberOfBottlesInput, setNumberOfBottlesInput] = useState([1]);
-	const [wasProductAdded, setWasProductAdded] = useState(false);
-	const [addAProductError, setAddAProductError] = useState("");
-	const [files, setFiles] = useState([] as FileToSend[]);
+	const [product, setProduct] = useState(defaultProduct);
+	const [openModal, setOpenModal] = useState(false);
+	const [files, setFiles] = useState([] as File[]);
+	const [saving, setSaving] = useState(false);
+	const [toast, setToast] = useState({
+		resolved: false,
+		success: false,
+		error: "",
+	});
+
+	useEffect(() => {
+		if (toast.resolved && toast.success)
+			doToast.success("🦄 Produto adicionado com sucesso!", {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+			});
+		else if (toast.resolved && !toast.success)
+			doToast.error(
+				`🦄 Houve um erro ao adicionar o produto!\n${toast.error}`,
+				{
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+				}
+			);
+	}, [toast]);
 
 	const {
 		formState: { errors },
@@ -72,68 +106,50 @@ export function AddAProduct() {
 		reset,
 	} = useForm<ProductToAdd>({
 		resolver: yupResolver(schema),
+		defaultValues: {
+			available_bottles: [
+				{
+					available_quantity: undefined,
+					bottle_format: undefined,
+					volume: undefined,
+					weight: undefined,
+				},
+			],
+			images: [],
+			isAvailable: false,
+			price: undefined,
+			description: "",
+			usage_tips: "",
+			category: [""],
+			title: "",
+		},
+	});
+	const { fields, append, remove } = useFieldArray({
+		control, // control props comes from useForm (optional: if you are using FormContext)
+		name: "available_bottles", // unique name for your Field Array
 	});
 
 	const onSubmit = async (data: ProductToAdd) => {
-		const product = { ...data, images: files };
-		console.log("data onSubmit =", product);
-		// await addAProduct(product);
+		setOpenModal(true);
+		setProduct(data);
 	};
 
 	console.log("errors =", errors);
-	console.log("addAProductError =", addAProductError);
 	console.log("files =", files);
 
-	async function addAProduct(productInfo: ProductToAdd) {
-		await connectToDatabase();
-
-		const res = await axios.post("/api/products", productInfo);
-
-		console.log("res =", res);
-		if (res.status !== 201) {
-			setAddAProductError(res.data);
-			setWasProductAdded(false);
-
-			toast.error(`🦄 Houve um erro ao adicionar o produto!\n${res.data}`, {
-				position: "top-right",
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-			});
-		} else {
-			setWasProductAdded(true);
-			setAddAProductError("");
-
-			toast.success("🦄 Produto adicionado com sucesso!", {
-				position: "top-right",
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-			});
-
-			// @ts-ignore
-			document.getElementById("my-form")?.reset();
-			reset();
-			setNumberOfBottlesInput([1]);
-		}
-	}
-
-	function bottleInput() {
+	function bottleInput(field: typeof fields[0], index: number) {
 		return (
-			<Fragment key={Math.random()}>
+			<Fragment key={field.id}>
 				<Controller
 					control={control}
-					name="available_bottles.bottle_format"
+					name={`available_bottles.${index}.bottle_format`}
+					key={`available_bottles.${index}.bottle_format`}
 					render={({ field }) => (
 						<TextField
-							error={!!errors.available_bottles?.bottle_format}
-							helperText={errors.available_bottles?.bottle_format?.message}
+							error={!!errors.available_bottles?.[index]?.bottle_format}
+							helperText={
+								errors.available_bottles?.[index]?.bottle_format?.message
+							}
 							variant="outlined"
 							defaultValue=""
 							label="Formato da garrafa"
@@ -145,11 +161,14 @@ export function AddAProduct() {
 
 				<Controller
 					control={control}
-					name="available_bottles.available_quantity"
+					name={`available_bottles.${index}.available_quantity`}
+					key={`available_bottles.${index}.available_quantity`}
 					render={({ field }) => (
 						<TextField
-							error={!!errors.available_bottles?.available_quantity}
-							helperText={errors.available_bottles?.available_quantity?.message}
+							error={!!errors.available_bottles?.[index]?.available_quantity}
+							helperText={
+								errors.available_bottles?.[index]?.available_quantity?.message
+							}
 							required
 							type="number"
 							variant="outlined"
@@ -163,11 +182,12 @@ export function AddAProduct() {
 
 				<Controller
 					control={control}
-					name="available_bottles.volume"
+					name={`available_bottles.${index}.volume`}
+					key={`available_bottles.${index}.volume`}
 					render={({ field }) => (
 						<TextField
-							error={!!errors.available_bottles?.volume}
-							helperText={errors.available_bottles?.volume?.message}
+							error={!!errors.available_bottles?.[index]?.volume}
+							helperText={errors.available_bottles?.[index]?.volume?.message}
 							type="number"
 							label="Volume"
 							variant="outlined"
@@ -184,11 +204,12 @@ export function AddAProduct() {
 
 				<Controller
 					control={control}
-					name="available_bottles.weight"
+					name={`available_bottles.${index}.weight`}
+					key={`available_bottles.${index}.weight`}
 					render={({ field }) => (
 						<TextField
-							error={!!errors.available_bottles?.weight}
-							helperText={errors.available_bottles?.weight?.message}
+							error={!!errors.available_bottles?.[index]?.weight}
+							helperText={errors.available_bottles?.[index]?.weight?.message}
 							label="Peso"
 							type="number"
 							variant="outlined"
@@ -208,42 +229,29 @@ export function AddAProduct() {
 		);
 	}
 
-	function addBottleInput(e: React.MouseEvent<HTMLElement>) {
-		e.preventDefault();
-
-		setNumberOfBottlesInput(oldValue => [...oldValue, 1]);
-	}
-
-	function handleSubBottleInput(e: React.MouseEvent<HTMLElement>) {
-		e.preventDefault();
-
-		setNumberOfBottlesInput(oldValue => {
-			if (oldValue.length <= 1) return [1];
-			const newValue = [...oldValue];
-			newValue.pop();
-			return newValue;
-		});
-	}
-
 	return (
 		<Container>
+			<ToastContainer />
+
 			<h3>Adicionar um produto</h3>
 
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className={classes.root}
-				id="my-form"
+				id={myFormId}
+				method="post"
+				encType="multipart/form-data"
 			>
 				<>
 					<Controller
 						control={control}
 						name="title"
+						key="title"
 						render={({ field }) => (
 							<TextField
 								error={!!errors.title}
 								required
 								helperText={errors.title?.message}
-								defaultValue=""
 								label="Título"
 								variant="outlined"
 								{...field}
@@ -254,13 +262,13 @@ export function AddAProduct() {
 					<Controller
 						control={control}
 						name="category"
+						key="category"
 						render={({ field }) => (
 							<TextField
 								error={!!errors.category}
-								helperText={errors.category?.message}
+								helperText={errors.category?.[0]?.message}
 								required
 								label="Categoria"
-								defaultValue=""
 								variant="outlined"
 								placeholder="Ex.: 'Aromatizador,Difusor'"
 								{...field}
@@ -272,6 +280,7 @@ export function AddAProduct() {
 					<Controller
 						control={control}
 						name="price"
+						key="price"
 						render={({ field }) => (
 							<TextField
 								error={!!errors.price}
@@ -302,12 +311,12 @@ export function AddAProduct() {
 					<Controller
 						control={control}
 						name="usage_tips"
+						key="usage_tips"
 						render={({ field }) => (
 							<TextField
 								error={!!errors.usage_tips}
 								className={classes.multiline}
 								helperText={errors.usage_tips?.message}
-								defaultValue=""
 								label="Dicas de uso"
 								variant="outlined"
 								multiline
@@ -319,13 +328,13 @@ export function AddAProduct() {
 					<Controller
 						control={control}
 						name="description"
+						key="description"
 						render={({ field }) => (
 							<TextField
 								error={!!errors.description}
 								className={classes.multiline}
 								helperText={errors.description?.message}
 								label="Descrição"
-								defaultValue=""
 								variant="outlined"
 								multiline
 								required
@@ -339,18 +348,46 @@ export function AddAProduct() {
 				<MyDropzone files={files} setFiles={setFiles} />
 
 				<Bottle className={classes.bottle}>
-					{numberOfBottlesInput.map(_ => bottleInput())}
+					{fields.map((field, index) => bottleInput(field, index))}
 
 					<div style={{ flexDirection: "row" }}>
-						<Button onClick={addBottleInput}>Adicionar grupo</Button>
-						<Button onClick={handleSubBottleInput}>Remover grupo</Button>
+						<Button
+							type="button"
+							onClick={() =>
+								append({
+									available_quantity: undefined,
+									bottle_format: undefined,
+									volume: undefined,
+									weight: undefined,
+								})
+							}
+						>
+							Mais
+						</Button>
+						<Button type="button" onClick={() => remove(fields.length - 1)}>
+							Deletar
+						</Button>
 					</div>
 				</Bottle>
 
 				<div className={classes.submit}>
-					<input type="submit" value="Adicionar" />
+					<input type="submit" value="Confirmar" disabled={saving} />
+					{saving && (
+						<CircularProgress size={24} className={classes.buttonProgress} />
+					)}
+					{/* <CircularProgress size={24} className={classes.buttonProgress} /> */}
 				</div>
 			</form>
+
+			<ConfirmationModal
+				setOpen={setOpenModal}
+				setSaving={setSaving}
+				setToast={setToast}
+				product={product}
+				open={openModal}
+				files={files}
+				reset={reset}
+			/>
 		</Container>
 	);
 }
@@ -381,5 +418,32 @@ const useStyles = makeStyles((theme: Theme) =>
 			justifyContent: "center",
 			alignItems: "center",
 		},
+		buttonSuccess: {
+			backgroundColor: green[500],
+			"&:hover": {
+				backgroundColor: green[700],
+			},
+		},
+		buttonProgress: {
+			color: green[500],
+		},
 	})
 );
+
+const defaultProduct: ProductToAdd = {
+	available_bottles: [
+		{
+			available_quantity: "",
+			bottle_format: "",
+			volume: undefined,
+			weight: undefined,
+		},
+	],
+	category: [""],
+	description: "",
+	images: [],
+	isAvailable: false,
+	price: "",
+	title: "",
+	usage_tips: "",
+};

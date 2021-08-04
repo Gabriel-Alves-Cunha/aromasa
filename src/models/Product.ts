@@ -1,46 +1,45 @@
 import mongoose, { Schema, Types, model } from "mongoose";
-import { FileToSend } from "../modules/AddAProduct";
+
+import { ImageModel } from "./Image";
 
 export type Product = {
 	available_bottles: {
-		available_quantity: number;
-		bottle_format: string;
-		volume: number;
-		weight: number;
-	};
-	images: FileToSend[];
+		available_quantity: string;
+		bottle_format?: string;
+		volume?: string;
+		weight?: string;
+	}[];
+	images: File[];
 	isAvailable: boolean;
 	description: string;
 	_id: Types.ObjectId;
-	usage_tips: string;
-	category: string;
+	usage_tips?: string;
+	category: string[];
 	title: string;
-	price: number;
+	price: string;
 };
 
 export type ClientChosenProduct = {
 	chosen_bottle: {
-		available_quantity: number;
-		bottle_format: string;
-		volume: number;
-		weight: number;
-	};
-	amountThatWillBeBought: number;
-	images: FileToSend[];
-	availableAmount: number;
+		available_quantity: string;
+		bottle_format?: string;
+		volume?: string;
+		weight?: string;
+	}[];
+	amountThatWillBeBought: string;
+	images: File[];
+	availableAmount: string;
 	isAvailable: boolean;
 	description: string;
 	_id: Types.ObjectId;
-	usage_tips: string;
-	category: string;
+	usage_tips?: string;
+	category: string[];
 	title: string;
-	price: number;
+	price: string;
 };
 
-export const product_collection_name = "Product";
-
 // By default, Mongoose adds an _id property to your schemas.
-const schema = new Schema<Product>({
+const productSchema = new Schema<Product>({
 	description: {
 		type: String,
 		required: [true, "Uma descrição do produto é necessária!"],
@@ -62,16 +61,11 @@ const schema = new Schema<Product>({
 		type: Array,
 		required: [true, "Uma categoria do produto é necessária!"],
 	},
-	images: [
+	imagesPaths: [
 		{
-			name: {
-				type: String,
-				required: [true, "Um nome para a imagem é necessário!"],
-			},
-			arrayBuffer: {
-				type: Array,
-				required: [true, "Um arrayBuffer (os bytes da imagem) é necessário!"],
-			},
+			// type: ImageModel.schema,
+			type: String,
+			maxLength: 300,
 		},
 	],
 	title: {
@@ -82,28 +76,30 @@ const schema = new Schema<Product>({
 		maxlength: [200, "O título não pode ter mais de 200 caracteres!"],
 	},
 	price: {
-		type: Number,
+		type: String,
 		required: [true, "Um preço para o produto é necessário!"],
 	},
 	available_bottles: [
 		{
 			volume: {
-				type: Number,
+				type: String,
 				trim: true,
 				maxLength: [14, "O volume não pode ter mais 14 caracteres!"],
+				required: false,
 			},
 			bottle_format: {
 				type: String,
 				trim: true,
 				maxLength: [50, "O volume não pode ter mais 50 caracteres!"],
+				required: false,
 			},
 			available_quantity: {
-				type: Number,
+				type: String,
 				required: [true, "A quantidade disponível deste produto é necessária!"],
 			},
 			weight: {
-				type: Number,
-				required: [true, "O peso deste produto é necessária!"],
+				type: String,
+				required: false,
 			},
 		},
 	],
@@ -115,17 +111,5 @@ const schema = new Schema<Product>({
 
 console.log("\nCompilando productSchema...\n");
 
-// let toBeExported;
-
-// try {
-// 	toBeExported = mongoose.model(product_collection_name);
-// } catch (error) {
-// 	// console.error("\n[ERROR - RECOVERABLE]:\n", error);
-
-// 	toBeExported = mongoose.model(product_collection_name, productSchema);
-// }
-
-// export default toBeExported;
-
 export const ProductModel: mongoose.Model<Product, {}, {}> =
-	mongoose.models.Product || model<Product>("Product", schema);
+	mongoose.models.Product || model<Product>("Product", productSchema);
