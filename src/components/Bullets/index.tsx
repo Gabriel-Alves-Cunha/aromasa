@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { Container, Span } from "./styles";
 
 type BulletsProps = {
@@ -27,6 +29,8 @@ export function Bullets({ slides, activeSlide, onClick }: BulletsProps) {
 	);
 }
 
-function Bullet({ active, onClick, index }: BulletProps) {
+function _Bullet({ active, onClick, index }: BulletProps) {
 	return <Span active={active} onClick={() => onClick(index)} />;
 }
+
+const Bullet = memo(_Bullet);

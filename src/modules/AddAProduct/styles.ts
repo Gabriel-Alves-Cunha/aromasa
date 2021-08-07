@@ -52,20 +52,6 @@ export const Container = styled.div`
 	}
 `;
 
-export const Bottle = styled.div`
-	width: 40em;
-	height: auto;
-
-	.MuiTextField-root {
-		margin: 1em;
-		width: 25ch;
-	}
-
-	border: 2px solid #ccc;
-
-	border-radius: 5px;
-`;
-
 export const Button = styled.button`
 	border: none;
 
@@ -86,10 +72,4 @@ export const Button = styled.button`
 	&:active {
 		opacity: 0.4;
 	}
-`;
-
-export const BorderBottom = styled.div`
-	margin: 40px 0;
-
-	border: 1px solid #ccc;
 `;

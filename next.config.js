@@ -5,7 +5,7 @@ const nextConfig = {
 	next: "latest",
 	node: "--trace-warnings",
 	images: {
-		domains: ["fakestoreapi.com"],
+		domains: [""],
 	},
 };
 

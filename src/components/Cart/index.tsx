@@ -4,8 +4,6 @@ import { Drawer, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { useRouter } from "next/router";
 
-import theme from "../../styles/theme";
-
 import { CardContainer } from "./CardContainer";
 import { Divider } from "../Divider";
 import { useCart } from "../../hooks/useCart";
@@ -17,23 +15,22 @@ import {
 	NoItems,
 	Header,
 } from "./styles";
+import theme from "../../styles/theme";
 
 export function Cart() {
-	const router = useRouter();
 	const classes = useStyles();
+	const router = useRouter();
 	const {
+		handleAddOneMoreToCart,
 		handleRemoveFromCart,
 		handleSubtractAmount,
-		handleAddToCart,
 		cartProducts,
 		getSubtotal,
 	} = useCart();
 
 	const [show, setShow] = useState(false);
 
-	const handleOpenCart = useCallback(() => {
-		setShow(oldValue => !oldValue);
-	}, []);
+	const handleOpenCart = useCallback(() => setShow(oldValue => !oldValue), []);
 
 	function handleBuyProducts(event: React.MouseEvent<HTMLButtonElement>) {
 		event.preventDefault();
@@ -44,9 +41,9 @@ export function Cart() {
 	return (
 		<>
 			<StyledButton
+				classes={{ root: classes.button }}
 				onClick={() => handleOpenCart()}
 				aria-label="Carrinho de compras"
-				classes={{ root: classes.button }}
 			>
 				<Badge
 					badgeContent={cartProducts.length}
@@ -72,11 +69,11 @@ export function Cart() {
 					{cartProducts.length > 0 ? (
 						cartProducts.map(product => (
 							<CardContainer
+								handleAddOneMoreToCart={handleAddOneMoreToCart}
 								handleSubtractAmount={handleSubtractAmount}
 								handleRemoveFromCart={handleRemoveFromCart}
-								handleAddToCart={handleAddToCart}
+								key={product._id.toString()}
 								product={product}
-								key={product.id}
 							/>
 						))
 					) : (

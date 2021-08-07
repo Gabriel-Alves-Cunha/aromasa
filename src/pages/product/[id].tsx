@@ -1,19 +1,18 @@
 import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import Head from "next/head";
 
-import { ProductSlider } from "../../components/ProductSlider";
+import { ProductSlider_WithThumbnail } from "../../components/ProductSlider_WithThumbnail";
 import { Product } from "../../models/Product";
 
 import {
 	ProductSliderContainer,
+	FirstViewHeight,
 	InfoContainer,
 	Container,
 	Details,
-	FirstVH,
 	Title,
 } from "./styles";
 
@@ -24,10 +23,8 @@ type Props = {
 export default function ProductCard({ product }: Props) {
 	const router = useRouter();
 
-	const [selectedImage, setSelectedImage] = useState(0);
-
-	async function goToProductCardPageOf(product: Product) {
-		router.push(`product/${product._id}`);
+	async function goToPageOfProduct(product: Product) {
+		router.push(`product/${product._id.toString()}`);
 	}
 
 	return (
@@ -37,33 +34,39 @@ export default function ProductCard({ product }: Props) {
 				<meta name="description" content="Produto" />
 			</Head>
 
-			<FirstVH>
+			<FirstViewHeight>
 				<ProductSliderContainer>
-					<ProductSlider
-						setSelectedImage={setSelectedImage}
-						selectedImage={selectedImage}
-						product={product}
-					/>
+					<ProductSlider_WithThumbnail imagesPaths={product.imagesPaths} />
 				</ProductSliderContainer>
 
 				<InfoContainer>
 					<Title>{product.title}</Title>
 
-					<Details>{product.category}</Details>
+					<Details>
+						{product.categories.map(category => category + ", ")}
+					</Details>
 				</InfoContainer>
-			</FirstVH>
+			</FirstViewHeight>
 		</Container>
 	);
 }
 
 export const getStaticProps: GetStaticProps = async ctx => {
-	console.log(ctx);
+	console.log("\ngetStaticProps ctx =", ctx);
+	try {
+		const { data: product } = await axios.get<Product>(
+			`api/products/${ctx.params?._id?.toString()}`
+		);
+		console.log("\nproduct =", product);
 
-	const { data: product } = await axios.get<Product>(
-		`api/products/${ctx.params?._id}`
-	);
+		return {
+			props: { product },
+		};
+	} catch (error) {
+		console.log(`❗ File: [id].tsx\nLine:66\n${typeof error}: 'error'`, error);
 
-	return {
-		props: { product },
-	};
+		return {
+			props: { product: {} },
+		};
+	}
 };

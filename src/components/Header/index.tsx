@@ -10,7 +10,6 @@ import AromasaLogo from "../../assets/logos/AromasaLogo.webp";
 
 import { Cart } from "../Cart";
 
-import theme from "../../styles/theme";
 import {
 	CartContainer,
 	LogoContainer,
@@ -19,6 +18,7 @@ import {
 	Options,
 	Option,
 } from "./styles";
+import theme from "../../styles/theme";
 
 type Props = {
 	currentPage?: HeaderData["label"];

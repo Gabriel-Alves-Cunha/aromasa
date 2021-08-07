@@ -1,25 +1,23 @@
 import { SliderWithThumbnail } from "../SliderWithThumbnail";
-import { Product } from "../../models/Product";
+import { useState } from "react";
 
 import { Container } from "./styles";
 
 type ProductSliderProps = {
-	setSelectedImage: React.Dispatch<React.SetStateAction<number>>;
-	selectedImage: number;
-	product: Product;
+	imagesPaths: string[];
 };
 
-export function ProductSlider({
-	setSelectedImage,
-	selectedImage,
-	product,
+export function ProductSlider_WithThumbnail({
+	imagesPaths,
 }: ProductSliderProps) {
+	const [selectedImage, setSelectedImage] = useState(0);
+
 	return (
 		<Container>
 			<SliderWithThumbnail
 				setSelectedImage={setSelectedImage}
 				selectedImage={selectedImage}
-				slides={product.images}
+				slides={imagesPaths}
 			/>
 		</Container>
 	);

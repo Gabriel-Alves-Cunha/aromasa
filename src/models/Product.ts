@@ -3,37 +3,35 @@ import mongoose, { Schema, Types, model } from "mongoose";
 import { ImageModel } from "./Image";
 
 export type Product = {
-	available_bottles: {
+	bottle: {
 		available_quantity: string;
 		bottle_format?: string;
 		volume?: string;
 		weight?: string;
-	}[];
-	images: File[];
-	isAvailable: boolean;
+	};
+	isAvailableToSell: boolean;
+	imagesPaths: string[];
+	ingredients?: string;
 	description: string;
 	_id: Types.ObjectId;
 	usage_tips?: string;
-	category: string[];
+	categories: string[];
 	title: string;
 	price: string;
 };
 
 export type ClientChosenProduct = {
-	chosen_bottle: {
-		available_quantity: string;
+	bottle: {
+		amountThatWillBeBought: string;
 		bottle_format?: string;
 		volume?: string;
 		weight?: string;
-	}[];
-	amountThatWillBeBought: string;
-	images: File[];
-	availableAmount: string;
-	isAvailable: boolean;
+	};
+	categories: string[];
+	ingredients?: string;
 	description: string;
 	_id: Types.ObjectId;
-	usage_tips?: string;
-	category: string[];
+	imagePath: string;
 	title: string;
 	price: string;
 };
@@ -45,7 +43,7 @@ const productSchema = new Schema<Product>({
 		required: [true, "Uma descrição do produto é necessária!"],
 		unique: true,
 		trim: true,
-		maxlength: [2000, "A descrição não pode ter mais de 2.000 caracteres!"],
+		maxlength: [3000, "A descrição não pode ter mais de 3.000 caracteres!"],
 	},
 	dicas_de_uso: {
 		type: String,
@@ -57,7 +55,15 @@ const productSchema = new Schema<Product>({
 			"As dicas de uso não podem ter mais de 1.000 caracteres!",
 		],
 	},
-	category: {
+	ingredients: {
+		type: String,
+		maxLength: [
+			3000,
+			"As dicas de uso não podem ter mais de 3.000 caracteres!",
+		],
+		required: false,
+	},
+	categories: {
 		type: Array,
 		required: [true, "Uma categoria do produto é necessária!"],
 	},
@@ -79,33 +85,34 @@ const productSchema = new Schema<Product>({
 		type: String,
 		required: [true, "Um preço para o produto é necessário!"],
 	},
-	available_bottles: [
-		{
-			volume: {
-				type: String,
-				trim: true,
-				maxLength: [14, "O volume não pode ter mais 14 caracteres!"],
-				required: false,
-			},
-			bottle_format: {
-				type: String,
-				trim: true,
-				maxLength: [50, "O volume não pode ter mais 50 caracteres!"],
-				required: false,
-			},
-			available_quantity: {
-				type: String,
-				required: [true, "A quantidade disponível deste produto é necessária!"],
-			},
-			weight: {
-				type: String,
-				required: false,
-			},
+	bottle: {
+		volume: {
+			type: String,
+			trim: true,
+			maxLength: [14, "O volume não pode ter mais 14 caracteres!"],
+			required: false,
 		},
-	],
-	isAvailable: {
+		bottle_format: {
+			type: String,
+			trim: true,
+			maxLength: [50, "O volume não pode ter mais 50 caracteres!"],
+			required: false,
+		},
+		available_quantity: {
+			type: String,
+			required: [true, "A quantidade disponível deste produto é necessária!"],
+		},
+		weight: {
+			type: String,
+			required: false,
+		},
+	},
+	isAvailableToSell: {
 		type: Boolean,
-		required: true,
+		required: [
+			true,
+			"Marque verdadeiro se o produto está disponível para venda!",
+		],
 	},
 });
 

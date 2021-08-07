@@ -1,22 +1,19 @@
 import { ClientChosenProduct } from "../../models/Product";
 import { ThumbnailSlider } from "../ThumbnailSlider";
+import { useState } from "react";
 
 import { Container } from "./styles";
 
 type ProductToBeBoughtSliderProps = {
-	setSelectedProduct: React.Dispatch<React.SetStateAction<number>>;
 	productsToBeBought: ClientChosenProduct[];
-	selectedProduct: number;
 };
 
 export function ProductsToBeBoughtSlider({
 	productsToBeBought,
-	setSelectedProduct,
-	selectedProduct,
 }: ProductToBeBoughtSliderProps) {
-	const imagesSources = productsToBeBought
-		.map(product => product.images)
-		.flat();
+	const [selectedProduct, setSelectedProduct] = useState(0);
+
+	const imagesSources = productsToBeBought.map(product => product.imagePath);
 
 	return (
 		<Container>

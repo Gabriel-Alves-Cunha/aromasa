@@ -32,8 +32,8 @@ function Home() {
 		<Container>
 			<Head>
 				<title>Aromasa Decor</title>
-				<meta name="description" content="Homepage of Aromasa Decor" />
-				<link rel="icon" href="/favicon.ico" />
+				<meta name="description" content="Página inicial da Aromasa Decor" />
+				<link rel="icon" href="/favicon.png" />
 			</Head>
 
 			<HeroContainer>

@@ -11,7 +11,7 @@ type Props = {
 	products: Product[];
 };
 
-export function Products({ products }: Props) {
+function Products({ products }: Props) {
 	console.log("\nProducts client-side =", products);
 
 	return (
@@ -32,18 +32,28 @@ Products.getLayout = (page: ReactNode) => (
 export default Products;
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-	await connectToDatabase();
+	try {
+		await connectToDatabase();
 
-	const products = await ProductModel.find({});
+		const products = await ProductModel.find({});
 
-	console.log(
-		"\nproducts from getServerSideProps in pages/products/index.tsx =",
-		products
-	);
+		console.log(
+			"\nproducts from getServerSideProps in 'pages/products/index.tsx' =",
+			products
+		);
 
-	return {
-		props: {
-			products,
-		},
-	};
+		return {
+			props: {
+				products,
+			},
+		};
+	} catch (error) {
+		console.log(`❗ File: index.tsx\nLine:51\n${typeof error}: 'error'`, error);
+
+		return {
+			props: {
+				products: [],
+			},
+		};
+	}
 };

@@ -9,7 +9,7 @@ const headerData: HeaderData[] = [
 		label: "Home",
 	},
 	{
-		link: "#",
+		link: "/products",
 		label: "Produtos",
 	},
 ];

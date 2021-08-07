@@ -67,26 +67,26 @@ export default function MyDropzone({ files, setFiles }: Props) {
 		</li>
 	));
 
-	const thumbs = previews.map(file => (
+	const thumbsJSXs = previews.map(file => (
 		<div
 			style={{
+				border: "1px solid #eaeaea",
+				boxSizing: "border-box",
 				display: "inline-flex",
 				borderRadius: 2,
-				border: "1px solid #eaeaea",
 				marginBottom: 8,
 				marginRight: 8,
-				width: 100,
 				height: 100,
+				width: 100,
 				padding: 2,
-				boxSizing: "border-box",
 			}}
 			key={file.name}
 		>
 			<div
 				style={{
+					overflow: "hidden",
 					display: "flex",
 					minWidth: 0,
-					overflow: "hidden",
 				}}
 			>
 				<TrashTheImg
@@ -104,10 +104,10 @@ export default function MyDropzone({ files, setFiles }: Props) {
 				<img
 					src={file.preview}
 					style={{
-						display: "block",
 						objectFit: "cover",
-						width: "100%",
+						display: "block",
 						height: "auto",
+						width: "100%",
 					}}
 				/>
 			</div>
@@ -122,14 +122,14 @@ export default function MyDropzone({ files, setFiles }: Props) {
 			</Container>
 			<div
 				style={{
-					display: "flex",
 					flexDirection: "row",
-					width: "40em",
 					flexWrap: "wrap",
+					display: "flex",
+					width: "40em",
 					marginTop: 16,
 				}}
 			>
-				{thumbs.map(e => e)}
+				{thumbsJSXs.map(e => e)}
 			</div>
 			<aside>
 				{fileRejectionJSXs.length > 0 && (

@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback } from "react";
 import { useEmblaCarousel } from "embla-carousel/react";
 import Image from "next/image";
 
@@ -46,8 +46,8 @@ export function ThumbnailSlider({
 							<Thumb
 								isSelected={index === selectedProduct}
 								onClick={() => onThumbClick(index)}
-								key={slide + index}
 								imgSrc={slide}
+								key={slide}
 							/>
 						))}
 					</EmblaContainer>

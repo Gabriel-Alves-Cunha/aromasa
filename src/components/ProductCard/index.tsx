@@ -23,8 +23,8 @@ function _ProductCard({ product }: Props) {
 	return (
 		<Card className={classes.root}>
 			<CardMedia
+				image={product.imagesPaths[0]}
 				className={classes.media}
-				image={product.images[0]}
 				title={product.title}
 			/>
 

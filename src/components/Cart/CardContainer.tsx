@@ -7,26 +7,26 @@ import { ClientChosenProduct } from "../../models/Product";
 import { ImgContainer, StyledButton, Title, Content, Amount } from "./styles";
 
 type Props = {
+	handleAddOneMoreToCart(product: ClientChosenProduct): void;
 	handleSubtractAmount(product: ClientChosenProduct): void;
 	handleRemoveFromCart(product: ClientChosenProduct): void;
-	handleAddToCart(product: ClientChosenProduct): void;
 	product: ClientChosenProduct;
 };
 
 export function CardContainer({
+	handleAddOneMoreToCart,
 	handleSubtractAmount,
 	handleRemoveFromCart,
-	handleAddToCart,
 	product,
 }: Props) {
 	return (
 		<Content>
 			<ImgContainer>
 				<Image
-					src={product.images[0] as string}
+					src={product.imagePath}
+					objectFit="contain"
 					height={200}
 					width={200}
-					objectFit="contain"
 				/>
 			</ImgContainer>
 
@@ -42,11 +42,12 @@ export function CardContainer({
 					</StyledButton>
 
 					<Amount>
-						R$ {product.price} <span>× {product.amountThatWillBeBought ?? 1}</span>
+						R$ {product.price}{" "}
+						<span>× {product.bottle.amountThatWillBeBought || "1"}</span>
 					</Amount>
 
 					<StyledButton
-						onClick={() => handleAddToCart(product)}
+						onClick={() => handleAddOneMoreToCart(product)}
 						title="Adicionar um"
 					>
 						<AiOutlinePlus />
@@ -54,7 +55,7 @@ export function CardContainer({
 				</div>
 
 				<div className="total">
-					<h3>Total: R$ {getPrice(product)}</h3>
+					<h3>Total: R$ {getPriceWithAmount(product)}</h3>
 
 					<StyledButton
 						onClick={() => handleRemoveFromCart(product)}
@@ -68,10 +69,8 @@ export function CardContainer({
 	);
 }
 
-function getPrice(product: ClientChosenProduct) {
-	if (product.amountThatWillBeBought === undefined || product.amountThatWillBeBought < 1) product.amountThatWillBeBought = 1;
+export function getPriceWithAmount(product: ClientChosenProduct) {
+	const amount = product.bottle.amountThatWillBeBought || "1";
 
-	return ((product.amountThatWillBeBought) * Number(product.price))
-		.toFixed(2)
-		.replace(".", ",");
+	return (parseFloat(amount) * parseFloat(product.price)).toFixed(2).replace(".", ",");
 }

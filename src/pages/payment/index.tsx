@@ -18,19 +18,18 @@ export default function Payment() {
 
 	const shipmentDetails: Shipment = { cost: 100, mode: "not_specified" };
 
-	const itemsThatWillBeBought: Items = cartProducts
-		.map(product => ({
-			_id: product._id,
-			title: product.title,
-			description: truncate(product.description, 250),
-			currency_id: "BRL" as Currency,
-			unit_price: product.price,
-			quantity: product.amountThatWillBeBought > 0 ? product.amountThatWillBeBought : 1,
-			picture_url: product.images[0],
-		}))
-		.slice(18);
+	const itemsThatWillBeBought: Items = cartProducts.map(product => ({
+		description: truncate(product.description, 250),
+		currency_id: "BRL" as Currency,
+		chosen_bottle: product.bottle,
+		imagePath: product.imagePath,
+		category: product.categories,
+		price: product.price,
+		title: product.title,
+		_id: product._id,
+	}));
 
-	// console.log("itemsThatWillBeBought =", itemsThatWillBeBought);
+	console.log("itemsThatWillBeBought =", itemsThatWillBeBought);
 
 	const getPreferenceId = async () => {
 		const res = await axios.post("api/payment", {

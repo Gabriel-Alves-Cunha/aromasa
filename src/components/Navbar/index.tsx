@@ -1,12 +1,12 @@
 import cx from "classnames";
 
-import navbarOptions from "./navabar.data";
+import navbarOptions, { NavbarOptions } from "./navabar.data";
 
 import { Container, Option } from "./styles";
 
 type Props = {
-	setActivePage: React.Dispatch<React.SetStateAction<any>>;
-	activePage: string;
+	setActivePage: React.Dispatch<React.SetStateAction<NavbarOptions["label"]>>;
+	activePage: NavbarOptions["label"];
 };
 
 export default function Navbar({ activePage, setActivePage }: Props) {

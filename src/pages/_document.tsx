@@ -1,7 +1,5 @@
-import { ServerStyleSheet } from "styled-components";
 import { ServerStyleSheets as MUIServerStyleSheets } from "@material-ui/core/styles";
-// import flush from "styled-jsx/server";
-
+import { ServerStyleSheet } from "styled-components";
 import Document, {
 	DocumentInitialProps,
 	DocumentContext,
@@ -35,7 +33,6 @@ export default class MyDocument extends Document {
 						{initialProps.styles}
 						{sheet.getStyleElement()}
 						{muiSheet.getStyleElement()}
-						{/* {flush() || null} */}
 					</>
 				),
 			};

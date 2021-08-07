@@ -11,12 +11,11 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 
-import { ProductToAdd } from ".";
-import { Button } from "./styles";
-import { myFormId } from ".";
+import { ProductToAddToTheServer } from ".";
+import { myFormId } from "./helper";
 
 import { Container } from "./modalStyles";
-import { Bottle } from "./styles";
+import { Button } from "./styles";
 
 type Props = {
 	setToast: React.Dispatch<
@@ -28,8 +27,8 @@ type Props = {
 	>;
 	setSaving: React.Dispatch<React.SetStateAction<boolean>>;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	reset: UseFormReset<ProductToAdd>;
-	product: ProductToAdd;
+	reset: UseFormReset<ProductToAddToTheServer>;
+	product: ProductToAddToTheServer;
 	files: File[];
 	open: boolean;
 };
@@ -45,7 +44,7 @@ export function ConfirmationModal({
 }: Props) {
 	const handleClose = () => setOpen(false);
 
-	async function addAProduct(productInfo: ProductToAdd) {
+	async function addAProduct(productInfo: ProductToAddToTheServer) {
 		setSaving(true);
 
 		try {
@@ -69,7 +68,7 @@ export function ConfirmationModal({
 				reset();
 			}
 		} catch (error) {
-			console.debug("\nError in addAProduct() =", error);
+			console.error("\nError in addAProduct() =", error);
 
 			setToast({ success: false, error, resolved: true });
 		}
@@ -91,85 +90,81 @@ export function ConfirmationModal({
 								disabled
 							/>
 							<TextField
-								defaultValue={product.category}
+								defaultValue={product.categories}
 								variant="outlined"
 								label="Categoria"
 								disabled
 							/>
 							<TextField
-								label="Preço"
-								variant="outlined"
-								disabled
-								defaultValue={product.price}
 								InputProps={{
 									startAdornment: (
 										<InputAdornment position="start">R$</InputAdornment>
 									),
 								}}
+								defaultValue={product.price}
+								variant="outlined"
+								label="Preço"
+								disabled
 							/>
 							<div
 								style={{ width: "100%", textAlign: "center", color: "gray" }}
 							>
 								<input
-									type="checkbox"
+									checked={product.isAvailableToSell}
 									style={{ margin: "0.4rem" }}
-									checked={product.isAvailable}
+									type="checkbox"
 									disabled
 								/>
 								<label>Este produto está disponível para venda?</label>
 							</div>
 							<TextField
+								defaultValue={product.usage_tips}
 								label="Dicas de uso"
 								variant="outlined"
-								disabled
 								multiline
-								defaultValue={product.usage_tips}
+								disabled
 							/>
 							<TextField
-								label="Descrição"
+								defaultValue={product.description}
 								variant="outlined"
+								label="Descrição"
 								multiline
 								disabled
-								defaultValue={product.description}
 							/>
-							{product.available_bottles.map((item, index) => (
-								<Bottle key={index} style={{ margin: "2.5rem 0" }}>
-									<TextField
-										variant="outlined"
-										defaultValue={item.bottle_format}
-										label="Formato da garrafa"
-										disabled
-									/>
-									<TextField
-										variant="outlined"
-										label="Quantidade disponível"
-										disabled
-										defaultValue={item.available_quantity}
-									/>
-									<TextField
-										label="Volume"
-										variant="outlined"
-										disabled
-										InputProps={{
-											endAdornment: (
-												<InputAdornment position="start">mL</InputAdornment>
-											),
-										}}
-										defaultValue={item.volume}
-									/>
-									<TextField
-										label="Peso"
-										variant="outlined"
-										InputProps={{
-											endAdornment: (
-												<InputAdornment position="start">Kg</InputAdornment>
-											),
-										}}
-										disabled
-										defaultValue={item.weight}
-									/>
-								</Bottle>
-							))}
+							<TextField
+								defaultValue={product.bottle.bottle_format}
+								label="Formato da garrafa"
+								variant="outlined"
+								disabled
+							/>
+							<TextField
+								defaultValue={product.bottle.available_quantity}
+								label="Quantidade disponível"
+								variant="outlined"
+								disabled
+							/>
+							<TextField
+								InputProps={{
+									endAdornment: (
+										<InputAdornment position="start">mL</InputAdornment>
+									),
+								}}
+								defaultValue={product.bottle.volume}
+								variant="outlined"
+								label="Volume"
+								disabled
+							/>
+							<TextField
+								InputProps={{
+									endAdornment: (
+										<InputAdornment position="start">Kg</InputAdornment>
+									),
+								}}
+								defaultValue={product.bottle.weight}
+								variant="outlined"
+								label="Peso"
+								disabled
+							/>
 						</Container>
 					</Fade>
 				</DialogContentText>
@@ -177,12 +172,12 @@ export function ConfirmationModal({
 
 			<DialogActions>
 				<Button onClick={handleClose} color="primary">
-					Cancel
+					Voltar
 				</Button>
 				<Button
 					onClick={() => {
-						setOpen(false);
 						addAProduct(product);
+						setOpen(false);
 					}}
 				>
 					Confirmar
@@ -208,6 +203,10 @@ function buildFormData(formData: FormData, data: any, parentKey: string) {
 			);
 		});
 	} else {
+		console.log(
+			`[LOG] Entering 'else' clause on file: modal.tsx\nLine:211\n${typeof data}: 'data'`,
+			data
+		);
 		const value = data === null ? "" : data;
 
 		formData.append(parentKey, value);

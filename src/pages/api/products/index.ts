@@ -18,6 +18,7 @@ export default async function talkToDb(
 	await connectToDatabase();
 
 	const { method } = req;
+
 	res.on("end", something => {
 		console.log("\nApi response ended:\n", something);
 		return;
@@ -34,8 +35,6 @@ export default async function talkToDb(
 		console.log("\nApi response closed.\n");
 		return;
 	});
-
-	// console.log("\nreq =", Object.keys(req));
 
 	switch (method) {
 		case "GET" || undefined:
@@ -110,7 +109,7 @@ export default async function talkToDb(
 									);
 								else
 									console.log(
-										`\nSuccessfully removed file with the path of ${filePath}`
+										`\n\nSuccessfully removed file with the path of ${filePath}\n`
 									);
 							})
 						);

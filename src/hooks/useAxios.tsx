@@ -1,11 +1,12 @@
 import axios, { AxiosResponse } from "axios";
-import assert from "node:assert";
 import useSWR from "swr";
+
+import { Product } from "../models/Product";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 type ApiUrl = "api/products" | "api/test" | "api/products/:id";
 
-export function useAxios<DataFormat = any>(
+export function useAxios<DataFormat = Product>(
 	method: Method,
 	url: ApiUrl,
 	reqData?: any
@@ -16,7 +17,7 @@ export function useAxios<DataFormat = any>(
 			await axios({
 				url,
 				method,
-				timeout: 10000,
+				timeout: 10_000, // 10 seconds
 				data: reqData ?? {},
 				headers: { Authorization: "Bearer" },
 			}),

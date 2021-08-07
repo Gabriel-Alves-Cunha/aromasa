@@ -76,10 +76,10 @@ export function SliderWithThumbnail({
 			<Embla>
 				<EmblaViewport ref={mainViewportRef}>
 					<EmblaContainer>
-						{slides.map((slide, index) => (
-							<EmblaSlide key={slide + index}>
+						{slides.map(slide => (
+							<EmblaSlide key={slide}>
 								<EmblaSlideInner>
-									<MainSliderImg slide={slide} index={index} />
+									<MainSliderImg slide={slide} />
 								</EmblaSlideInner>
 							</EmblaSlide>
 						))}
@@ -105,8 +105,8 @@ export function SliderWithThumbnail({
 							<Thumb
 								isSelected={index === selectedImage}
 								onClick={() => onThumbClick(index)}
-								key={slide + index}
 								imgSrc={slide}
+								key={slide}
 							/>
 						))}
 					</EmblaContainer>
@@ -118,14 +118,9 @@ export function SliderWithThumbnail({
 
 //////////////////////////////////////
 
-type MainSliderImgProps = {
-	slide: string;
-	index: number;
-};
-
-function _MainSliderImg({ slide, index }: MainSliderImgProps) {
+function _MainSliderImg({ slide }: { slide: string }) {
 	return (
-		<EmblaSlide key={slide + index}>
+		<EmblaSlide key={slide}>
 			<EmblaSlideInner>
 				<Image className="embla-slide-img" src={slide} layout="fill" />
 			</EmblaSlideInner>
