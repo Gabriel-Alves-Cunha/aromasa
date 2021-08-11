@@ -1,12 +1,15 @@
 import axios, { AxiosResponse } from "axios";
 import useSWR from "swr";
 
-import { Product } from "../models/Product";
-
 type Method = "GET" | "POST" | "PUT" | "DELETE";
-type ApiUrl = "api/products" | "api/test" | "api/products/:id";
+type ApiUrl =
+	| "api/products/:id"
+	| "api/payment/:id"
+	| "api/products"
+	| "api/webhooks"
+	| "api/test";
 
-export function useAxios<DataFormat = Product>(
+export function useAxios<DataFormat = any>(
 	method: Method,
 	url: ApiUrl,
 	reqData?: any

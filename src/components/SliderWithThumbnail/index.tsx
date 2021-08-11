@@ -122,7 +122,11 @@ function _MainSliderImg({ slide }: { slide: string }) {
 	return (
 		<EmblaSlide key={slide}>
 			<EmblaSlideInner>
-				<Image className="embla-slide-img" src={slide} layout="fill" />
+				<Image
+					className="embla-slide-img"
+					src={slide[0] === "/" ? slide : "/" + slide}
+					layout="fill"
+				/>
 			</EmblaSlideInner>
 		</EmblaSlide>
 	);
@@ -147,7 +151,7 @@ function _Thumb({ isSelected, onClick, imgSrc }: ThumbProps) {
 				<Image
 					className="embla-slide-thumb-img embla__slide__thumbnail"
 					layout="fill"
-					src={imgSrc}
+					src={imgSrc[0] === "/" ? imgSrc : "/" + imgSrc}
 				/>
 			</EmblaSlideButton>
 		</EmblaSlide>

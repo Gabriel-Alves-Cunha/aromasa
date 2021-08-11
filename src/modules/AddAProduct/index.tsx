@@ -87,7 +87,7 @@ export function AddAProduct() {
 				id={myFormId}
 				method="post"
 			>
-				<fieldset disabled={saving}>
+				<>
 					<Controller
 						control={control}
 						name="title"
@@ -98,6 +98,7 @@ export function AddAProduct() {
 								error={!!errors.title}
 								inputRef={field.ref}
 								variant="outlined"
+								disabled={saving}
 								label="Título"
 								{...field}
 								required
@@ -116,6 +117,7 @@ export function AddAProduct() {
 								placeholder="Ex.: 'Aromatizador,Difusor'"
 								error={!!errors.categories}
 								variant="outlined"
+								disabled={saving}
 								label="Categoria"
 								inputRef={field.ref}
 								required
@@ -138,6 +140,7 @@ export function AddAProduct() {
 								error={!!errors.price}
 								inputRef={field.ref}
 								variant="outlined"
+								disabled={saving}
 								label="Preço"
 								type="number"
 								{...field}
@@ -156,6 +159,7 @@ export function AddAProduct() {
 								label="Formato da garrafa"
 								inputRef={field.ref}
 								variant="outlined"
+								disabled={saving}
 								{...field}
 							/>
 						)}
@@ -172,6 +176,7 @@ export function AddAProduct() {
 								placeholder="Número inteiro"
 								inputRef={field.ref}
 								variant="outlined"
+								disabled={saving}
 								type="number"
 								{...field}
 								required
@@ -193,6 +198,7 @@ export function AddAProduct() {
 								error={!!errors.bottle?.volume}
 								inputRef={field.ref}
 								variant="outlined"
+								disabled={saving}
 								label="Volume"
 								type="number"
 								{...field}
@@ -214,6 +220,7 @@ export function AddAProduct() {
 								error={!!errors.bottle?.weight}
 								inputRef={field.ref}
 								variant="outlined"
+								disabled={saving}
 								type="number"
 								label="Peso"
 								{...field}
@@ -224,6 +231,7 @@ export function AddAProduct() {
 						<input
 							{...register("isAvailableToSell", { required: true })}
 							style={{ margin: "0.4rem" }}
+							disabled={saving}
 							type="checkbox"
 						/>
 						<label>Este produto está disponível para venda?</label>
@@ -240,6 +248,7 @@ export function AddAProduct() {
 								label="Dicas de uso"
 								inputRef={field.ref}
 								variant="outlined"
+								disabled={saving}
 								{...field}
 								multiline
 							/>
@@ -257,13 +266,14 @@ export function AddAProduct() {
 								inputRef={field.ref}
 								variant="outlined"
 								label="Descrição"
+								disabled={saving}
 								{...field}
 								multiline
 								required
 							/>
 						)}
 					/>
-				</fieldset>
+				</>
 
 				<MyDropzone files={files} setFiles={setFiles} />
 

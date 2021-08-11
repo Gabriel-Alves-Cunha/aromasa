@@ -47,7 +47,7 @@ export function ThumbnailSlider({
 								isSelected={index === selectedProduct}
 								onClick={() => onThumbClick(index)}
 								imgSrc={slide}
-								key={slide}
+								key={slide + index}
 							/>
 						))}
 					</EmblaContainer>
@@ -72,7 +72,7 @@ function _Thumb({ isSelected, onClick, imgSrc }: ThumbProps) {
 				<Image
 					className="embla-slide-thumb-img embla__slide__thumbnail"
 					layout="fill"
-					src={imgSrc}
+					src={imgSrc[0] === "/" ? imgSrc : "/" + imgSrc}
 				/>
 			</EmblaSlideButton>
 		</EmblaSlide>

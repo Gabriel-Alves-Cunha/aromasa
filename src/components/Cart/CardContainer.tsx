@@ -23,8 +23,9 @@ export function CardContainer({
 		<Content>
 			<ImgContainer>
 				<Image
-					src={product.imagePath}
-					objectFit="contain"
+					className="img"
+					src={"/" + product.imagePath}
+					objectFit="cover"
 					height={200}
 					width={200}
 				/>
@@ -70,7 +71,13 @@ export function CardContainer({
 }
 
 export function getPriceWithAmount(product: ClientChosenProduct) {
-	const amount = product.bottle.amountThatWillBeBought || "1";
+	const amount = parseFloat(product.bottle.amountThatWillBeBought || "1");
+	const price = parseFloat(product.price);
 
-	return (parseFloat(amount) * parseFloat(product.price)).toFixed(2).replace(".", ",");
+	if (amount > 0 && price > 0)
+		return (amount * price).toFixed(2).replace(".", ",");
+	else
+		throw new Error(
+			`Houve um erro ao calcular o preço do produto ${product.title}`
+		);
 }

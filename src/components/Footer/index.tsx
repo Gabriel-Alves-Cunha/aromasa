@@ -46,10 +46,10 @@ export function Footer() {
 
 				<Options>
 					{informationOptions.map((item, index) => (
-						<Option key={index}>
+						<Option key={item.link + index}>
 							<Link href={item.link}>
 								<a>
-									<div className={"name"}>
+									<div>
 										<BsChevronRight size={15} style={{ marginRight: 10 }} />
 										{item.title}
 									</div>
@@ -97,6 +97,6 @@ const informationOptions = [
 	},
 	{
 		title: "Política de privacidade e termos de uso",
-		link: "/privacy-policy"
-	}
+		link: "/privacy-policy",
+	},
 ];

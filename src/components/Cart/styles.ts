@@ -38,13 +38,17 @@ export const Header = styled.div`
 
 export const ImgContainer = styled.div`
 	position: relative;
-	height: 100%;
+	height: 200%;
 	width: auto;
 
 	margin-right: 20px;
 
 	justify-content: center;
 	align-items: center;
+
+	.img {
+		border-radius: 5px;
+	}
 `;
 
 export const Content = styled.div`

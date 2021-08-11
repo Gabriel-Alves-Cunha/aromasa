@@ -13,9 +13,9 @@ export default class MyDocument extends Document {
 	static async getInitialProps(
 		ctx: DocumentContext
 	): Promise<DocumentInitialProps> {
-		const sheet = new ServerStyleSheet();
 		const muiSheet = new MUIServerStyleSheets();
 		const originalRenderPage = ctx.renderPage;
+		const sheet = new ServerStyleSheet();
 
 		try {
 			ctx.renderPage = () =>

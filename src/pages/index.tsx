@@ -11,23 +11,6 @@ import { Product } from "../models/Product";
 import Layout from "../components/Layout";
 
 function Home() {
-	// async function insertProduct(event: FormEvent) {
-	// 	event.preventDefault();
-
-	// 	const res = await useAxios<Product>("POST", "api/products", {
-	// 		description: "Produto false nº 1",
-	// 		category: "Falsiane",
-	// 		images: [],
-	// 		title: "Falsê",
-	// 		price: "100,00",
-	// 		availableAmount: 100,
-	// 		isAvailable: true,
-	// 	});
-
-	// 	console.log(JSON.stringify(res));
-	// 	console.log("Hello");
-	// }
-
 	return (
 		<Container>
 			<Head>

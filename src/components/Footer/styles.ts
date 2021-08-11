@@ -3,12 +3,12 @@ import styled from "styled-components";
 import theme from "../../styles/theme";
 
 const { footer } = theme.colors.light;
+export const FOOTER_HEIGHT = "46vh";
 
 export const Container = styled.footer`
-	position: static;
-	bottom: 0;
-	width: 100vw;
-	height: 45vh;
+	position: absolute;
+	width: 100%;
+	height: ${FOOTER_HEIGHT};
 
 	display: flex;
 	flex-direction: row;

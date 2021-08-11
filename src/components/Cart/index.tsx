@@ -35,7 +35,7 @@ export function Cart() {
 	function handleBuyProducts(event: React.MouseEvent<HTMLButtonElement>) {
 		event.preventDefault();
 
-		router.push("/buy");
+		router.push("/cart");
 	}
 
 	return (

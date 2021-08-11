@@ -1,3 +1,4 @@
+import { Button, Grid, Typography } from "@material-ui/core";
 import { toast, ToastContainer } from "react-toastify";
 import axios, { AxiosPromise } from "axios";
 import { useEffect, useState } from "react";
@@ -10,7 +11,7 @@ import { getLayout } from "../../components/Layout";
 import { useCart } from "../../hooks/useCart";
 import { Product } from "../../models/Product";
 
-import { Container, SecondVH } from "./styles";
+import useStyles, { Container, SecondVH } from "./styles";
 
 type InfoNotDownloaded = {
 	productsId: Array<Types.ObjectId>;
@@ -23,7 +24,6 @@ type Availability = {
 };
 
 function Cart() {
-	const router = useRouter();
 	const {
 		handleAddOneMoreToCart,
 		handleRemoveFromCart,
@@ -31,6 +31,12 @@ function Cart() {
 		cartProducts,
 		getSubtotal,
 	} = useCart();
+	const isCartEmpty = !cartProducts.length;
+	const classes = useStyles();
+	const router = useRouter();
+
+	console.log(cartProducts);
+	console.log("Rendering outer function");
 
 	const [
 		erros_de_informações_não_baixadas,
@@ -48,7 +54,8 @@ function Cart() {
 
 	useEffect(() => {
 		if (!canGoToBuyPage) {
-			console.error(
+			console.log(
+				"Erros:",
 				erros_de_informações_não_baixadas,
 				erros_de_disponibilidades
 			);
@@ -70,6 +77,8 @@ function Cart() {
 	}, [canGoToBuyPage]);
 
 	async function checkIfAllProductsAreAvailable() {
+		console.log("Rendering checkIfAllProductsAreAvailable function");
+
 		setCanGoToBuyPage(true);
 
 		const cartProductsId = cartProducts.map(({ _id }) => _id);
@@ -84,6 +93,7 @@ function Cart() {
 		}));
 
 		const responses = await Promise.allSettled(promises);
+		console.log("Responses =", responses);
 
 		const products = responses
 			.map(res => {
@@ -93,8 +103,11 @@ function Cart() {
 				} else return res.value.data;
 			})
 			.filter(p => {
+				console.log("p =", p);
+
 				if (p) return p;
 			}) as Product[]; // either a Product[] or an empty []
+		console.log("Products =", products);
 
 		cartProducts.forEach(cartProduct => {
 			const foundProduct = products.find(({ _id }) => _id === cartProduct._id);
@@ -206,10 +219,56 @@ function Cart() {
 	}
 
 	async function gotoPayment() {
-		await checkIfAllProductsAreAvailable();
+		console.log("Rendering outer gotoPayment");
 
-		if (canGoToBuyPage) router.push("/payment");
+		try {
+			await checkIfAllProductsAreAvailable();
+		} catch (error) {
+			console.log(error);
+		}
+
+		if (canGoToBuyPage) router.push("/checkout");
 	}
+
+	const Empty = () => <div>No items in cart!!</div>;
+
+	const Filled = () => (
+		<>
+			<Grid container spacing={3}>
+				{cartProducts.map(product => (
+					<Grid item xs={12} sm={4} key={product._id.toString()}>
+						<div>{product.title}</div>
+					</Grid>
+				))}
+			</Grid>
+
+			<div className={classes.cardDetails}>
+				<Typography variant="h4">Subtotal: R$ {getSubtotal()}</Typography>
+
+				<div>
+					<Button
+						className={classes.emptyButton}
+						variant="contained"
+						color="secondary"
+						type="button"
+						size="large"
+					>
+						Esvaziar carrinho
+					</Button>
+					<Button
+						className={classes.checkoutButton}
+						onClick={gotoPayment}
+						variant="contained"
+						color="primary"
+						type="button"
+						size="large"
+					>
+						Checkout
+					</Button>
+				</div>
+			</div>
+		</>
+	);
 
 	return (
 		<Container>
@@ -221,7 +280,11 @@ function Cart() {
 			<ToastContainer />
 
 			<SecondVH>
-				<ProductsToBeBoughtSlider productsToBeBought={cartProducts} />
+				{/* <ProductsToBeBoughtSlider productsToBeBought={cartProducts} /> */}
+				<Typography className={classes.title} variant="h3">
+					Seu carrinho
+				</Typography>
+				{isCartEmpty ? <Empty /> : <Filled />}
 			</SecondVH>
 		</Container>
 	);

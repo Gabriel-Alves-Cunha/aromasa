@@ -53,15 +53,13 @@ const yupSchema = yup.object().shape({
 const myFormId = "add-product-form";
 
 const defaultProduct: ProductToAddToTheServer = {
-	available_bottles: [
-		{
-			available_quantity: "",
-			bottle_format: "",
-			volume: undefined,
-			weight: undefined,
-		},
-	],
-	isAvailable: false,
+	bottle: {
+		available_quantity: "",
+		bottle_format: "",
+		volume: undefined,
+		weight: undefined,
+	},
+	isAvailableToSell: false,
 	description: "",
 	imagesPaths: [],
 	ingredients: "",
