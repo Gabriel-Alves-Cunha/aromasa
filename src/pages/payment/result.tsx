@@ -41,6 +41,12 @@ function Result() {
 	);
 }
 
+function Loading() {
+	return (
+		<div></div>
+	)
+}
+
 function Success() {
 	return (
 		<div style={{ marginTop: "90px" }}>
