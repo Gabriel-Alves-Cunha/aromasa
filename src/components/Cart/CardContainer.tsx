@@ -23,9 +23,10 @@ export function CardContainer({
 		<Content>
 			<ImgContainer>
 				<Image
-					className="img"
+					alt="Imagem ilustrativa do produto."
 					src={"/" + product.imagePath}
 					objectFit="cover"
+					className="img"
 					height={200}
 					width={200}
 				/>
@@ -43,7 +44,7 @@ export function CardContainer({
 					</StyledButton>
 
 					<Amount>
-						R$ {product.price}{" "}
+						R$ {product.price.replace(".", ",")}{" "}
 						<span>× {product.bottle.amountThatWillBeBought || "1"}</span>
 					</Amount>
 

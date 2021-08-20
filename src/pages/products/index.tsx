@@ -1,41 +1,94 @@
+import { toast, ToastContainer } from "react-toastify";
 import { GetServerSideProps } from "next";
-import { ReactNode } from "react";
+import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";
 
 import { ProductModel, Product } from "../../models/Product";
 import { ProductCard } from "../../components/ProductCard";
+import { getLayout } from "../../components/Layout";
+import { useCart } from "../../hooks/useCart";
+import { Header } from "../../components";
 import connectToDatabase from "../../utils/connectToMongoDB";
 import fakeProducts from "../../../products_example2.json";
-import Layout from "../../components/Layout";
 
 import useStyles from "./styles";
+import "react-toastify/dist/ReactToastify.css";
 
 type Props = {
 	products: Product[];
 };
 // { products }: Props
 function Products() {
+	const { handleAddPossibleNewProductToCart, cartProducts } = useCart();
 	const products: Product[] = fakeProducts;
 	const classes = useStyles();
-	console.log("\nProducts client-side =", products);
+	const router = useRouter();
+
+	console.log(
+		`❗ File: index.tsx\nLine:27\n${typeof cartProducts}: 'cartProducts'`,
+		cartProducts
+	);
+
+	function gotoProductPage() {
+		console.log("gotoProductPage");
+
+		//router.push(`/product/${product._id.toString()}`);
+	}
+
+	function handleAddToCart(product: Product) {
+		handleAddPossibleNewProductToCart(product);
+
+		toast.success("🦄 Produto adicionado ao carrinho!", {
+			hideProgressBar: false,
+			position: "top-left",
+			progress: undefined,
+			closeOnClick: true,
+			pauseOnHover: true,
+			autoClose: 3000,
+			draggable: true,
+		});
+	}
+
+	// console.log("\nProducts client-side =", products);
 
 	return (
-		<div className={classes.content}>
-			<div className={classes.addHeaderHeight} />
-			<Grid justifyContent="center" spacing={4} container>
-				{products?.map(product => (
-					<Grid item key={product._id.toString()} xs={12} sm={6} md={4} lg={3}>
-						<ProductCard product={product} />
-					</Grid>
-				))}
-			</Grid>
-		</div>
+		<>
+			<Header currentPage="Produtos" />
+
+			<div className={classes.content}>
+				<ToastContainer />
+
+				<div className={classes.addHeaderHeight} />
+				<Grid
+					justifyContent="center"
+					alignItems="stretch"
+					direction="row"
+					spacing={4}
+					container
+				>
+					{products?.map(product => (
+						<Grid
+							key={product._id.toString()}
+							xs={12}
+							sm={6}
+							md={4}
+							lg={3}
+							item
+						>
+							<ProductCard
+								gotoProductPage={gotoProductPage}
+								handleAddToCart={handleAddToCart}
+								product={product}
+							/>
+						</Grid>
+					))}
+				</Grid>
+			</div>
+		</>
 	);
 }
 
-Products.getLayout = (page: ReactNode) => (
-	<Layout currentPage="Produtos">{page}</Layout>
-);
+Products.getLayout = getLayout;
 
 export default Products;
 

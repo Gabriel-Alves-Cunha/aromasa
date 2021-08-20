@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import Image from "next/image";
 import Head from "next/head";
 
@@ -8,45 +7,48 @@ import { HeroContainer, Container } from "../styles/pages";
 import { NewArrivals } from "../modules/NewArrivals";
 import { Instagram } from "../components/Instagram";
 import { Product } from "../models/Product";
-import Layout from "../components/Layout";
+import { Header } from "../components";
+import { getLayout } from "../components/Layout";
 
 function Home() {
 	return (
-		<Container>
-			<Head>
-				<title>Aromasa Decor</title>
-				<meta name="description" content="Página inicial da Aromasa Decor" />
-				<link rel="icon" href="/favicon.png" />
-			</Head>
+		<>
+			<Header currentPage="Home" />
 
-			<HeroContainer>
-				<Image
-					alt="Photo by Alesia Kozik from Pexels"
-					className="hero_img"
-					objectFit="cover"
-					priority
-					src={bg}
-				/>
+			<Container>
+				<Head>
+					<title>Aromasa Decor</title>
+					<meta name="description" content="Página inicial da Aromasa Decor" />
+					<link rel="icon" href="/favicon.png" />
+				</Head>
 
-				<div className="text_block">
-					<h2>Aromas</h2>
-					<p>
-						Perfumor is the place where you can get high-quality fragrances from
-						certified consultants, who are not just professionals but also
-						talented masters.
-					</p>
-				</div>
-			</HeroContainer>
+				<HeroContainer>
+					<Image
+						alt="Photo by Alesia Kozik from Pexels"
+						className="hero_img"
+						objectFit="cover"
+						priority
+						src={bg}
+					/>
 
-			<NewArrivals />
+					<div className="text_block">
+						<h2>Aromas</h2>
+						<p>
+							Perfumor is the place where you can get high-quality fragrances
+							from certified consultants, who are not just professionals but
+							also talented masters.
+						</p>
+					</div>
+				</HeroContainer>
 
-			<Instagram />
-		</Container>
+				<NewArrivals />
+
+				<Instagram />
+			</Container>
+		</>
 	);
 }
 
-Home.getLayout = (page: ReactNode) => (
-	<Layout currentPage="Home">{page}</Layout>
-);
+Home.getLayout = getLayout;
 
 export default Home;

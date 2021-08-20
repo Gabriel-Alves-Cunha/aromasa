@@ -122,9 +122,14 @@ export const ConfirmButton = styled.button`
 
 	transition: box-shadow 0.3s ease-in 0s, opacity 0.2s ease 0s;
 
-	&:hover {
+	&:disabled {
+		cursor: default;
+		opacity: 0.4;
+	}
+
+	&:hover:enabled {
 		box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
-			0 17px 50px 0 rgba(0, 0, 0, 0.19);
+			0 17px 20px 0 rgba(0, 0, 0, 0.19);
 	}
 
 	&:active {

@@ -1,7 +1,20 @@
-import { useCallback, useState } from "react";
+import { ReactNode, useState, createContext, useContext } from "react";
 
 import { ClientChosenProduct, Product } from "../models/Product";
 import fakeProducts from "../../products_example2.json";
+
+export type CartContextProps = {
+	handleAddOneMoreToCart(productToBeAdded: ClientChosenProduct | Product): void;
+	handleAddPossibleNewProductToCart(newProduct: Product): void;
+	handleSubtractAmount(product: ClientChosenProduct): void;
+	handleRemoveFromCart(product: ClientChosenProduct): void;
+	cartProducts: ClientChosenProduct[];
+	getSubtotal(): string;
+};
+
+type CartProviderProps = {
+	children: ReactNode;
+};
 
 const fakeClientChosenProducts: ClientChosenProduct[] = fakeProducts.map(
 	product => ({
@@ -21,26 +34,29 @@ const fakeClientChosenProducts: ClientChosenProduct[] = fakeProducts.map(
 	})
 );
 
-export function useCart() {
-	const [cartProducts, setCartProducts] = useState(fakeClientChosenProducts);
+export const CartContext = createContext({} as CartContextProps);
 
-	const handleAddPossilbeNewProductToCart = (newProduct: Product) => {
+function CartProvider({ children }: CartProviderProps) {
+	const [cartProducts, setCartProducts] = useState([] as ClientChosenProduct[]);
+
+	function handleAddPossilbeNewProductToCart(newProduct: Product) {
 		const isProductInCart = cartProducts.some(
 			({ _id }) => _id === newProduct._id
 		);
+		console.log("isProductInCart =", isProductInCart);
 
 		// Add one more to the cart:
 		if (isProductInCart) handleAddOneMoreToCart(newProduct);
 		// Add new one to the cart:
-		else
+		else {
 			setCartProducts(oldCartProducts => [
 				...oldCartProducts,
 				{
 					bottle: {
-						amountThatWillBeBought: "1",
 						bottle_format: newProduct.bottle.bottle_format,
 						volume: newProduct.bottle.volume,
 						weight: newProduct.bottle.weight,
+						amountThatWillBeBought: "1",
 					},
 					imagePath: newProduct.imagesPaths[0],
 					ingredients: newProduct.ingredients,
@@ -51,11 +67,16 @@ export function useCart() {
 					_id: newProduct._id,
 				},
 			]);
-	};
 
-	const handleAddOneMoreToCart = (
+			console.log("Added new product to product.", newProduct._id);
+		}
+	}
+
+	function handleAddOneMoreToCart(
 		productToBeAdded: ClientChosenProduct | Product
-	) => {
+	) {
+		console.log("Adding one more to cart.", productToBeAdded._id);
+
 		const productInCartIndex = cartProducts.findIndex(
 			({ _id }) => _id === productToBeAdded._id
 		);
@@ -77,9 +98,9 @@ export function useCart() {
 
 			return newCartProducts;
 		});
-	};
+	}
 
-	const handleSubtractAmount = (product: ClientChosenProduct) => {
+	function handleSubtractAmount(product: ClientChosenProduct) {
 		const productIndex = cartProducts.findIndex(
 			({ _id }) => _id === product._id
 		);
@@ -102,15 +123,15 @@ export function useCart() {
 				return newCartProducts;
 			});
 		}
-	};
+	}
 
-	const handleRemoveFromCart = (product: ClientChosenProduct) => {
+	function handleRemoveFromCart(product: ClientChosenProduct) {
 		setCartProducts(oldCartProducts =>
 			oldCartProducts.filter(({ _id }) => _id !== product._id)
 		);
-	};
+	}
 
-	const getSubtotal = () => {
+	function getSubtotal() {
 		const subtotal = cartProducts.reduce(
 			(acc, { bottle: { amountThatWillBeBought }, price: price_ }) => {
 				const amount = parseFloat(amountThatWillBeBought) || 1;
@@ -125,14 +146,24 @@ export function useCart() {
 		} else {
 			throw new Error("Houve um erro na contabilização do preço subtotal!");
 		}
-	};
+	}
 
-	return {
-		handleAddPossilbeNewProductToCart,
-		handleAddOneMoreToCart,
-		handleSubtractAmount,
-		handleRemoveFromCart,
-		cartProducts,
-		getSubtotal,
-	};
+	return (
+		<CartContext.Provider
+			value={{
+				handleAddPossibleNewProductToCart: handleAddPossilbeNewProductToCart,
+				handleAddOneMoreToCart,
+				handleSubtractAmount,
+				handleRemoveFromCart,
+				cartProducts,
+				getSubtotal,
+			}}
+		>
+			{children}
+		</CartContext.Provider>
+	);
 }
+
+const useCart = () => useContext(CartContext);
+
+export { useCart, CartProvider };

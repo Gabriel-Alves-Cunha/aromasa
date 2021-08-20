@@ -10,6 +10,7 @@ import { ProductsToBeBoughtSlider } from "../../components/ProductsToBeBoughtSli
 import { getLayout } from "../../components/Layout";
 import { useCart } from "../../hooks/useCart";
 import { Product } from "../../models/Product";
+import { Header } from "../../components";
 
 import useStyles, { Container, SecondVH } from "./styles";
 
@@ -271,22 +272,26 @@ function Cart() {
 	);
 
 	return (
-		<Container>
-			<Head>
-				<title>Aromasa Decor - Carrinho</title>
-				<meta name="description" content="Carrinho" />
-			</Head>
+		<>
+			<Header />
 
-			<ToastContainer />
+			<Container>
+				<Head>
+					<title>Aromasa Decor - Carrinho</title>
+					<meta name="description" content="Carrinho" />
+				</Head>
 
-			<SecondVH>
-				{/* <ProductsToBeBoughtSlider productsToBeBought={cartProducts} /> */}
-				<Typography className={classes.title} variant="h3">
-					Seu carrinho
-				</Typography>
-				{isCartEmpty ? <Empty /> : <Filled />}
-			</SecondVH>
-		</Container>
+				<ToastContainer />
+
+				<SecondVH>
+					{/* <ProductsToBeBoughtSlider productsToBeBought={cartProducts} /> */}
+					<Typography className={classes.title} variant="h3">
+						Seu carrinho
+					</Typography>
+					{isCartEmpty ? <Empty /> : <Filled />}
+				</SecondVH>
+			</Container>
+		</>
 	);
 }
 

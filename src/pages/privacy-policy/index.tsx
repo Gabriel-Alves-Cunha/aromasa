@@ -1,10 +1,13 @@
 import { getLayout } from "../../components/Layout";
+import { Header } from "../../components";
 
 import { Container, Content } from "./styles";
 
 function PrivacyPolicy() {
 	return (
 		<Container>
+			<Header />
+
 			<Content>
 				<h2>Política Privacidade</h2>
 				<p>
@@ -35,7 +38,11 @@ function PrivacyPolicy() {
 					por nós. Esteja ciente de que não temos controle sobre o conteúdo e
 					práticas desses sites e não podemos aceitar responsabilidade por suas
 					respectivas{" "}
-					<a href="https://politicaprivacidade.com" target="_BLANK">
+					<a
+						href="https://politicaprivacidade.com"
+						rel="noreferrer"
+						target="_BLANK"
+					>
 						políticas de privacidade
 					</a>
 					.{" "}

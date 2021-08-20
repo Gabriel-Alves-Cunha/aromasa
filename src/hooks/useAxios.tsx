@@ -6,7 +6,6 @@ type ApiUrl =
 	| "api/products/:id"
 	| "api/payment/:id"
 	| "api/products"
-	| "api/webhooks"
 	| "api/test";
 
 export function useAxios<DataFormat = any>(

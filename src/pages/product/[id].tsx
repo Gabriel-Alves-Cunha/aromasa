@@ -5,7 +5,9 @@ import Image from "next/image";
 import Head from "next/head";
 
 import { ProductSlider_WithThumbnail } from "../../components/ProductSlider_WithThumbnail";
+import { getLayout } from "../../components/Layout";
 import { Product } from "../../models/Product";
+import { Header } from "../../components";
 
 import {
 	ProductSliderContainer,
@@ -20,36 +22,40 @@ type Props = {
 	product: Product;
 };
 
-export default function ProductCard({ product }: Props) {
+function ProductCard({ product }: Props) {
 	const router = useRouter();
 
-	async function goToPageOfProduct(product: Product) {
-		router.push(`product/${product._id.toString()}`);
-	}
-
 	return (
-		<Container>
-			<Head>
-				<title>Aromasa Decor - Produto</title>
-				<meta name="description" content="Produto" />
-			</Head>
+		<>
+			<Header currentPage="Home" />
 
-			<FirstViewHeight>
-				<ProductSliderContainer>
-					<ProductSlider_WithThumbnail imagesPaths={product.imagesPaths} />
-				</ProductSliderContainer>
+			<Container>
+				<Head>
+					<title>Aromasa Decor - Produto</title>
+					<meta name="description" content="Produto" />
+				</Head>
 
-				<InfoContainer>
-					<Title>{product.title}</Title>
+				<FirstViewHeight>
+					<ProductSliderContainer>
+						<ProductSlider_WithThumbnail imagesPaths={product.imagesPaths} />
+					</ProductSliderContainer>
 
-					<Details>
-						{product.categories.map(category => category + ", ")}
-					</Details>
-				</InfoContainer>
-			</FirstViewHeight>
-		</Container>
+					<InfoContainer>
+						<Title>{product.title}</Title>
+
+						<Details>
+							{product.categories.map(category => category + ", ")}
+						</Details>
+					</InfoContainer>
+				</FirstViewHeight>
+			</Container>
+		</>
 	);
 }
+
+ProductCard.getLayout = getLayout;
+
+export default ProductCard;
 
 export const getStaticProps: GetStaticProps = async ctx => {
 	console.log("\ngetStaticProps ctx =", ctx);

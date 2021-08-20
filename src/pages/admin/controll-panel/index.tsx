@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import { getFooterlessLayout } from "../../../components/Layout";
 import { DeleteAProduct } from "../../../modules/DeleteAProduct";
+import { Header, Navbar } from "../../../components";
 import { AlterAProduct } from "../../../modules/AlterAProduct";
 import { NavbarOptions } from "../../../components/Navbar/navabar.data";
 import { AddAProduct } from "../../../modules/AddAProduct";
-import { Navbar } from "../../../components";
+import { getLayout } from "../../../components/Layout";
 
 import { Container } from "./styles";
 
@@ -16,20 +16,24 @@ function ControllPanel() {
 	console.log(activePage);
 
 	return (
-		<Container>
-			<Navbar activePage={activePage} setActivePage={setActivePage} />
+		<>
+			<Header />
 
-			{(() => {
-				if (activePage === "Adicionar um produto") {
-					return <AddAProduct />;
-				} else if (activePage === "Alterar um produto")
-					return <AlterAProduct />;
-				else if (activePage === "Deletar um produto") return <DeleteAProduct />;
-			})()}
-		</Container>
+			<Container>
+				<Navbar activePage={activePage} setActivePage={setActivePage} />
+
+				{(() => {
+					if (activePage === "Adicionar um produto") return <AddAProduct />;
+					else if (activePage === "Alterar um produto")
+						return <AlterAProduct />;
+					else if (activePage === "Deletar um produto")
+						return <DeleteAProduct />;
+				})()}
+			</Container>
+		</>
 	);
 }
 
-ControllPanel.getLayout = getFooterlessLayout;
+ControllPanel.getLayout = getLayout;
 
 export default ControllPanel;

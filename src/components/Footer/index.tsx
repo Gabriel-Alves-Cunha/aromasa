@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Sublogo from "../../assets/logos/sublogo_preto.png";
+import { envVariables } from "../../storage/env";
 
 import {
 	LogoContainer,
@@ -17,11 +18,11 @@ export function Footer() {
 	return (
 		<Container>
 			<LogoContainer>
-				<Image src={Sublogo} />
+				<Image src={Sublogo} alt="Logo da Aromasa Decor." />
 			</LogoContainer>
 
 			<Social>
-				<h1>Redes sociais</h1>
+				<h2>Redes sociais</h2>
 
 				<div className="border-bottom-size" />
 
@@ -40,7 +41,7 @@ export function Footer() {
 			</Social>
 
 			<Contact>
-				<h1>Informações</h1>
+				<h2>Informações</h2>
 
 				<div className="border-bottom-size" />
 
@@ -66,7 +67,7 @@ export function Footer() {
 const socialNetworkOptions = [
 	{
 		title: "INSTAGRAM",
-		link: "/",
+		link: "https://www.instagram.com/aromasadecor/",
 	},
 	{
 		title: "PINTEREST",
@@ -89,7 +90,7 @@ const informationOptions = [
 	},
 	{
 		title: "Fale conosco",
-		link: "/",
+		link: `mailto:${envVariables.contactEmail}`,
 	},
 	{
 		title: "Entregas e devoluções",

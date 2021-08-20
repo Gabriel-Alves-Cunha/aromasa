@@ -1,12 +1,15 @@
 import { getLayout } from "../../components/Layout";
+import { Header } from "../../components";
 
 import { Container } from "./styles";
 
 function DataExclusion() {
 	return (
-		<Container>
+		<>
+			<Header />
 
-		</Container>
+			<Container></Container>
+		</>
 	);
 }
 

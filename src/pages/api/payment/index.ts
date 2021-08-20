@@ -22,16 +22,14 @@ export default async function talkToServer(
 				const redirect_url = `${req.headers.origin}/payment/result?session_id={CHECKOUT_SESSION_ID}`;
 
 				const session = await stripe.checkout.sessions.create({
-					payment_method_types: ["card", "boleto"],
 					line_items: pricesIdsAndquantities,
-					mode: "payment",
+					payment_method_types: ["card"],
 					success_url: redirect_url,
 					cancel_url: redirect_url,
+					mode: "payment",
 				});
 
-				console.log("\nsession =", session);
-
-				res.json({ sessionId: session.id, session });
+				res.json({ sessionId: session.id });
 			} catch (error) {
 				console.log(error);
 
@@ -42,7 +40,7 @@ export default async function talkToServer(
 			break;
 		default:
 			res.json({
-				error: "Entered default case. 'POST' is the only method supported.",
+				error: "Entered default case! 'POST' is the only method supported.",
 			});
 			break;
 	}

@@ -40,22 +40,30 @@ export const LogoContainer = styled.div`
 export const Social = styled.div`
 	width: 20vw;
 
-	font-family: ${theme.fonts.brand};
-	color: ${theme.colors.dark.background};
+	font-family: ${theme.fonts.primary};
+	/* color: ${theme.colors.dark.background}; */
 
-	h1 {
-		font-size: 3rem;
+	h1,
+	h2,
+	h3,
+	h4 {
+		font-size: 1.5rem;
+		font-weight: 500;
 	}
 `;
 
 export const Contact = styled.div`
 	width: 20vw;
 
-	font-family: ${theme.fonts.brand};
+	font-family: ${theme.fonts.primary};
 	color: ${theme.colors.dark.background};
 
-	h1 {
-		font-size: 3rem;
+	h1,
+	h2,
+	h3,
+	h4 {
+		font-size: 1.5rem;
+		font-weight: 500;
 	}
 `;
 

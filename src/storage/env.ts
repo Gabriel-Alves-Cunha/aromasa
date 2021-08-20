@@ -3,6 +3,7 @@ const envVariables = {
 	mercadoPagoAccessToken: "",
 	mercadoPagoPublicKey: "",
 	stripePublishableKey: "",
+	contactEmailPassword: "",
 	stripeSecretKey: "",
 	contactEmail: "",
 	aromasaUrl: "",
@@ -31,7 +32,9 @@ if (process.env.NODE_ENV === "development") {
 
 	envVariables.stripeSecretKey = process.env.STRIPE_TEST_SECRET_KEY ?? "";
 
-	envVariables.contactEmail = process.env.CONTACT_EMAIL ?? "";
+	envVariables.contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "";
+
+	envVariables.contactEmailPassword = process.env.CONTACT_EMAIL_PASSWORD ?? "";
 
 	envVariables.stripeWebhookEndpointSecret =
 		process.env.STRIPE_WEBHOOK_ENDPOINT_TEST_SECRET ?? "";
@@ -55,7 +58,9 @@ if (process.env.NODE_ENV === "development") {
 
 	envVariables.stripeSecretKey = process.env.STRIPE_SECRET_KEY ?? "";
 
-	envVariables.contactEmail = process.env.CONTACT_EMAIL ?? "";
+	envVariables.contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "";
+
+	envVariables.contactEmailPassword = process.env.CONTACT_EMAIL_PASSWORD ?? "";
 
 	envVariables.stripeWebhookEndpointSecret =
 		process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET ?? "";

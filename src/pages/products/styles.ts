@@ -6,10 +6,10 @@ export const Container = styled.div`
 `;
 
 export default makeStyles(theme => ({
-	addHeaderHeight: theme.mixins.toolbar,
+	addHeaderHeight: { marginTop: "90px" },
 	content: {
 		flexGrow: 1,
-		backgroundColor: theme.palette.background.default,
+		backgroundColor: "white",
 		padding: theme.spacing(3),
 	},
 	root: {

@@ -3,9 +3,11 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useState } from "react";
 import axios from "axios";
 
+import { ClientChosenProduct } from "../../models/Product";
 import { envVariables } from "../../storage/env";
 import { getLayout } from "../../components/Layout";
 import { useCart } from "../../hooks/useCart";
+import { Header } from "../../components";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,8 +16,8 @@ function Checkout() {
 
 	const [isLoading, setIsLoading] = useState(false);
 
-	async function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-		e.preventDefault();
+	async function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+		event.preventDefault();
 		setIsLoading(true);
 
 		// const pricesIdsAndquantities = () =>
@@ -41,20 +43,18 @@ function Checkout() {
 					},
 				}
 			);
-			// When the customer clicks on the button, redirect them to Checkout.
-			const stripe = await getStripe();
-			console.log("StripePromise");
 
+			const stripe = await getStripe();
+			// When the customer clicks on the button, redirect them to Checkout.
 			//@ts-ignore
 			const { error } = await stripe?.redirectToCheckout({
 				sessionId: data.sessionId,
 			});
-			console.log("redirectToCheckout. Error =", error);
 
 			if (error) {
 				console.log("redirectToCheckout error:", error);
 				toast.error(
-					`🦄 Houve um erro ao comprar o produto!\n${error.message}`,
+					`🦄 Houve um erro ao comprar o produto! Por favor, tente novamente.\n${error.message}`,
 					{
 						hideProgressBar: false,
 						position: "top-right",
@@ -85,6 +85,8 @@ function Checkout() {
 	// TODO: cart products
 	return (
 		<>
+			<Header />
+
 			<ToastContainer />
 
 			<div className="product">
@@ -100,6 +102,16 @@ function Checkout() {
 			<button type="button" onClick={handleClick} disabled={isLoading}>
 				Checkout
 			</button>
+		</>
+	);
+}
+
+function ProductJSXs(products: ClientChosenProduct[]) {
+	return (
+		<>
+			{products.map(product => (
+				<></>
+			))}
 		</>
 	);
 }

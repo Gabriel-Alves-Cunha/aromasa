@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { Drawer, Badge } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 import { CardContainer } from "./CardContainer";
 import { Divider } from "../Divider";
@@ -16,6 +16,7 @@ import {
 	Header,
 } from "./styles";
 import theme from "../../styles/theme";
+import { useEffect } from "react";
 
 export function Cart() {
 	const classes = useStyles();
@@ -28,14 +29,19 @@ export function Cart() {
 		getSubtotal,
 	} = useCart();
 
+	console.log(
+		`❗ File: index.tsx\nLine:32\n${typeof cartProducts}: 'cartProducts'`,
+		cartProducts
+	);
+
 	const [show, setShow] = useState(false);
 
-	const handleOpenCart = useCallback(() => setShow(oldValue => !oldValue), []);
+	const handleOpenCart = () => setShow(oldValue => !oldValue);
 
-	function handleBuyProducts(event: React.MouseEvent<HTMLButtonElement>) {
+	async function handleBuyProducts(event: React.MouseEvent<HTMLButtonElement>) {
 		event.preventDefault();
 
-		router.push("/cart");
+		await router.push("/cart");
 	}
 
 	return (
