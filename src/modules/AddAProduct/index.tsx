@@ -116,10 +116,10 @@ export function AddAProduct() {
 								helperText={errors.categories?.[0]?.message}
 								placeholder="Ex.: 'Aromatizador,Difusor'"
 								error={!!errors.categories}
+								inputRef={field.ref}
 								variant="outlined"
 								disabled={saving}
 								label="Categoria"
-								inputRef={field.ref}
 								required
 							/>
 						)}

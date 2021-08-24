@@ -1095,6 +1095,14 @@ caniuse-lite@^1.0.30001202, caniuse-lite@^1.0.30001219, caniuse-lite@^1.0.300012
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001251.tgz#6853a606ec50893115db660f82c094d18f096d85"
   integrity sha512-HOe1r+9VkU4TFmnU70z+r7OLmtR+/chB1rdcJUeQlAinjEeb0cKL20tlAtOagNZhbrtLnCvV19B4FmF1rgzl6A==
 
+cep-promise@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/cep-promise/-/cep-promise-4.1.1.tgz#21a5b98bab22e77a711ac3644bcf54c7f137076d"
+  integrity sha512-SXxOV4qsY2vt31zuoOQfCz164Y4Aa8WrzCC1TZ74WeO8GeSqlAKEjsa+3sYH0iG6cD0qKhX6JDysF/TixhTIdw==
+  dependencies:
+    node-fetch "2.6.1"
+    unfetch "4.1.0"
+
 chalk@2.4.2, chalk@^2.0.0:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -4624,6 +4632,11 @@ unbox-primitive@^1.0.1:
     has-symbols "^1.0.2"
     which-boxed-primitive "^1.0.2"
 
+unfetch@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/unfetch/-/unfetch-4.1.0.tgz#6ec2dd0de887e58a4dee83a050ded80ffc4137db"
+  integrity sha512-crP/n3eAPUJxZXM9T80/yv0YhkTEx2K1D3h7D1AJM6fzsWZrxdyRuLN0JH/dkZh1LNH8LxCnBzoPFCPbb2iGpg==
+
 unpipe@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
@@ -4706,6 +4719,11 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+validations-br@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/validations-br/-/validations-br-1.2.0.tgz#254c3a7982667cada8935e633c7a4168e1d98de1"
+  integrity sha512-BHoRZMH+GklOObdxnqatyo0JxpiKxzzRwLHOHAbSeBJ1REB5yBietcmyMK7pR7JwzWuLiU2CwTF/xpY7CmP7XQ==
 
 value-equal@^1.0.1:
   version "1.0.1"

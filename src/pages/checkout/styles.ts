@@ -1,6 +1,6 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 
-export default makeStyles((theme: Theme) =>
+export const useStyles = makeStyles((theme: Theme) =>
 	createStyles({
 		root: {
 			"& > *": {
@@ -8,11 +8,5 @@ export default makeStyles((theme: Theme) =>
 				width: "25ch",
 			},
 		},
-		actionArea: {},
-		media: {},
-		cardContent: {},
-		title: {},
-		price: {},
-		cardActions: {},
 	})
 );
