@@ -8,5 +8,16 @@ export const useStyles = makeStyles((theme: Theme) =>
 				width: "25ch",
 			},
 		},
+		submit: {},
+		a: {
+			fontSize: 13,
+			color: "lightgray",
+			"&:hover": {
+				color: "#3e47ee",
+				transition: "all 0.1s ease",
+				textDecoration: "underline",
+			},
+		},
+		cep: { width: 400 },
 	})
 );

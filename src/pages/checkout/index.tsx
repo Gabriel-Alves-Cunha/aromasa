@@ -1,23 +1,38 @@
+import { Grid, InputAdornment, TextField } from "@material-ui/core";
 import { toast, ToastContainer } from "react-toastify";
-import { Controller, useForm } from "react-hook-form";
-import { Grid, TextField } from "@material-ui/core";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 import cep from "cep-promise";
 
-import { defaultValues, FrenetForm, getStripe, yupSchema } from "./helper";
-import { CheckoutCardForProduct } from "../../components/CheckoutCardForProduct";
-import { ClientChosenProduct } from "../../models/Product";
-import { envVariables } from "../../storage/env";
-import { getLayout } from "../../components/Layout";
-import { useCart } from "../../hooks/useCart";
-import { Header } from "../../components";
+import { CheckoutCardForProduct } from "components/CheckoutCardForProduct";
+import { ClientChosenProduct } from "models/Product";
+import { envVariables } from "storage/env";
+import { getLayout } from "components/Layout";
+import { useCart } from "hooks/useCart";
+import { Header } from "components";
+import {
+	urlDeNãoSeiMeuCep,
+	partialYupSchema,
+	defaultValues,
+	foneFormatado,
+	cepFormatado,
+	cpfFormatado,
+	FrenetForm,
+	getStripe,
+	yupSchema,
+} from "./helper";
 
 import { useStyles } from "./styles";
 import "react-toastify/dist/ReactToastify.css";
+import { validateCep, validateCPF } from "validations-br";
+
+console.log(`\n\n${cepFormatado("56320700")}`);
+console.log(`\n\n${cpfFormatado("04174360170")}`);
+console.log(`\n\n${foneFormatado("87999633141")}`);
 
 function Checkout() {
 	const { cartProducts } = useCart();
@@ -25,147 +40,66 @@ function Checkout() {
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(false);
+	const [shipData, setShipData] = useState({} as FrenetForm);
 
 	const {
 		formState: { errors },
 		handleSubmit,
 		setValue,
-		control,
-	} = useForm<FrenetForm>({
-		resolver: yupResolver(yupSchema),
-		defaultValues,
-	});
+		register,
+	} = useForm<FrenetForm>({ defaultValues });
 
 	const onSubmit = (data: FrenetForm) => {
 		console.log("form data =", data);
 	};
 
-	function searchAddressWithCEP(cepStr: string) {
-		console.log("Entered searchAddressWithCEP()");
+	function searchAddressWithCEP(
+		event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+	) {
+		const cepStr = cepFormatado(event.target.value);
+		console.log(`Entered searchAddressWithCEP(${cepStr})`);
+		if (cepStr.length < 8) return;
+
+		const isValid = validateCep(cepStr);
+		console.log(`CEP é valido (${cepStr})? ${isValid}`);
+		if (!isValid) return;
 
 		const cache: { tm: NodeJS.Timeout | null } = {
 			tm: null,
 		};
 
-		return () => {
+		return (() => {
+			console.log("Entered searchAddressWithCEP inner fn");
 			if (cache.tm) clearTimeout(cache.tm);
 
 			cache.tm = setTimeout(async () => {
 				try {
 					const cepRes = await cep(cepStr);
 					console.log("awaited cep =", cepRes);
-					setValue("state", cepRes.state);
-					setValue("city", cepRes.city);
-					setValue("logradouro", cepRes.street);
-					setValue("neighborhood", cepRes.neighborhood);
+					setTimeout(() => {
+						setValue("neighborhood", cepRes.neighborhood);
+						setValue("logradouro", cepRes.street);
+						setValue("state", cepRes.state);
+						setValue("city", cepRes.city);
+
+						setShipData(oldValue => ({
+							...oldValue,
+							neighborhood: cepRes.neighborhood,
+							logradouro: cepRes.street,
+							state: cepRes.state,
+							city: cepRes.city,
+						}));
+					});
 				} catch (error) {
 					console.log("error from cep =", error);
-					errors.zipCode = error.errors;
+
+					errors.zipCode = error;
 				}
-			}, 1000);
-		};
+			}, 5_000);
+		})();
 	}
 
-	const AddressForm = () => (
-		<form
-			onSubmit={handleSubmit(onSubmit)}
-			encType="multipart/form-data"
-			className={classes.root}
-			id="address-form"
-			method="post"
-		>
-			<Controller
-				control={control}
-				name="zipCode"
-				key="zipCode"
-				render={({ field }) => (
-					<TextField
-						helperText={errors.zipCode?.message}
-						placeholder="Digite o CEP"
-						error={!!errors.zipCode}
-						inputRef={field.ref}
-						variant="outlined"
-						label="Cidade de destino"
-						{...field}
-						onChange={e => searchAddressWithCEP(e.target.value)}
-						required
-					/>
-				)}
-			/>
-
-			<Controller
-				control={control}
-				name="federalDocument"
-				key="federalDocument"
-				render={({ field }) => (
-					<TextField
-						helperText={errors.federalDocument?.message}
-						placeholder="Digite o seu CPF"
-						error={!!errors.federalDocument}
-						inputRef={field.ref}
-						variant="outlined"
-						label="CPF"
-						{...field}
-						required
-					/>
-				)}
-			/>
-
-			<Controller
-				control={control}
-				name="addressNumber"
-				key="addressNumber"
-				render={({ field }) => (
-					<TextField
-						helperText={errors.addressNumber?.message}
-						placeholder="Digite o número da sua morada"
-						error={!!errors.addressNumber}
-						inputRef={field.ref}
-						variant="outlined"
-						label="Número"
-						{...field}
-						required
-					/>
-				)}
-			/>
-
-			<Controller
-				control={control}
-				name="addressComplement"
-				key="addressComplement"
-				render={({ field }) => (
-					<TextField
-						helperText={errors.addressComplement?.message}
-						placeholder="Apartamento nº 10"
-						error={!!errors.addressComplement}
-						inputRef={field.ref}
-						variant="outlined"
-						label="Complemento"
-						{...field}
-					/>
-				)}
-			/>
-
-			<Controller
-				control={control}
-				name="phoneNumber"
-				key="phoneNumber"
-				render={({ field }) => (
-					<TextField
-						helperText={errors.phoneNumber?.message}
-						placeholder="87 9 9876-5432"
-						error={!!errors.phoneNumber}
-						inputRef={field.ref}
-						variant="outlined"
-						label="Número de telefone"
-						{...field}
-					/>
-				)}
-			/>
-		</form>
-	);
-
-	async function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+	async function handleCheckout(event: React.MouseEvent<HTMLButtonElement>) {
 		event.preventDefault();
 		setIsLoading(true);
 
@@ -237,12 +171,24 @@ function Checkout() {
 		//router.push(`/product/${product._id.toString()}`);
 	}
 
+	function handleFederalDocument(event) {
+		const cpfStr = cpfFormatado(event.target.value);
+		console.log(`Entered handleFederalDocument(${cpfStr})`);
+		if (cpfStr.length < 14) return;
+
+		const isValid = validateCPF(cpfStr);
+		console.log(`CPF é valido (${cpfStr})? ${isValid}`);
+		if (!isValid) return;
+	}
+
+	let cepForm = register("zipCode", { required: "É necessário o CEP" });
 	return (
 		<>
 			<Header />
 			<ToastContainer />
 
 			<Grid
+				style={{ marginTop: 90 }}
 				justifyContent="center"
 				alignItems="stretch"
 				direction="column"
@@ -259,11 +205,87 @@ function Checkout() {
 				))}
 			</Grid>
 
-			<AddressForm />
+			<form
+				onSubmit={handleSubmit(onSubmit)}
+				className={classes.root}
+				id="address-form"
+			>
+				<TextField
+					InputProps={{
+						endAdornment: (
+							<InputAdornment position="end">
+								<a href={urlDeNãoSeiMeuCep} className={classes.a}>
+									Não sei meu CEP
+								</a>
+							</InputAdornment>
+						),
+					}}
+					onChange={e => {
+						cepForm.onChange(e);
+						searchAddressWithCEP(e);
+					}}
+					helperText={errors.zipCode?.message}
+					placeholder="Digite o CEP"
+					error={!!errors.zipCode}
+					className={classes.cep}
+					label="Digite seu CEP"
+					variant="outlined"
+					ref={cepForm.ref}
+					type="number"
+					required
+				/>
 
-			<button type="button" onClick={handleClick} disabled={isLoading}>
-				Checkout
-			</button>
+				<TextField
+					{...register("federalDocument", { required: true })}
+					onChange={handleFederalDocument}
+					helperText={errors.federalDocument?.message}
+					error={!!errors.federalDocument}
+					placeholder="Digite o seu CPF"
+					variant="outlined"
+					type="number"
+					label="CPF"
+					required
+				/>
+
+				<TextField
+					{...register("addressNumber", { required: true })}
+					placeholder="Digite o número da sua morada"
+					helperText={errors.addressNumber?.message}
+					error={!!errors.addressNumber}
+					variant="outlined"
+					label="Número"
+					type="number"
+					required
+				/>
+
+				<TextField
+					helperText={errors.addressComplement?.message}
+					{...register("addressComplement")}
+					error={!!errors.addressComplement}
+					placeholder="Apartamento nº 10"
+					label="Complemento"
+					variant="outlined"
+				/>
+
+				<TextField
+					helperText={errors.phoneNumber?.message}
+					{...register("phoneNumber")}
+					error={!!errors.phoneNumber}
+					placeholder="87 9 9876-5432"
+					label="Número de telefone"
+					variant="outlined"
+					type="number"
+				/>
+
+				<div className={classes.submit}>
+					<input
+						type="submit"
+						value="Checkout"
+						disabled={isLoading}
+						onClick={() => {}}
+					/>
+				</div>
+			</form>
 		</>
 	);
 }

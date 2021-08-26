@@ -1,4 +1,3 @@
-import { validateCPF, validateCep } from "validations-br";
 import { loadStripe } from "@stripe/stripe-js";
 import * as yup from "yup";
 
@@ -16,7 +15,7 @@ export type FrenetForm = {
 	stateDocument: string;
 	addressNumber: string;
 	neighborhood: string;
-	phoneNumber: string;
+	phoneNumber?: number;
 	companyName: string;
 	platformId: number;
 	logradouro: string;
@@ -36,6 +35,26 @@ export type FrenetForm = {
 	name: string;
 };
 
+export const partialYupSchema = yup.object().shape({
+	federalDocument: yup
+		.string()
+		.required("CPF da pessoa física ou CNPJ da pessoa jurídica"),
+	zipCode: yup
+		.string()
+		.required(
+			"CEP da empresa ou pessoa física, este campo é usado como CEP de origem no momento da cotação de Frete"
+		)
+		.min(8),
+	addressNumber: yup
+		.string()
+		.trim()
+		.required(
+			"Número do logradouro da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
+		),
+	addressComplement: yup.string().trim().optional(), //"Complemento do endereço da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
+	phoneNumber: yup.number().optional().min(10).max(11),
+});
+
 export const yupSchema = yup.object().shape({
 	email: yup
 		.string()
@@ -45,11 +64,11 @@ export const yupSchema = yup.object().shape({
 			"E-mail do cliente, este campo é o mais importante de toda a API, será usado como chave para autenticação no painel administrativo e para os comunicados enviados pelo Frenet"
 		),
 	type: yup
-		.number()
+		.string()
 		.required(
 			"Identifica o tipo do cliente, por enquanto aceita apenas o valor 1 (Clientes)"
 		)
-		.default(1),
+		.default("1"),
 	password: yup
 		.string()
 		.min(8, "Uma senha de no mínimo 8 caracters é necessária!")
@@ -76,16 +95,7 @@ export const yupSchema = yup.object().shape({
 		),
 	federalDocument: yup
 		.string()
-		.required("CPF da pessoa física ou CNPJ da pessoa jurídica")
-		.test("validação_de_CPF", "Seu CPF está incorreto!", function (cpf) {
-			const { path, createError } = this;
-
-			const isValid = validateCPF(cpf ?? "");
-
-			return isValid
-				? true
-				: createError({ path, message: "Seu CPF está incorreto!" });
-		}),
+		.required("CPF da pessoa física ou CNPJ da pessoa jurídica"),
 	stateDocument: yup
 		.string()
 		.optional
@@ -100,15 +110,7 @@ export const yupSchema = yup.object().shape({
 		.required(
 			"CEP da empresa ou pessoa física, este campo é usado como CEP de origem no momento da cotação de Frete"
 		)
-		.test("teste_de_cep", "Seu CEP está errado!", function (cep) {
-			const { path, createError } = this;
-
-			const isValid = validateCep(cep ?? "");
-
-			return isValid
-				? true
-				: createError({ path, message: "Seu CEP está errado!" });
-		}),
+		.min(8),
 	city: yup
 		.string()
 		.trim()
@@ -142,7 +144,7 @@ export const yupSchema = yup.object().shape({
 		),
 	phoneNumber: yup.number().optional().min(10).max(11),
 	platformId: yup
-		.number()
+		.string()
 		.required(
 			"Código da plataforma, o valor para este campo será informado pela equipe de integração do Frenet"
 		),
@@ -152,7 +154,7 @@ export const yupSchema = yup.object().shape({
 			"Nome da plataforma, o valor para este campo será informado pela equipe de integração do Frenet"
 		),
 	agencyId: yup
-		.number()
+		.string()
 		.required(
 			"Código da agência, o valor para este campo será informado pela equipe de integração do Frenet"
 		),
@@ -162,14 +164,14 @@ export const yupSchema = yup.object().shape({
 			"Nome da agência, o valor para este campo será informado pela equipe de integração do Frenet"
 		),
 	plancode: yup
-		.number()
-		.default(1)
+		.string()
+		.default("1")
 		.required(
 			"Código do plano, o valor para este campo será informado pela equipe de integração do Frenet"
 		),
 	timeout: yup
-		.number()
-		.default(10_000)
+		.string()
+		.default("10_000")
 		.required("Tempo máximo de resposta da API de cotação"),
 	sendEmailConfirmation: yup
 		.boolean()
@@ -186,7 +188,7 @@ export const defaultValues: FrenetForm = {
 	stateDocument: "",
 	addressNumber: "",
 	neighborhood: "",
-	phoneNumber: "",
+	phoneNumber: undefined,
 	companyName: "",
 	platformId: 0,
 	logradouro: "",
@@ -220,3 +222,12 @@ export const getStripe = () => {
 
 	return notToUseDirectly_stripePromise;
 };
+
+export const cpfFormatado = (cpf: string) =>
+	cpf.replace(/(\d{3})?(\d{3})?(\d{3})?(\d{2})/, "$1.$2.$3-$4");
+
+export const cepFormatado = (cep: string) =>
+	cep.replace(/(\d{5})?(\d{3})/, "$1-$2");
+
+export const foneFormatado = (fone: string) =>
+	fone.replace(/(\d{2})?(\d{1})?(\d{4})?(\d{4})/, "($1) $2 $3-$4");
