@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { CardContainer } from "./CardContainer";
 import { Divider } from "../Divider";
-import { useCart } from "../../hooks/useCart";
+import { useCart } from "hooks/useCart";
 
 import {
 	DrawerContainer,
@@ -15,8 +15,7 @@ import {
 	NoItems,
 	Header,
 } from "./styles";
-import theme from "../../styles/theme";
-import { useEffect } from "react";
+import theme from "styles/theme";
 
 export function Cart() {
 	const classes = useStyles();
@@ -30,7 +29,7 @@ export function Cart() {
 	} = useCart();
 
 	console.log(
-		`❗ File: index.tsx\nLine:32\n${typeof cartProducts}: 'cartProducts'`,
+		`[LOG]\n\tFile: 'components/Cart/index.tsx'\n\tLine:33\n\t${typeof cartProducts}: 'cartProducts' =`,
 		cartProducts
 	);
 
@@ -41,7 +40,7 @@ export function Cart() {
 	async function handleBuyProducts(event: React.MouseEvent<HTMLButtonElement>) {
 		event.preventDefault();
 
-		await router.push("/cart");
+		await router.push("/checkout");
 	}
 
 	return (

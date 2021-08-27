@@ -2,8 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import fs from "fs";
 
-import { ProductModel } from "../../../models/Product";
-import connectToDatabase from "../../../utils/connectToMongoDB";
+import { ProductModel } from "models/Product";
+import connectToDatabase from "utils/connectToMongoDB";
 
 export const config = {
 	api: {
@@ -37,6 +37,7 @@ export default async function talkToDb(
 	});
 
 	switch (method) {
+		// Get all products
 		case "GET" || undefined:
 			try {
 				const products = await ProductModel.find({});
@@ -44,7 +45,7 @@ export default async function talkToDb(
 				return res.status(200).json({ success: true, data: products });
 			} catch (err) {
 				console.log(
-					"\n\n[ERROR on talkToDB() on 'api/products/index.ts' in GET]:\n\n",
+					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:51\n\t${typeof err}: 'err' =`,
 					err
 				);
 
@@ -52,7 +53,8 @@ export default async function talkToDb(
 			}
 			break;
 		///////////////////////////////////////////////
-		case "POST": // create
+		// Create a product
+		case "POST":
 			try {
 				console.log("\ninside POST\n");
 

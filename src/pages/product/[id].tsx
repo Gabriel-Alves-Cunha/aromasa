@@ -1,13 +1,13 @@
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import axios from "axios";
-import Image from "next/image";
 import Head from "next/head";
 
-import { ProductSlider_WithThumbnail } from "../../components/ProductSlider_WithThumbnail";
-import { getLayout } from "../../components/Layout";
-import { Product } from "../../models/Product";
-import { Header } from "../../components";
+import { ProductSlider_WithThumbnail } from "components/ProductSlider_WithThumbnail";
+import { getLayout } from "components/Layout";
+import { Product } from "models/Product";
+import { Header } from "components";
+import connectToDatabase from "utils/connectToMongoDB";
 
 import {
 	ProductSliderContainer,
@@ -57,19 +57,61 @@ ProductCard.getLayout = getLayout;
 
 export default ProductCard;
 
+export const getStaticPaths: GetStaticPaths = async ctx => {
+	try {
+		await connectToDatabase();
+
+		const { data: products, status } = await axios.get<Product[]>(
+			"api/products"
+		);
+
+		if (status === 200) {
+			return {
+				paths: products.map(product => ({
+					params: {
+						id: product._id.toString(),
+						product: JSON.stringify(product),
+					},
+				})),
+				fallback: false,
+			};
+		} else {
+			console.log(
+				`[LOG]\n\tFile: [id].tsx\n\tLine:81\n\t${typeof products}: 'data: products' =`,
+				products
+			);
+
+			throw new Error(
+				"Houve um problema ao pegar os produtos da base de dados."
+			);
+		}
+	} catch (error) {
+		console.log(
+			`[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:91\n\t${typeof error}: 'error' =`,
+			error
+		);
+
+		throw new Error("Houve um problema ao pegar os produtos da base de dados.");
+	}
+};
+
 export const getStaticProps: GetStaticProps = async ctx => {
 	console.log("\ngetStaticProps ctx =", ctx);
 	try {
-		const { data: product } = await axios.get<Product>(
-			`api/products/${ctx.params?._id?.toString()}`
-		);
+		// const { data: product } = await axios.get<Product>(
+		// 	`api/products/${ctx.params?.id}`
+		// );
+		const product = JSON.parse(ctx.params?.product as string);
 		console.log("\nproduct =", product);
 
 		return {
 			props: { product },
 		};
 	} catch (error) {
-		console.log(`❗ File: [id].tsx\nLine:66\n${typeof error}: 'error'`, error);
+		console.log(
+			`[ERROR] File: [id].tsx\nLine:113\n${typeof error}: 'error' =`,
+			error
+		);
 
 		return {
 			props: { product: {} },

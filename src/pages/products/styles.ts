@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
+import styled from "styled-components";
 
 export const Container = styled.div`
 	width: 100%;

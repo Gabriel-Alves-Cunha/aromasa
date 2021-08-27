@@ -1,14 +1,15 @@
 import { toast, ToastContainer } from "react-toastify";
 import { GetServerSideProps } from "next";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";
 
-import { ProductModel, Product } from "../../models/Product";
-import { ProductCard } from "../../components/ProductCard";
-import { getLayout } from "../../components/Layout";
-import { useCart } from "../../hooks/useCart";
-import { Header } from "../../components";
-import connectToDatabase from "../../utils/connectToMongoDB";
+import { ProductModel, Product } from "models/Product";
+import { ProductCard } from "components/ProductCard";
+import { getLayout } from "components/Layout";
+import { useCart } from "hooks/useCart";
+import { Header } from "components";
+import connectToDatabase from "utils/connectToMongoDB";
 import fakeProducts from "../../../products_example2.json";
 
 import useStyles from "./styles";
@@ -24,10 +25,12 @@ function Products() {
 	const classes = useStyles();
 	const router = useRouter();
 
-	console.log(
-		`❗ File: index.tsx\nLine:27\n${typeof cartProducts}: 'cartProducts'`,
-		cartProducts
-	);
+	useEffect(() => {
+		console.log(
+			`[LOG]\n\tFile: index.tsx\n\tLine:30\n\t${typeof cartProducts}: 'cartProducts' =`,
+			cartProducts
+		);
+	}, [cartProducts]);
 
 	function gotoProductPage() {
 		console.log("gotoProductPage");
@@ -54,10 +57,9 @@ function Products() {
 	return (
 		<>
 			<Header currentPage="Produtos" />
+			<ToastContainer />
 
 			<div className={classes.content}>
-				<ToastContainer />
-
 				<div className={classes.addHeaderHeight} />
 				<Grid
 					justifyContent="center"

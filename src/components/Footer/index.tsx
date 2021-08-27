@@ -2,8 +2,8 @@ import { BsChevronRight } from "react-icons/bs";
 import Image from "next/image";
 import Link from "next/link";
 
-import Sublogo from "../../assets/logos/sublogo_preto.png";
-import { envVariables } from "../../storage/env";
+import Sublogo from "assets/logos/sublogo_preto.png";
+import { envVariables } from "storage/env";
 
 import {
 	LogoContainer,
@@ -71,12 +71,12 @@ const socialNetworkOptions = [
 	},
 	{
 		title: "PINTEREST",
-		link: "/",
+		link: "https://br.pinterest.com/aromasadecor/_created/",
 	},
-	{
-		title: "FACEBOOK",
-		link: "",
-	},
+	// {
+	// 	title: "FACEBOOK",
+	// 	link: "",
+	// },
 	{
 		title: "WhatsApp",
 		link: "/",

@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Head from "next/head";
 
-import bg from "../assets/bg.jpg";
+import bg from "assets/bg.jpg";
 
-import { HeroContainer, Container } from "../styles/pages";
-import { NewArrivals } from "../modules/NewArrivals";
-import { Instagram } from "../components/Instagram";
-import { Product } from "../models/Product";
-import { Header } from "../components";
-import { getLayout } from "../components/Layout";
+import { HeroContainer, Container } from "styles/pages";
+import { NewArrivals } from "modules/NewArrivals";
+import { Instagram } from "components/Instagram";
+import { getLayout } from "components/Layout";
+import { Product } from "models/Product";
+import { Header } from "components";
 
 function Home() {
 	return (

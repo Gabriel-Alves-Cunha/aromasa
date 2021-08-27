@@ -1,7 +1,9 @@
 import { loadStripe } from "@stripe/stripe-js";
+import { Types } from "mongoose";
 import * as yup from "yup";
 
-import { envVariables } from "../../storage/env";
+import { envVariables } from "storage/env";
+import { validateCPF } from "validations-br";
 
 export const urlDeNãoSeiMeuCep =
 	"https://buscacepinter.correios.com.br/app/endereco/index.php?t";
@@ -231,3 +233,28 @@ export const cepFormatado = (cep: string) =>
 
 export const foneFormatado = (fone: string) =>
 	fone.replace(/(\d{2})?(\d{1})?(\d{4})?(\d{4})/, "($1) $2 $3-$4");
+
+export type InfoNotDownloaded = {
+	productsId: Array<Types.ObjectId>;
+	messages: Array<string>;
+};
+
+export type Availability = {
+	productsId: Array<Types.ObjectId>;
+	messages: Array<string>;
+};
+
+export function handleFederalDocument(event: any) {
+	//@ts-ignore
+	const cpfStr = cpfFormatado(event.target.value);
+	console.log(`Entered handleFederalDocument(${cpfStr})`);
+	if (cpfStr.length < 14) return;
+
+	const isValid = validateCPF(cpfStr);
+	console.log(`CPF é valido (${cpfStr})? ${isValid}`);
+	if (!isValid) return;
+}
+
+console.log(`\n\n${cepFormatado("56320700")}`);
+console.log(`\n\n${cpfFormatado("04174360170")}`);
+console.log(`\n\n${foneFormatado("87999633141")}`);

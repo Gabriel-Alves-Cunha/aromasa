@@ -1,7 +1,9 @@
 import { ReactNode, useState, createContext, useContext } from "react";
+import { parseCookies, setCookie } from "nookies";
 
-import { ClientChosenProduct, Product } from "../models/Product";
+import { ClientChosenProduct, Product } from "models/Product";
 import fakeProducts from "../../products_example2.json";
+import { useEffect } from "react";
 
 export type CartContextProps = {
 	handleAddOneMoreToCart(productToBeAdded: ClientChosenProduct | Product): void;
@@ -39,7 +41,29 @@ export const CartContext = createContext({} as CartContextProps);
 function CartProvider({ children }: CartProviderProps) {
 	const [cartProducts, setCartProducts] = useState([] as ClientChosenProduct[]);
 
-	function handleAddPossilbeNewProductToCart(newProduct: Product) {
+	useEffect(() => {
+		if (cartProducts.length === 0) {
+			console.log("cartProducts.length === 0 |=> parsing cookies!");
+
+			const cookies = parseCookies();
+			console.log(
+				`[LOG]\n\tFile: useCart.tsx\n\tLine:44\n\t${typeof cookies}: 'cookies' =`,
+				cookies
+			);
+
+			const cartProductsFromCookies = (JSON.parse(cookies.cartProducts) ||
+				[]) as ClientChosenProduct[];
+			setCartProducts(cartProductsFromCookies);
+		}
+
+		// For client-side, omit context parameter.
+		setCookie(null, "cartProducts", JSON.stringify(cartProducts), {
+			maxAge: 5 * 24 * 60 * 60,
+			path: "/",
+		});
+	}, [cartProducts]);
+
+	function handleAddPossibleNewProductToCart(newProduct: Product) {
 		const isProductInCart = cartProducts.some(
 			({ _id }) => _id === newProduct._id
 		);
@@ -151,7 +175,7 @@ function CartProvider({ children }: CartProviderProps) {
 	return (
 		<CartContext.Provider
 			value={{
-				handleAddPossibleNewProductToCart: handleAddPossilbeNewProductToCart,
+				handleAddPossibleNewProductToCart,
 				handleAddOneMoreToCart,
 				handleSubtractAmount,
 				handleRemoveFromCart,

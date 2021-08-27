@@ -1,4 +1,4 @@
-const envVariables = {
+export const envVariables = {
 	stripeWebhookEndpointSecret: "",
 	mercadoPagoAccessToken: "",
 	mercadoPagoPublicKey: "",
@@ -65,5 +65,3 @@ if (process.env.NODE_ENV === "development") {
 	envVariables.stripeWebhookEndpointSecret =
 		process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET ?? "";
 }
-
-export { envVariables };
