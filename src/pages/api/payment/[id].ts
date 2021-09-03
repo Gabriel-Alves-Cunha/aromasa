@@ -3,13 +3,13 @@ import nodemailer from "nodemailer";
 import Stripe from "stripe";
 import axios from "axios";
 
-import { envVariables } from "../../../storage/env";
+import { envVariables } from "storage/env";
 
-const contactEmail = envVariables.contactEmail;
 const contactEmailPassword = envVariables.contactEmailPassword;
 const stripe = new Stripe(envVariables.stripeSecretKey, {
 	apiVersion: "2020-08-27",
 });
+const contactEmail = envVariables.contactEmail;
 
 console.log(contactEmail, contactEmailPassword);
 
@@ -53,20 +53,20 @@ export default async function handler(
 
 			const mailSender = nodemailer.createTransport({
 				service: "hotmail",
-				port: 587,
 				secure: false, // true for 465, false for other ports
+				port: 587,
 				auth: {
-					user: contactEmail,
 					pass: contactEmailPassword,
+					user: contactEmail,
 				},
 			});
 
 			mailSender.sendMail(
 				{
-					from: contactEmail,
 					to: [contactEmail, checkout_session.customer_details?.email ?? ""],
 					subject: "Recibo de pagamento da Aromasa Decor.",
 					html: htmls.join(", "),
+					from: contactEmail,
 					text:
 						"Link para o recibo: " +
 						(
@@ -86,9 +86,9 @@ export default async function handler(
 			);
 		}
 
-		res.status(200).json(checkout_session);
-	} catch (err) {
-		res
+		return res.status(200).json(checkout_session);
+	} catch (err: any) {
+		return res
 			.status(500)
 			.json({ message: "Error on 'api/payment/[id].ts': " + err.message });
 	}

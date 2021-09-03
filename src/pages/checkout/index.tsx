@@ -1,20 +1,18 @@
 import { Grid, InputAdornment, TextField, Typography } from "@material-ui/core";
 import { toast, ToastContainer } from "react-toastify";
 import axios, { AxiosPromise } from "axios";
+import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { validateCep } from "validations-br";
 import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
 import Head from "next/head";
 import cep from "cep-promise";
 
+import { CheckoutCardForProduct, NormalLayoutWithFooter, Header } from "components";
 import { ClientChosenProduct, Product } from "models/Product";
-import { CheckoutCardForProduct } from "components/CheckoutCardForProduct";
 import { envVariables } from "storage/env";
-import { getLayout } from "components/Layout";
 import { useCart } from "hooks/useCart";
-import { Header } from "components";
 import {
 	handleFederalDocument,
 	InfoNotDownloaded,
@@ -29,7 +27,7 @@ import {
 	yupSchema,
 } from "./helper";
 
-import useStyles from "./styles";
+import useStyles, { ConfirmButton } from "./styles";
 import "react-toastify/dist/ReactToastify.css";
 
 function Checkout() {
@@ -40,14 +38,14 @@ function Checkout() {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [shipData, setShipData] = useState({} as FrenetForm);
-	const [
-		erros_de_informações_não_baixadas,
-		set_erros_de_informações_não_baixadas,
-	] = useState<InfoNotDownloaded>({
-		productsId: [],
-		messages: [],
-	});
-	// const [erros_de_disponibilidades, set_erros_de_disponibilidades] =
+	// const [
+	// 	erros_de_informações_não_baixadas,
+	// 	set_erros_de_informações_não_baixadas,
+	// ] = useState<InfoNotDownloaded>({
+	// 	productsId: [],
+	// 	messages: [],
+	// });
+	// // const [erros_de_disponibilidades, set_erros_de_disponibilidades] =
 	// 	useState<Availability>({
 	// 		productsId: [],
 	// 		messages: [],
@@ -58,12 +56,12 @@ function Checkout() {
 		formState: { errors },
 		handleSubmit,
 		setValue,
-		register,
+		control,
 	} = useForm<FrenetForm>({ defaultValues });
 
 	const onSubmit = (data: FrenetForm) => {
 		console.log(
-			`[LOG]\n\tFile: 'pages/checkout/index.tsx'\n\tLine:76\n\t${typeof data}: 'data' =`,
+			`[LOG]\n\tFile: 'pages/checkout/index.tsx'\n\tLine:66\n\t${typeof data}: 'data' =`,
 			data
 		);
 	};
@@ -72,7 +70,7 @@ function Checkout() {
 		event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
 	) {
 		const cepStr = cepFormatado(event.target.value);
-		console.log(`Entered searchAddressWithCEP(${cepStr})`);
+		// console.log(`Entered searchAddressWithCEP(${cepStr})`);
 		if (cepStr.length < 8) return;
 
 		const isValid = validateCep(cepStr);
@@ -92,10 +90,10 @@ function Checkout() {
 					const cepRes = await cep(cepStr);
 					console.log("awaited cep =", cepRes);
 					setTimeout(() => {
-						// setValue("neighborhood", cepRes.neighborhood);
-						// setValue("logradouro", cepRes.street);
-						// setValue("state", cepRes.state);
-						// setValue("city", cepRes.city);
+						setValue("neighborhood", cepRes.neighborhood);
+						setValue("logradouro", cepRes.street);
+						setValue("state", cepRes.state);
+						setValue("city", cepRes.city);
 
 						setShipData(oldValue => ({
 							...oldValue,
@@ -105,7 +103,7 @@ function Checkout() {
 							city: cepRes.city,
 						}));
 					});
-				} catch (error) {
+				} catch (error: any) {
 					console.log("error from cep =", error);
 
 					errors.zipCode = error;
@@ -114,8 +112,10 @@ function Checkout() {
 		})();
 	}
 
-	async function handleCheckout(event: React.MouseEvent<HTMLButtonElement>) {
+	async function handleCheckout(event: React.MouseEvent<HTMLInputElement>) {
 		event.preventDefault();
+
+		checkIfAmountOfProductsIsAvailable();
 
 		if (!canGoToBuyPage) {
 			toast.error(`🦄 Houve um ou mais erros ao comprar o(s) produto(s)!`, {
@@ -133,22 +133,29 @@ function Checkout() {
 
 		setIsLoading(true);
 
-		// const pricesIdsAndquantities = () =>
-		// 	cartProducts.map(product => ({
-		// 		price: product._id.toString(),
-		// 		quantity: parseFloat(product.bottle.amountThatWillBeBought),
-		// 	}));
-		const pricesIdsAndquantities = () => [
-			// for test only
-			{ price: "price_1JMZHdBQSnJH4whOHTPPCdJv", quantity: 2 },
-		];
+		const productsInfo = () =>
+			cartProducts.map(product => ({
+				price_data: {
+					currency: "brl",
+					product_data: {
+						name: product.title,
+					},
+					unit_amount: parseFloat(product.price) * 100, // centavos
+				},
+				quantity: parseFloat(product.bottle.amountThatWillBeBought),
+			}));
+		// const productsInfo = () => [
+		// 	// for test only
+		// 	{ price: "price_1JMZHdBQSnJH4whOHTPPCdJv", quantity: 2 },
+		// ];
 
 		try {
 			// Call your backend to create the Checkout session.
 			const { data } = await axios.post<{ sessionId: string }>(
 				"/api/payment",
 				{
-					products: [...pricesIdsAndquantities()],
+					products: productsInfo(),
+					metadata: shipData,
 				},
 				{
 					headers: {
@@ -179,7 +186,7 @@ function Checkout() {
 					}
 				);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			console.log(error);
 			toast.error(`🦄 Houve um erro ao comprar o produto!\n${error.message}`, {
 				hideProgressBar: false,
@@ -198,7 +205,29 @@ function Checkout() {
 	function gotoProductPage(product: ClientChosenProduct) {
 		console.log("gotoProductPage with product:", product._id);
 
-		//router.push(`/product/${product._id.toString()}`);
+		router.push(`/product/${product._id.toString()}`);
+	}
+
+	function checkIfAmountOfProductsIsAvailable() {
+		setCanGoToBuyPage(true);
+
+		cartProducts.forEach(product => {
+			if (parseFloat(product.bottle.amountThatWillBeBought) > 50) {
+				toast.error(
+					`🦄 Você está comprando produtos mais de 50 produtos!! Por favor, entre em contato por email (está no rodapé da página) para realizar compras grandes!`,
+					{
+						hideProgressBar: false,
+						position: "top-right",
+						progress: undefined,
+						closeOnClick: true,
+						pauseOnHover: true,
+						autoClose: 7000,
+						draggable: true,
+					}
+				);
+				setCanGoToBuyPage(false);
+			}
+		});
 	}
 
 	// useEffect(() => {
@@ -369,139 +398,249 @@ function Checkout() {
 
 	const Empty = () => <div>No items in cart!!</div>;
 
-	const Filled = () => (
-		<div className={classes.root}>
-			<Grid
-				justifyContent="center"
-				alignItems="stretch"
-				direction="row"
-				spacing={3}
-				container
-			>
-				{cartProducts.map(product => (
-					<Grid item key={product._id.toString()} xs={12}>
-						<CheckoutCardForProduct
-							gotoProductPage={gotoProductPage}
-							product={product}
-						/>
-					</Grid>
-				))}
-			</Grid>
+	function Filled() {
+		return (
+			<div className={classes.root}>
+				<Grid
+					justifyContent="center"
+					alignItems="stretch"
+					direction="row"
+					spacing={3}
+					container
+				>
+					{cartProducts.map(product => (
+						<Grid item key={product._id.toString()} xs={12}>
+							<CheckoutCardForProduct
+								gotoProductPage={gotoProductPage}
+								product={product}
+							/>
+						</Grid>
+					))}
+				</Grid>
 
-			<div className={classes.totalDetails}>
-				<Typography variant="h6">Subtotal: R$ {getSubtotal()}</Typography>
-			</div>
+				<div className={classes.totalDetails}>
+					<Typography variant="h6">Subtotal: R$ {getSubtotal()}</Typography>
+				</div>
 
-			<div className={classes.formWrapper}>
-				Dados para sua entrega
-				<Form />
+				<div className={classes.formWrapper}>
+					Dados para sua entrega
+					<Form />
+				</div>
 			</div>
-
-			<div className={classes.submit}>
-				<input
-					type="submit"
-					value="Checkout"
-					disabled={isLoading}
-					onClick={() => {}}
-				/>
-			</div>
-		</div>
-	);
+		);
+	}
 
 	function Form() {
-		const cepForm = register("zipCode", { required: "É necessário o CEP" });
-
 		return (
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className={classes.form}
 				id="address-form"
 			>
-				<TextField
-					InputProps={{
-						endAdornment: (
-							<InputAdornment position="end">
-								<a
-									href={urlDeNãoSeiMeuCep}
-									className={classes.a}
-									rel="noreferrer"
-									target="_blank"
-								>
-									Não sei meu CEP
-								</a>
-							</InputAdornment>
-						),
-					}}
-					onChange={e => {
-						cepForm.onChange(e);
-						searchAddressWithCEP(e);
-					}}
-					helperText={errors.zipCode?.message}
-					placeholder="Digite o CEP"
-					error={!!errors.zipCode}
-					label="Digite seu CEP"
-					variant="standard"
-					ref={cepForm.ref}
-					type="number"
-					required
+				<Controller
+					control={control}
+					name="zipCode"
+					defaultValue=""
+					render={({ field }) => (
+						<TextField
+							{...field}
+							onChange={e => {
+								field.onChange(e);
+								searchAddressWithCEP(e);
+							}}
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										<a
+											href={urlDeNãoSeiMeuCep}
+											className={classes.a}
+											rel="noreferrer"
+											target="_blank"
+										>
+											Não sei meu CEP
+										</a>
+									</InputAdornment>
+								),
+							}}
+							helperText={errors.zipCode?.message}
+							placeholder="Digite o CEP"
+							error={!!errors.zipCode}
+							label="Digite seu CEP"
+							variant="standard"
+							type="number"
+							required
+						/>
+					)}
 				/>
 
-				<TextField
-					{...register("logradouro", { required: true })}
-					helperText={errors.logradouro?.message}
-					error={!!errors.logradouro}
-					variant="standard"
-					placeholder="Rua"
-					label="Rua"
-					required
+				<Controller
+					control={control}
+					name="logradouro"
+					defaultValue=""
+					render={({ field }) => (
+						<TextField
+							{...field}
+							helperText={errors.logradouro?.message}
+							error={!!errors.logradouro}
+							variant="standard"
+							placeholder="Rua"
+							label="Rua"
+							required
+						/>
+					)}
 				/>
 
-				<TextField
-					{...register("federalDocument", { required: true })}
-					helperText={errors.federalDocument?.message}
-					error={!!errors.federalDocument}
-					onChange={handleFederalDocument}
-					placeholder="Digite o seu CPF"
-					variant="standard"
-					type="number"
-					label="CPF"
-					required
+				<Controller
+					control={control}
+					name="name"
+					defaultValue=""
+					render={({ field }) => (
+						<TextField
+							{...field}
+							helperText={errors.name?.message}
+							error={!!errors.name}
+							variant="standard"
+							placeholder="Entregar a(o)"
+							label="Destinatário"
+							required
+						/>
+					)}
 				/>
 
-				<TextField
-					{...register("addressNumber", { required: true })}
-					placeholder="Digite o número da sua morada"
-					helperText={errors.addressNumber?.message}
-					error={!!errors.addressNumber}
-					variant="standard"
-					label="Número"
-					type="number"
-					required
+				<Controller
+					control={control}
+					name="city"
+					defaultValue=""
+					render={({ field }) => (
+						<TextField
+							{...field}
+							helperText={errors.city?.message}
+							error={!!errors.city}
+							placeholder="Cidade"
+							variant="standard"
+							label="Cidade"
+							required
+						/>
+					)}
 				/>
 
-				<TextField
-					helperText={errors.addressComplement?.message}
-					{...register("addressComplement")}
-					error={!!errors.addressComplement}
-					placeholder="Apartamento nº 10"
-					label="Complemento"
-					variant="standard"
+				<Controller
+					control={control}
+					name="neighborhood"
+					defaultValue=""
+					render={({ field }) => (
+						<TextField
+							{...field}
+							helperText={errors.neighborhood?.message}
+							error={!!errors.neighborhood}
+							placeholder="Bairro"
+							variant="standard"
+							label="Bairro"
+							required
+						/>
+					)}
 				/>
 
-				<TextField
-					helperText={errors.phoneNumber?.message}
-					{...register("phoneNumber")}
-					error={!!errors.phoneNumber}
-					placeholder="87 9 9876-5432"
-					label="Número de telefone"
-					variant="standard"
-					type="number"
+				<Controller
+					control={control}
+					name="state"
+					defaultValue=""
+					render={({ field }) => (
+						<TextField
+							{...field}
+							helperText={errors.state?.message}
+							error={!!errors.state}
+							placeholder="Estado"
+							variant="standard"
+							label="Estado"
+							required
+						/>
+					)}
+				/>
+
+				<Controller
+					control={control}
+					name="federalDocument"
+					defaultValue=""
+					render={({ field }) => (
+						<TextField
+							{...field}
+							onChange={e => {
+								field.onChange(e);
+								handleFederalDocument(e);
+							}}
+							helperText={errors.federalDocument?.message}
+							error={!!errors.federalDocument}
+							placeholder="Digite o seu CPF"
+							variant="standard"
+							type="number"
+							label="CPF"
+							required
+						/>
+					)}
+				/>
+
+				<Controller
+					control={control}
+					name="addressNumber"
+					defaultValue=""
+					render={({ field }) => (
+						<TextField
+							{...field}
+							placeholder="Digite o número da sua morada"
+							helperText={errors.addressNumber?.message}
+							error={!!errors.addressNumber}
+							variant="standard"
+							label="Número"
+							type="number"
+							required
+						/>
+					)}
+				/>
+
+				<Controller
+					control={control}
+					name="addressComplement"
+					defaultValue=""
+					render={({ field }) => (
+						<TextField
+							{...field}
+							helperText={errors.addressComplement?.message}
+							error={!!errors.addressComplement}
+							placeholder="Apartamento nº 10"
+							label="Complemento"
+							variant="standard"
+						/>
+					)}
+				/>
+
+				<Controller
+					control={control}
+					defaultValue={undefined}
+					name="phoneNumber"
+					render={({ field }) => (
+						<TextField
+							{...field}
+							helperText={errors.phoneNumber?.message}
+							error={!!errors.phoneNumber}
+							placeholder="87 9 9876-5432"
+							label="Número de telefone"
+							variant="standard"
+							type="number"
+						/>
+					)}
+				/>
+
+				<ConfirmButton
+					onClick={handleCheckout}
+					disabled={isLoading}
+					value="Checkout"
+					type="submit"
 				/>
 			</form>
 		);
 	}
 
-	// debugger;
 	return (
 		<>
 			<Head>
@@ -517,6 +656,6 @@ function Checkout() {
 	);
 }
 
-Checkout.getLayout = getLayout;
+Checkout.getLayout = NormalLayoutWithFooter;
 
 export default Checkout;

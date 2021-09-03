@@ -1,9 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
+import Stripe from "stripe";
 import fs from "fs";
 
+import { envVariables } from "storage/env";
 import { ProductModel } from "models/Product";
 import connectToDatabase from "utils/connectToMongoDB";
+
+const stripe = new Stripe(envVariables.stripeSecretKey, {
+	apiVersion: "2020-08-27",
+});
 
 export const config = {
 	api: {
@@ -16,8 +22,6 @@ export default async function talkToDb(
 	res: NextApiResponse
 ) {
 	await connectToDatabase();
-
-	const { method } = req;
 
 	res.on("end", something => {
 		console.log("\nApi response ended:\n", something);
@@ -36,16 +40,16 @@ export default async function talkToDb(
 		return;
 	});
 
-	switch (method) {
+	switch (req.method) {
 		// Get all products
 		case "GET" || undefined:
 			try {
-				const products = await ProductModel.find({});
-
-				return res.status(200).json({ success: true, data: products });
+				return res
+					.status(200)
+					.json({ success: true, data: await ProductModel.find({}) });
 			} catch (err) {
 				console.log(
-					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:51\n\t${typeof err}: 'err' =`,
+					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:48\n\t${typeof err}: 'err' =`,
 					err
 				);
 
@@ -56,8 +60,6 @@ export default async function talkToDb(
 		// Create a product
 		case "POST":
 			try {
-				console.log("\ninside POST\n");
-
 				const form = formidable({
 					uploadDir: "public/uploads/products_images",
 					maxFileSize: 20 * 1024 * 1024,
@@ -68,7 +70,7 @@ export default async function talkToDb(
 
 				form.once("error", err => {
 					console.error(err);
-					res.status(400).json(err);
+					res.status(err.statusCode ?? 400).json(err);
 				});
 				form.once("end", () => {
 					console.log("-> Upload to server done.");
@@ -78,61 +80,77 @@ export default async function talkToDb(
 					console.log("\ninside form.parse()\n");
 					// console.log("\nfields =", fields);
 					// console.log("\nfiles =", files);
-					let filesPaths: string[] = [];
-					Object.entries(files).forEach(pair =>
-						//@ts-ignore
-						filesPaths.push(pair[1].path)
-					);
 					// console.log(filesPaths);
+					const filesPaths: string[] = Object.entries(files).map(
+						([_key, value]) => (value as formidable.File).path
+					);
+
 					const newProduct = { ...fields, imagesPaths: filesPaths };
 
 					try {
 						// const ret = "just testing";
-						const ret = await ProductModel.create([newProduct], {
+						const productCreatedOnDB = await ProductModel.create([newProduct], {
 							writeConcern: { j: true },
 							validateBeforeSave: true,
 							timestamps: true,
 							checkKeys: true,
 						});
-						console.log("\nret from ProductModel.create() =", ret);
+						const productCreatedOnStripe = await stripe.products.create({
+							active: productCreatedOnDB[0].isAvailableToSell,
+							description: productCreatedOnDB[0].description,
+							name: productCreatedOnDB[0].title,
+							id: productCreatedOnDB[0].id,
+						});
+						console.log(
+							"\nret from ProductModel.create() =",
+							productCreatedOnDB
+						);
+						console.log(
+							"\nret from productCreatedOnStripe.create() =",
+							productCreatedOnStripe
+						);
 
-						return res.status(201).json({ success: true, data: ret });
+						return res.status(201).json({
+							success: true,
+							data: { productCreatedOnDB, productCreatedOnStripe },
+						});
 					} catch (error) {
 						console.log(`\nError creating ProductModel = ${error}`);
 
 						filesPaths.forEach(filePath =>
 							fs.unlink(filePath, err => {
 								if (err && err.code == "ENOENT")
-									console.log("Error! File doesn't exist.");
+									console.log(`\nError! File '${filePath}' doesn't exist.\n`);
 								else if (err)
 									console.error(
-										"\nSomething went wrong. Please try again later.",
-										err
+										`\nSomething went wrong. Please try again later: ${err}\n`
 									);
 								else
 									console.log(
-										`\n\nSuccessfully removed file with the path of ${filePath}\n`
+										`\nSuccessfully removed file with the path of ${filePath}\n`
 									);
 							})
 						);
 
-						return res.status(400).json({ success: false, data: err });
+						return res.status(400).json({ success: false, data: err + error });
 					}
 				});
-			} catch (error) {
+			} catch (error: any) {
 				console.log(
-					"\n\n[ERROR on talkToDB() on 'api/products/index.ts' in POST]:\n\n",
-					error
+					`\n\n[ERROR on talkToDB() on 'api/products/index.ts' in POST]:\n${error}`
 				);
 
-				return res.json({ success: false, data: error });
+				return res
+					.status(error.statusCode ?? 500)
+					.json({ success: false, data: error });
 			}
 			break;
 		///////////////////////////////////////////////
 		default:
-			return res
-				.status(400)
-				.json({ success: false, data: "Entered default case!" });
+			return res.status(400).json({
+				success: false,
+				data: "Entered default case on 'pages/api/products/index.ts'!",
+			});
 			break;
 	}
 }

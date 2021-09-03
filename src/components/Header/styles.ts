@@ -102,3 +102,15 @@ export const CartContainer = styled.div`
 
 	margin-right: 2rem;
 `;
+
+export const ModalContainer = styled.div`
+
+`;
+
+export const SignInButton = styled.button`
+
+`;
+
+export const SignOutButton = styled.button`
+
+`;

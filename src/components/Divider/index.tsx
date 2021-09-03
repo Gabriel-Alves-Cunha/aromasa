@@ -1,9 +1,3 @@
-import styled from "styled-components";
-
 export function Divider() {
-	return <Content />;
+	return <div style={{ borderBottom: "1px solid #ccc" }} />;
 }
-
-const Content = styled.div`
-	border-bottom: 1px solid #ccc;
-`;

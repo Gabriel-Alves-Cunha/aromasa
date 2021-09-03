@@ -3,10 +3,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Head from "next/head";
 
-import { ProductSlider_WithThumbnail } from "components/ProductSlider_WithThumbnail";
-import { getLayout } from "components/Layout";
+import { ProductSlider_WithThumbnail, NormalLayoutWithFooter, Header } from "components";
 import { Product } from "models/Product";
-import { Header } from "components";
 import connectToDatabase from "utils/connectToMongoDB";
 
 import {
@@ -53,7 +51,7 @@ function ProductCard({ product }: Props) {
 	);
 }
 
-ProductCard.getLayout = getLayout;
+ProductCard.getLayout = NormalLayoutWithFooter;
 
 export default ProductCard;
 

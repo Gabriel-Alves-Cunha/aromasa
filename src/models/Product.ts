@@ -9,13 +9,19 @@ export type Product = {
 		volume?: string;
 		weight?: string;
 	};
+	packageDimensions: {
+		height: string;
+		length: string;
+		weight: string;
+		width: string;
+	};
 	isAvailableToSell: boolean;
 	imagesPaths: string[];
+	categories: string[];
 	ingredients?: string;
 	description: string;
 	_id: Types.ObjectId;
 	usage_tips?: string;
-	categories: string[];
 	title: string;
 	price: string;
 };

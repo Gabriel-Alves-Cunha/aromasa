@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"forceConsistentCasingInFileNames": true,
 		"lib": ["dom", "dom.iterable", "esnext"],
+		"useUnknownInCatchVariables": true,
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
@@ -9,11 +10,11 @@
 		"skipLibCheck": true,
 		"module": "esnext",
 		"jsx": "preserve",
+		"baseUrl": "src",
 		"allowJs": true,
 		"target": "es6",
 		"strict": true,
-		"noEmit": true,
-		"baseUrl": "src"
+		"noEmit": true
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src"],
 	"exclude": ["node_modules"]

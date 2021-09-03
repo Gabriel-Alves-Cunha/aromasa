@@ -3,12 +3,12 @@ import Head from "next/head";
 
 import bg from "assets/bg.jpg";
 
-import { HeroContainer, Container } from "styles/pages";
+import { getLayout, Header } from "components";
 import { NewArrivals } from "modules/NewArrivals";
 import { Instagram } from "components/Instagram";
-import { getLayout } from "components/Layout";
 import { Product } from "models/Product";
-import { Header } from "components";
+
+import { HeroContainer, Container } from "styles/pages";
 
 function Home() {
 	return (

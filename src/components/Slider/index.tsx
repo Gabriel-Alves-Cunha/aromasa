@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useEmblaCarousel } from "embla-carousel/react";
 import Image from "next/image";
 
-import { Bullets } from "../Bullets";
-import { Arrow } from "../Arrow";
+import { Arrow, Bullets } from "components";
 
 import { Embla, EmblaContainer, EmblaViewport, Slide } from "./styles";
 
@@ -57,7 +56,7 @@ export function Slider({
 				<EmblaContainer>
 					{slides.map(slide => (
 						<Slide key={slide.src}>
-							<Image layout="fill" objectFit="cover" src={slide} />
+							<Image layout="fill" objectFit="cover" src={slide} alt="" />
 						</Slide>
 					))}
 				</EmblaContainer>

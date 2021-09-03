@@ -15,7 +15,7 @@ type Preview = {
 	name: string;
 };
 
-export default function MyDropzone({ files, setFiles }: Props) {
+export function MyDropzone({ files, setFiles }: Props) {
 	const [previews, setPreviews] = useState([] as Preview[]);
 
 	const { getRootProps, getInputProps, fileRejections } = useDropzone({
@@ -109,6 +109,7 @@ export default function MyDropzone({ files, setFiles }: Props) {
 						height: "auto",
 						width: "100%",
 					}}
+					alt=""
 				/>
 			</div>
 		</div>

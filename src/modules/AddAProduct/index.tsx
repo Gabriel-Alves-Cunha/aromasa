@@ -7,9 +7,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { green } from "@material-ui/core/colors";
 
 import { defaultProduct, myFormId, yupSchema } from "./helper";
-import { Product as NotToUseProductModel } from "../../models/Product";
+import { Product as NotToUseProductModel } from "models/Product";
 import { ConfirmationModal } from "./modal";
-import { MyDropzone } from "../../components";
+import { MyDropzone } from "components";
 
 import { Container } from "./styles";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,6 +29,7 @@ export function AddAProduct() {
 		error: "",
 	});
 
+	// TODO: toast.promise
 	useEffect(() => {
 		if (toast.resolved && toast.success)
 			doToast.success("🦄 Produto adicionado com sucesso!", {
@@ -105,6 +106,7 @@ export function AddAProduct() {
 							/>
 						)}
 					/>
+
 					<Controller
 						control={control}
 						name="categories"
@@ -124,6 +126,7 @@ export function AddAProduct() {
 							/>
 						)}
 					/>
+
 					<Controller
 						control={control}
 						name="price"
@@ -148,6 +151,7 @@ export function AddAProduct() {
 							/>
 						)}
 					/>
+
 					<Controller
 						key={"bottle.bottle_format"}
 						name="bottle.bottle_format"
@@ -164,6 +168,7 @@ export function AddAProduct() {
 							/>
 						)}
 					/>
+
 					<Controller
 						name={`bottle.available_quantity`}
 						key={`bottle.available_quantity`}
@@ -183,6 +188,7 @@ export function AddAProduct() {
 							/>
 						)}
 					/>
+
 					<Controller
 						name={`bottle.volume`}
 						key={`bottle.volume`}
@@ -205,6 +211,7 @@ export function AddAProduct() {
 							/>
 						)}
 					/>
+
 					<Controller
 						name={`bottle.weight`}
 						key={`bottle.weight`}
@@ -227,6 +234,7 @@ export function AddAProduct() {
 							/>
 						)}
 					/>
+
 					<div style={{ width: "100%" }}>
 						<input
 							{...register("isAvailableToSell", { required: true })}
@@ -236,6 +244,7 @@ export function AddAProduct() {
 						/>
 						<label>Este produto está disponível para venda?</label>
 					</div>
+
 					<Controller
 						control={control}
 						name="usage_tips"
@@ -254,6 +263,7 @@ export function AddAProduct() {
 							/>
 						)}
 					/>
+
 					<Controller
 						name="description"
 						control={control}
@@ -310,12 +320,12 @@ const useStyles = makeStyles((theme: Theme) =>
 			width: "40em",
 		},
 		submit: {
+			justifyContent: "center",
+			alignItems: "center",
+			marginBottom: "3em",
 			display: "flex",
 			width: "30em",
 			margin: "1em",
-			marginBottom: "3em",
-			justifyContent: "center",
-			alignItems: "center",
 		},
 		buttonProgress: {
 			color: green[500],

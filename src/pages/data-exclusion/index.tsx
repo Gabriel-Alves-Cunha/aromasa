@@ -1,5 +1,4 @@
-import { getLayout } from "../../components/Layout";
-import { Header } from "../../components";
+import { Header, NormalLayoutWithFooter } from "components";
 
 import { Container } from "./styles";
 
@@ -13,6 +12,6 @@ function DataExclusion() {
 	);
 }
 
-DataExclusion.getLayout = getLayout;
+DataExclusion.getLayout = NormalLayoutWithFooter;
 
 export default DataExclusion;

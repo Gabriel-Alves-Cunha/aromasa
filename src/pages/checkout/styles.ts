@@ -1,8 +1,10 @@
 import { createStyles, makeStyles } from "@material-ui/core";
+import styled from "styled-components";
 
 import theme from "styles/theme";
 
-const { primary } = theme.fonts;
+const { primary: f_primary } = theme.fonts;
+const { primary } = theme.colors.dark;
 
 export default makeStyles(theme =>
 	createStyles({
@@ -48,7 +50,7 @@ export default makeStyles(theme =>
 		},
 		formWrapper: {
 			border: "1px solid lightgray",
-			fontFamily: primary,
+			fontFamily: f_primary,
 			color: "#6a9db0",
 			marginTop: "5%",
 			padding: "1em",
@@ -60,13 +62,41 @@ export default makeStyles(theme =>
 				width: "40ch",
 			},
 		},
-		submit: {
-			justifyContent: "center",
-			alignItems: "center",
-			marginBottom: "3em",
-			display: "flex",
-			margin: "1em",
-			width: "4em",
-		},
 	})
 );
+
+export const ConfirmButton = styled.input`
+	font-family: ${f_primary};
+	font-size: 1.1em;
+
+	width: 60%;
+	height: 30px;
+
+	display: block !important;
+	margin: auto !important;
+	margin-top: 90px !important;
+
+	background: ${primary};
+	color: white;
+
+	border: none;
+	padding: 10px;
+
+	cursor: pointer;
+
+	transition: box-shadow 0.2s ease-in 0s, opacity 0.1s ease 0s;
+
+	&:disabled {
+		cursor: default;
+		opacity: 0.4;
+	}
+
+	&:hover:enabled {
+		box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+			0 17px 20px 0 rgba(0, 0, 0, 0.19);
+	}
+
+	&:active {
+		opacity: 0.3;
+	}
+`;

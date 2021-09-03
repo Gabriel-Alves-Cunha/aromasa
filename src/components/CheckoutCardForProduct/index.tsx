@@ -9,9 +9,9 @@ import {
 } from "@material-ui/core";
 
 import { ClientChosenProduct } from "models/Product";
-import { StyledButton } from "components/Cart/styles";
 import { useCart } from "hooks/useCart";
 
+import { StyledButton } from "components/Cart/styles";
 import useStyles from "./styles";
 
 type Props = {

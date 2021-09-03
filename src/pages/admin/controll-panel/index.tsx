@@ -1,11 +1,15 @@
+import { GetServerSideProps } from "next";
+import { useSession } from "next-auth/client";
 import { useState } from "react";
+import jwt from "next-auth/jwt";
 
-import { DeleteAProduct } from "../../../modules/DeleteAProduct";
-import { Header, Navbar } from "../../../components";
-import { AlterAProduct } from "../../../modules/AlterAProduct";
-import { NavbarOptions } from "../../../components/Navbar/navabar.data";
-import { AddAProduct } from "../../../modules/AddAProduct";
-import { getLayout } from "../../../components/Layout";
+import { getLayout, Header, Navbar } from "components";
+import { DeleteAProduct } from "modules/DeleteAProduct";
+import { AlterAProduct } from "modules/AlterAProduct";
+import { NavbarOptions } from "components/Navbar/navabar.data";
+import { envVariables } from "storage/env";
+import { AddAProduct } from "modules/AddAProduct";
+import connectToDatabase from "utils/connectToMongoDB";
 
 import { Container } from "./styles";
 
@@ -37,3 +41,27 @@ function ControllPanel() {
 ControllPanel.getLayout = getLayout;
 
 export default ControllPanel;
+
+export const getServerSideProps: GetServerSideProps = async ctx => {
+	try {
+		await connectToDatabase();
+
+		const token = await jwt.getToken({
+			req: ctx.req,
+			secret: envVariables.jwtSecret,
+		});
+		const auth = ctx.req.headers;
+		console.log("Headers =", auth);
+		console.log("token =", token);
+
+		// TODO: see if user is alowed using the DB.
+		// const userIsAllowed = await getUserWithToken(token);
+
+		if (token /* && userIsAllowed*/) return { props: {} };
+		else return { notFound: true };
+	} catch (error) {
+		console.log(`❗ File: index.tsx\nLine:58\n${typeof error}: 'error'`, error);
+
+		return { notFound: true };
+	}
+};

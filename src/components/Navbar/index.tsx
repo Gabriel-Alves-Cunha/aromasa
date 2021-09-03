@@ -9,7 +9,7 @@ type Props = {
 	activePage: NavbarOptions["label"];
 };
 
-export default function Navbar({ activePage, setActivePage }: Props) {
+export function Navbar({ activePage, setActivePage }: Props) {
 	return (
 		<Container>
 			{navbarOptions.map((option, index) => (

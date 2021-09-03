@@ -1,6 +1,7 @@
-import { ClientChosenProduct } from "../../models/Product";
-import { ThumbnailSlider } from "../ThumbnailSlider";
 import { useState } from "react";
+
+import { ClientChosenProduct } from "models/Product";
+import { ThumbnailSlider } from "components";
 
 import { Container } from "./styles";
 

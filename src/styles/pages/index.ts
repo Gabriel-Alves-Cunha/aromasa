@@ -2,13 +2,7 @@ import styled from "styled-components";
 
 import theme from "../theme";
 
-const { primary: f_primary, secondary: f_secondary } = theme.fonts;
-const { background, primary, text, text_light } = theme.colors.light;
-const {
-	background: background_dark,
-	primary: primary_dark,
-	text: text_dark,
-} = theme.colors.dark;
+const { primary: f_primary } = theme.fonts;
 
 export const Container = styled.div`
 	display: flex;

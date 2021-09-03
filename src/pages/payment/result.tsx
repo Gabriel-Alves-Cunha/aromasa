@@ -3,12 +3,10 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Image from "next/image";
 
-import { envVariables } from "../../storage/env";
-import { getLayout } from "../../components/Layout";
-import { Loading } from "../../components/Loading";
-import { Header } from "../../components";
+import { NormalLayoutWithFooter, Loading, Header } from "components";
+import { envVariables } from "storage/env";
 
-import error500_svg from "../../assets/errorVector/error_500.svg";
+import error500_svg from "assets/errorVector/error_500.svg";
 
 const contactEmail = envVariables.contactEmail;
 
@@ -76,6 +74,6 @@ function Success() {
 	);
 }
 
-Result.getLayout = getLayout;
+Result.getLayout = NormalLayoutWithFooter;
 
 export default Result;

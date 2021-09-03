@@ -67,7 +67,7 @@ export function ConfirmationModal({
 				document.getElementById(myFormId)?.reset();
 				reset();
 			}
-		} catch (error) {
+		} catch (error: any) {
 			console.error("\nError in addAProduct() =", error);
 
 			setToast({ success: false, error, resolved: true });
@@ -204,7 +204,7 @@ function buildFormData(formData: FormData, data: any, parentKey: string) {
 		});
 	} else {
 		console.log(
-			`[LOG] Entering 'else' clause on file: modal.tsx\nLine:211\n${typeof data}: 'data'`,
+			`[LOG] Entering 'else' clause on file: modal.tsx\nLine:207\n${typeof data}: 'data'`,
 			data
 		);
 		const value = data === null ? "" : data;

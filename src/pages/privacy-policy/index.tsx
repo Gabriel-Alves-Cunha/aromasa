@@ -1,5 +1,4 @@
-import { getLayout } from "../../components/Layout";
-import { Header } from "../../components";
+import { Header, NormalLayoutWithFooter } from "components";
 
 import { Container, Content } from "./styles";
 
@@ -367,6 +366,6 @@ function PrivacyPolicy() {
 	);
 }
 
-PrivacyPolicy.getLayout = getLayout;
+PrivacyPolicy.getLayout = NormalLayoutWithFooter;
 
 export default PrivacyPolicy;

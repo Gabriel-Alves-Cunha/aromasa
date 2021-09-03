@@ -34,6 +34,7 @@ export function ThumbnailSlider({
 
 			if (emblaThumbsApi.clickAllowed()) setSelectedProduct(index);
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[emblaThumbsApi]
 	);
 
@@ -71,8 +72,9 @@ function _Thumb({ isSelected, onClick, imgSrc }: ThumbProps) {
 			<EmblaSlideButton onClick={onClick}>
 				<Image
 					className="embla-slide-thumb-img embla__slide__thumbnail"
-					layout="fill"
 					src={imgSrc[0] === "/" ? imgSrc : "/" + imgSrc}
+					layout="fill"
+					alt=""
 				/>
 			</EmblaSlideButton>
 		</EmblaSlide>

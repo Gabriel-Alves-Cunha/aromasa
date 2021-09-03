@@ -10,13 +10,13 @@ import {
 	Card,
 } from "@material-ui/core";
 
-import { Product } from "../../models/Product";
+import { Product } from "models/Product";
 
 import useStyles from "./styles";
 
 type Props = {
 	handleAddToCart(product: Product): void;
-	gotoProductPage(): void;
+	gotoProductPage(product: Product): void;
 	product: Product;
 };
 
@@ -25,7 +25,10 @@ function _ProductCard({ product, gotoProductPage, handleAddToCart }: Props) {
 
 	return (
 		<Card className={classes.root} square>
-			<CardActionArea onClick={gotoProductPage} className={classes.actionArea}>
+			<CardActionArea
+				onClick={() => gotoProductPage(product)}
+				className={classes.actionArea}
+			>
 				<CardMedia
 					image={product.imagesPaths[0]}
 					className={classes.media}

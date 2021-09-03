@@ -1,33 +1,74 @@
-import headerData, { HeaderData } from "./header.data";
+import { signIn, signOut, useSession } from "next-auth/client";
+import { toast, ToastContainer } from "react-toastify";
+import { makeStyles, Modal } from "@material-ui/core";
 import { BsFillPersonFill } from "react-icons/bs";
-import { makeStyles } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Avatar } from "@material-ui/core";
 import Image from "next/image";
 import Link from "next/link";
 import cx from "classnames";
 
-import AromasaLogo from "../../assets/logos/AromasaLogo.webp";
+import AromasaLogo from "assets/logos/AromasaLogo.webp";
 
-import { Cart } from "../Cart";
+import headerData, { HeaderData } from "./header.data";
+import { Cart } from "components";
 
 import {
+	ModalContainer,
+	SignOutButton,
 	CartContainer,
 	LogoContainer,
+	SignInButton,
 	StyledButton,
 	Container,
 	Options,
 	Option,
 } from "./styles";
-import theme from "../../styles/theme";
+import theme from "styles/theme";
+import "react-toastify/dist/ReactToastify.css";
 
 type Props = {
 	currentPage?: HeaderData["label"];
 };
 
-export default function Header({ currentPage }: Props) {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+export function Header({ currentPage }: Props) {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [session] = useSession();
 	const classes = useStyles();
-	// console.log(`currentPage = ${currentPage}`);
+
+	async function handleProfileClick(e: React.MouseEvent<HTMLButtonElement>) {
+		e.preventDefault();
+
+		if (!session) handleLogin();
+		else setIsModalOpen(oldValue => !oldValue);
+	}
+
+	useEffect(() => {
+		handleOpenOrCloseModal();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isModalOpen]);
+
+	async function handleLogin() {
+		await signIn("google");
+	}
+
+	async function handleLogout() {
+		await signOut();
+	}
+
+	function handleOpenOrCloseModal() {
+		return (
+			session && (
+				<Modal className={classes.modal} disableEnforceFocus open={isModalOpen}>
+					<ModalContainer>
+						<Avatar alt={session!.user?.name ?? "?"} />
+
+						<SignOutButton onClick={handleLogout}>Deslogar</SignOutButton>
+					</ModalContainer>
+				</Modal>
+			)
+		);
+	}
 
 	return (
 		<Container>
@@ -59,7 +100,10 @@ export default function Header({ currentPage }: Props) {
 			</Options>
 
 			<CartContainer>
-				<StyledButton classes={{ root: classes.button }}>
+				<StyledButton
+					classes={{ root: classes.button }}
+					onClick={handleProfileClick}
+				>
 					<BsFillPersonFill size={18} />
 				</StyledButton>
 
@@ -73,4 +117,5 @@ const useStyles = makeStyles(_muiTheme => ({
 	button: {
 		color: theme.colors.light.primary,
 	},
+	modal: {},
 }));

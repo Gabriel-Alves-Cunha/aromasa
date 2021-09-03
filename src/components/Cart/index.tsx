@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { CardContainer } from "./CardContainer";
-import { Divider } from "../Divider";
+import { Divider } from "components";
 import { useCart } from "hooks/useCart";
 
 import {

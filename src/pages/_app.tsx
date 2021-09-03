@@ -14,13 +14,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 		((page: ReactNode) => page);
 
 	return getLayout(
-		<Provider session={pageProps.session}>
-			<ThemeProvider theme={theme}>
+		<ThemeProvider theme={theme}>
+			<GlobalStyle />
+
+			<Provider session={pageProps.session}>
 				<CartProvider>
 					<Component {...pageProps} />
 				</CartProvider>
-				<GlobalStyle />
-			</ThemeProvider>
-		</Provider>
+			</Provider>
+		</ThemeProvider>
 	);
 }

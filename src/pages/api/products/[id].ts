@@ -1,7 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import Stripe from "stripe";
 
-import { ProductModel } from "../../../models/Product";
-import connectToDatabase from "../../../utils/connectToMongoDB";
+import { envVariables } from "storage/env";
+import { ProductModel } from "models/Product";
+import connectToDatabase from "utils/connectToMongoDB";
+
+const stripe = new Stripe(envVariables.stripeSecretKey, {
+	apiVersion: "2020-08-27",
+});
 
 export default async function talkToDbWithId(
 	req: NextApiRequest,
@@ -19,16 +25,26 @@ export default async function talkToDbWithId(
 			try {
 				const product = await ProductModel.findById(_id);
 
-				return res.status(200).json({ success: true, data: product });
+				if (product)
+					return res.status(200).json({ success: true, data: product });
+				else
+					return res.status(400).json({
+						success: false,
+						data: `GET product with id = ${_id} was not found!`,
+					});
 			} catch (err) {
-				console.error("\n[talkToDbWithId on api/products/[id].ts in GET]", err);
+				console.error(
+					"\n[talkToDbWithId on 'api/products/[id].ts' in GET]",
+					err
+				);
 
 				return res.status(400).json({ success: false, data: err });
 			}
+			break;
 		///////////////////////////////////////////////
 		case "PUT": // update
 			try {
-				const updatedProduct = await ProductModel.findByIdAndUpdate(
+				const updatedProductOnDB = await ProductModel.findByIdAndUpdate(
 					_id,
 					req.body,
 					{
@@ -39,21 +55,39 @@ export default async function talkToDbWithId(
 					}
 				);
 
-				return res.status(200).json({ success: true, data: updatedProduct });
+				if (updatedProductOnDB)
+					return res.status(200).json({
+						success: true,
+						data: updatedProductOnDB,
+					});
+				else
+					return res
+						.status(400)
+						.json({ success: false, data: "updatedProductOnDB returned null" });
 			} catch (err) {
 				console.error("\n[talkToDbWithId on api/products/[id].ts in PUT]", err);
 
 				return res.status(400).json({ success: false, data: err });
 			}
+			break;
 		///////////////////////////////////////////////
 		case "DELETE":
 			try {
-				const deletedProduct = await ProductModel.findByIdAndRemove(_id);
+				const deletedProductOnDB = await ProductModel.findByIdAndRemove(_id);
 
-				return res.status(204).json({
-					success: true,
-					data: deletedProduct,
-				});
+				if (deletedProductOnDB) {
+					const deletedProductOnStripe = await stripe.products.del(
+						_id.toString()
+					);
+
+					return res.status(204).json({
+						success: true,
+						data: { deletedProductOnDB, deletedProductOnStripe },
+					});
+				} else
+					return res
+						.status(400)
+						.json({ success: false, data: "deletedProductOnDB returned null" });
 			} catch (err) {
 				console.error(
 					"\n[talkToDbWithId on api/products/[id].ts in DELETE]",
@@ -62,10 +96,13 @@ export default async function talkToDbWithId(
 
 				return res.status(400).json({ success: false, data: err });
 			}
+			break;
 		///////////////////////////////////////////////
 		default:
-			return res
-				.status(400)
-				.json({ success: false, data: "Entered default case!" });
+			return res.status(400).json({
+				success: false,
+				data: "Entered default case on 'pages/api/products/[id].ts'!",
+			});
+			break;
 	}
 }

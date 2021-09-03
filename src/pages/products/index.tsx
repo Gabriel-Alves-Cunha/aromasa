@@ -4,13 +4,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";
 
+import { ProductCard, NormalLayoutWithFooter, Header } from "components";
 import { ProductModel, Product } from "models/Product";
-import { ProductCard } from "components/ProductCard";
-import { getLayout } from "components/Layout";
 import { useCart } from "hooks/useCart";
-import { Header } from "components";
 import connectToDatabase from "utils/connectToMongoDB";
-import fakeProducts from "../../../products_example2.json";
 
 import useStyles from "./styles";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,24 +15,23 @@ import "react-toastify/dist/ReactToastify.css";
 type Props = {
 	products: Product[];
 };
-// { products }: Props
-function Products() {
+
+function Products({ products }: Props) {
 	const { handleAddPossibleNewProductToCart, cartProducts } = useCart();
-	const products: Product[] = fakeProducts;
 	const classes = useStyles();
 	const router = useRouter();
 
 	useEffect(() => {
 		console.log(
-			`[LOG]\n\tFile: index.tsx\n\tLine:30\n\t${typeof cartProducts}: 'cartProducts' =`,
+			`[LOG]\n\tFile: index.tsx\n\tLine:26\n\t${typeof cartProducts}: 'cartProducts' =`,
 			cartProducts
 		);
 	}, [cartProducts]);
 
-	function gotoProductPage() {
+	function gotoProductPage(product: Product) {
 		console.log("gotoProductPage");
 
-		//router.push(`/product/${product._id.toString()}`);
+		router.push(`/product/${product._id.toString()}`);
 	}
 
 	function handleAddToCart(product: Product) {
@@ -52,7 +48,7 @@ function Products() {
 		});
 	}
 
-	// console.log("\nProducts client-side =", products);
+	console.log("\nProducts client-side =", products);
 
 	return (
 		<>
@@ -68,7 +64,7 @@ function Products() {
 					spacing={4}
 					container
 				>
-					{products?.map(product => (
+					{products.map(product => (
 						<Grid
 							key={product._id.toString()}
 							xs={12}
@@ -90,33 +86,36 @@ function Products() {
 	);
 }
 
-Products.getLayout = getLayout;
+Products.getLayout = NormalLayoutWithFooter;
 
 export default Products;
 
-// export const getServerSideProps: GetServerSideProps = async ctx => {
-// 	try {
-// 		await connectToDatabase();
+export const getServerSideProps: GetServerSideProps = async ctx => {
+	try {
+		await connectToDatabase();
 
-// 		const products = await ProductModel.find({});
+		const products = await ProductModel.find({});
 
-// 		console.log(
-// 			"\nproducts from getServerSideProps in 'pages/products/index.tsx' =",
-// 			products
-// 		);
+		console.log(
+			"\nproducts from getServerSideProps in 'pages/products/index.tsx' =",
+			products
+		);
 
-// 		return {
-// 			props: {
-// 				products,
-// 			},
-// 		};
-// 	} catch (error) {
-// 		console.log(`❗ File: index.tsx\nLine:51\n${typeof error}: 'error'`, error);
+		return {
+			props: {
+				products,
+			},
+		};
+	} catch (error) {
+		console.log(
+			`❗ File: index.tsx\nLine:115\n${typeof error}: 'error'`,
+			error
+		);
 
-// 		return {
-// 			props: {
-// 				products: [],
-// 			},
-// 		};
-// 	}
-// };
+		return {
+			props: {
+				products: [],
+			},
+		};
+	}
+};

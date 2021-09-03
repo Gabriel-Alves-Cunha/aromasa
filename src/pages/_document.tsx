@@ -53,7 +53,7 @@ export default class MyDocument extends Document {
 						rel="stylesheet"
 					/>
 
-					<link href="/static/fonts/styles.css" rel="stylesheet" />
+					{/* <link href="/static/fonts/styles.css" rel="stylesheet" /> */}
 
 					<link rel="icon" href="favicon.png" type="image/x-icon" />
 				</Head>

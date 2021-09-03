@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { envVariables } from "../storage/env";
+import { envVariables } from "storage/env";
 
 /**
  * Global is used here to maintain a cached connection across hot reloads

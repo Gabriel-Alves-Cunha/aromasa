@@ -1,9 +1,14 @@
-import { ReactNode, useState, createContext, useContext } from "react";
 import { parseCookies, setCookie } from "nookies";
+import {
+	createContext,
+	useContext,
+	ReactNode,
+	useEffect,
+	useState,
+} from "react";
 
 import { ClientChosenProduct, Product } from "models/Product";
-import fakeProducts from "../../products_example2.json";
-import { useEffect } from "react";
+// import fakeProducts from "../../products_example2.json";
 
 export type CartContextProps = {
 	handleAddOneMoreToCart(productToBeAdded: ClientChosenProduct | Product): void;
@@ -18,23 +23,23 @@ type CartProviderProps = {
 	children: ReactNode;
 };
 
-const fakeClientChosenProducts: ClientChosenProduct[] = fakeProducts.map(
-	product => ({
-		bottle: {
-			bottle_format: product.bottle.bottle_format ?? undefined,
-			volume: product.bottle.volume ?? undefined,
-			weight: product.bottle.weight ?? undefined,
-			amountThatWillBeBought: "1",
-		},
-		ingredients: product.ingredients ?? undefined,
-		imagePath: product.imagesPaths[0],
-		description: product.description,
-		categories: product.categories,
-		price: product.price,
-		title: product.title,
-		_id: product._id,
-	})
-);
+// const fakeClientChosenProducts: ClientChosenProduct[] = fakeProducts.map(
+// 	product => ({
+// 		bottle: {
+// 			bottle_format: product.bottle.bottle_format ?? undefined,
+// 			volume: product.bottle.volume ?? undefined,
+// 			weight: product.bottle.weight ?? undefined,
+// 			amountThatWillBeBought: "1",
+// 		},
+// 		ingredients: product.ingredients ?? undefined,
+// 		imagePath: product.imagesPaths[0],
+// 		description: product.description,
+// 		categories: product.categories,
+// 		price: product.price,
+// 		title: product.title,
+// 		_id: product._id,
+// 	})
+// );
 
 export const CartContext = createContext({} as CartContextProps);
 
@@ -47,21 +52,21 @@ function CartProvider({ children }: CartProviderProps) {
 
 			const cookies = parseCookies();
 			console.log(
-				`[LOG]\n\tFile: useCart.tsx\n\tLine:44\n\t${typeof cookies}: 'cookies' =`,
+				`[LOG]\n\tFile: useCart.tsx\n\tLine:55\n\t${typeof cookies}: 'cookies' =`,
 				cookies
 			);
 
 			const cartProductsFromCookies = (JSON.parse(cookies.cartProducts) ||
 				[]) as ClientChosenProduct[];
-			setCartProducts(cartProductsFromCookies);
+			setCartProducts(_oldValue => cartProductsFromCookies);
 		}
 
 		// For client-side, omit context parameter.
 		setCookie(null, "cartProducts", JSON.stringify(cartProducts), {
-			maxAge: 5 * 24 * 60 * 60,
+			maxAge: 30 * 24 * 60 * 60,
 			path: "/",
 		});
-	}, [cartProducts]);
+	}, []);
 
 	function handleAddPossibleNewProductToCart(newProduct: Product) {
 		const isProductInCart = cartProducts.some(
@@ -165,11 +170,8 @@ function CartProvider({ children }: CartProviderProps) {
 			0
 		);
 
-		if (subtotal >= 0) {
-			return subtotal.toFixed(2).replace(".", ",");
-		} else {
-			throw new Error("Houve um erro na contabilização do preço subtotal!");
-		}
+		if (subtotal >= 0) return subtotal.toFixed(2).replace(".", ",");
+		else throw new Error("Houve um erro na contabilização do preço subtotal!");
 	}
 
 	return (

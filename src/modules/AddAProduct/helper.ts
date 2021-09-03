@@ -59,6 +59,12 @@ const defaultProduct: ProductToAddToTheServer = {
 		volume: undefined,
 		weight: undefined,
 	},
+	packageDimensions: {
+		height: "",
+		length: "",
+		weight: "",
+		width: "",
+	},
 	isAvailableToSell: false,
 	description: "",
 	imagesPaths: [],

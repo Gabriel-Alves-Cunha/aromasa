@@ -15,6 +15,7 @@ export const Container = styled.footer`
 
 	justify-content: space-around;
 
+	/* background-color: red; */
 	background-color: ${footer};
 
 	margin-top: 7rem;

@@ -12,6 +12,7 @@ export const urlDeBuscarInfoDeUmEstado = (uf: string) =>
 
 export type FrenetForm = {
 	sendEmailConfirmation: boolean;
+	totalPriceChosen?: string;
 	addressComplement: string;
 	federalDocument: string;
 	stateDocument: string;
@@ -255,6 +256,36 @@ export function handleFederalDocument(event: any) {
 	if (!isValid) return;
 }
 
-console.log(`\n\n${cepFormatado("56320700")}`);
-console.log(`\n\n${cpfFormatado("04174360170")}`);
-console.log(`\n\n${foneFormatado("87999633141")}`);
+// console.log(`\n\n${cepFormatado("56320700")}`);
+// console.log(`\n\n${cpfFormatado("04174360170")}`);
+// console.log(`\n\n${foneFormatado("87999633141")}`);
+
+export const nomes_e_siglas_dos_estados_brasileiros = [
+	{ nome: "Acre", sigla: "AC" },
+	{ nome: "Alagoas", sigla: "AL" },
+	{ nome: "Amapá", sigla: "AP" },
+	{ nome: "Amazonas", sigla: "AM" },
+	{ nome: "Bahia", sigla: "BA" },
+	{ nome: "Ceará", sigla: "CE" },
+	{ nome: "Distrito Federal", sigla: "DF" },
+	{ nome: "Espírito Santo", sigla: "ES" },
+	{ nome: "Goiás", sigla: "GO" },
+	{ nome: "Maranhão", sigla: "MA" },
+	{ nome: "Mato Grosso", sigla: "MT" },
+	{ nome: "Mato Grosso do Sul", sigla: "MS" },
+	{ nome: "Minas Gerais", sigla: "MG" },
+	{ nome: "Pará", sigla: "PA" },
+	{ nome: "Paraíba", sigla: "PB" },
+	{ nome: "Paraná", sigla: "PR" },
+	{ nome: "Pernambuco", sigla: "PE" },
+	{ nome: "Piauí", sigla: "PI" },
+	{ nome: "Rio de Janeiro", sigla: "RJ" },
+	{ nome: "Rio Grande do Norte", sigla: "RN" },
+	{ nome: "Rio Grande do Sul", sigla: "RS" },
+	{ nome: "Rondônia", sigla: "RO" },
+	{ nome: "Roraima", sigla: "RR" },
+	{ nome: "Santa Catarina", sigla: "SC" },
+	{ nome: "São Paulo", sigla: "SP" },
+	{ nome: "Sergipe", sigla: "SE" },
+	{ nome: "Tocantins", sigla: "TO" },
+];
