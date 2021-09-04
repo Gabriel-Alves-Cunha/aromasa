@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/client";
 import { useState } from "react";
 
-import { getLayout, Header, Navbar } from "components";
+import { Header, Navbar } from "components";
 import { DeleteAProduct } from "modules/DeleteAProduct";
 import { AlterAProduct } from "modules/AlterAProduct";
 import { NavbarOptions } from "components/Navbar/navabar.data";

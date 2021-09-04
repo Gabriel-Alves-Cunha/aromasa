@@ -5,10 +5,15 @@ import * as yup from "yup";
 import { envVariables } from "storage/env";
 import { validateCPF } from "validations-br";
 
-export const urlDeNãoSeiMeuCep =
-	"https://buscacepinter.correios.com.br/app/endereco/index.php?t";
-export const urlDeBuscarInfoDeUmEstado = (uf: string) =>
-	`https://brasilapi.com.br/api/ibge/uf/v1/${uf}`;
+export type InfoNotDownloaded = {
+	productsId: Array<Types.ObjectId>;
+	messages: Array<string>;
+};
+
+export type Availability = {
+	productsId: Array<Types.ObjectId>;
+	messages: Array<string>;
+};
 
 export type FrenetForm = {
 	sendEmailConfirmation: boolean;
@@ -38,25 +43,16 @@ export type FrenetForm = {
 	name: string;
 };
 
-export const partialYupSchema = yup.object().shape({
-	federalDocument: yup
-		.string()
-		.required("CPF da pessoa física ou CNPJ da pessoa jurídica"),
-	zipCode: yup
-		.string()
-		.required(
-			"CEP da empresa ou pessoa física, este campo é usado como CEP de origem no momento da cotação de Frete"
-		)
-		.min(8),
-	addressNumber: yup
-		.string()
-		.trim()
-		.required(
-			"Número do logradouro da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
-		),
-	addressComplement: yup.string().trim().optional(), //"Complemento do endereço da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
-	phoneNumber: yup.number().optional().min(10).max(11),
-});
+const typeFor_stripePromise = () =>
+	loadStripe(envVariables.stripePublishableKey);
+let notToUseDirectly_stripePromise: ReturnType<
+	typeof typeFor_stripePromise
+> | null = null;
+
+export const urlDeNãoSeiMeuCep =
+	"https://buscacepinter.correios.com.br/app/endereco/index.php?t";
+export const urlDeBuscarInfoDeUmEstado = (uf: string) =>
+	`https://brasilapi.com.br/api/ibge/uf/v1/${uf}`;
 
 export const yupSchema = yup.object().shape({
 	email: yup
@@ -211,12 +207,6 @@ export const defaultValues: FrenetForm = {
 	name: "",
 };
 
-const typeFor_stripePromise = () =>
-	loadStripe(envVariables.stripePublishableKey);
-
-let notToUseDirectly_stripePromise: ReturnType<
-	typeof typeFor_stripePromise
-> | null = null;
 export const getStripe = () => {
 	if (!notToUseDirectly_stripePromise)
 		notToUseDirectly_stripePromise = loadStripe(
@@ -235,18 +225,9 @@ export const cepFormatado = (cep: string) =>
 export const foneFormatado = (fone: string) =>
 	fone.replace(/(\d{2})?(\d{1})?(\d{4})?(\d{4})/, "($1) $2 $3-$4");
 
-export type InfoNotDownloaded = {
-	productsId: Array<Types.ObjectId>;
-	messages: Array<string>;
-};
-
-export type Availability = {
-	productsId: Array<Types.ObjectId>;
-	messages: Array<string>;
-};
-
-export function handleFederalDocument(event: any) {
-	//@ts-ignore
+export function handleFederalDocument(
+	event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+) {
 	const cpfStr = cpfFormatado(event.target.value);
 	console.log(`Entered handleFederalDocument(${cpfStr})`);
 	if (cpfStr.length < 14) return;
@@ -259,33 +240,3 @@ export function handleFederalDocument(event: any) {
 // console.log(`\n\n${cepFormatado("56320700")}`);
 // console.log(`\n\n${cpfFormatado("04174360170")}`);
 // console.log(`\n\n${foneFormatado("87999633141")}`);
-
-export const nomes_e_siglas_dos_estados_brasileiros = [
-	{ nome: "Acre", sigla: "AC" },
-	{ nome: "Alagoas", sigla: "AL" },
-	{ nome: "Amapá", sigla: "AP" },
-	{ nome: "Amazonas", sigla: "AM" },
-	{ nome: "Bahia", sigla: "BA" },
-	{ nome: "Ceará", sigla: "CE" },
-	{ nome: "Distrito Federal", sigla: "DF" },
-	{ nome: "Espírito Santo", sigla: "ES" },
-	{ nome: "Goiás", sigla: "GO" },
-	{ nome: "Maranhão", sigla: "MA" },
-	{ nome: "Mato Grosso", sigla: "MT" },
-	{ nome: "Mato Grosso do Sul", sigla: "MS" },
-	{ nome: "Minas Gerais", sigla: "MG" },
-	{ nome: "Pará", sigla: "PA" },
-	{ nome: "Paraíba", sigla: "PB" },
-	{ nome: "Paraná", sigla: "PR" },
-	{ nome: "Pernambuco", sigla: "PE" },
-	{ nome: "Piauí", sigla: "PI" },
-	{ nome: "Rio de Janeiro", sigla: "RJ" },
-	{ nome: "Rio Grande do Norte", sigla: "RN" },
-	{ nome: "Rio Grande do Sul", sigla: "RS" },
-	{ nome: "Rondônia", sigla: "RO" },
-	{ nome: "Roraima", sigla: "RR" },
-	{ nome: "Santa Catarina", sigla: "SC" },
-	{ nome: "São Paulo", sigla: "SP" },
-	{ nome: "Sergipe", sigla: "SE" },
-	{ nome: "Tocantins", sigla: "TO" },
-];

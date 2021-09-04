@@ -11,13 +11,11 @@ const stripe = new Stripe(envVariables.stripeSecretKey, {
 });
 const contactEmail = envVariables.contactEmail;
 
-console.log(contactEmail, contactEmailPassword);
-
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	console.log("\nEntered 'api/payment/[id].ts'\n");
+	console.log("\nEntered 'pages/api/payment/[id].ts'\n");
 
 	const id = req.query.id as string;
 	console.log("\nsession_id =", id);
@@ -78,6 +76,7 @@ export default async function handler(
 						console.error(err);
 						return;
 					}
+
 					console.log(
 						"\nResponse from nodemailer [email sent :) ]: ",
 						info.response
@@ -90,6 +89,8 @@ export default async function handler(
 	} catch (err: any) {
 		return res
 			.status(500)
-			.json({ message: "Error on 'api/payment/[id].ts': " + err.message });
+			.json({
+				message: "Error on 'pages/api/payment/[id].ts': " + err.message,
+			});
 	}
 }

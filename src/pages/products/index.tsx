@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";
 
-import { ProductCard, NormalLayoutWithFooter, Header } from "components";
+import { ProductCard, Header, getLayout } from "components";
 import { ProductModel, Product } from "models/Product";
 import { useCart } from "hooks/useCart";
 import connectToDatabase from "utils/connectToMongoDB";
@@ -86,7 +86,7 @@ function Products({ products }: Props) {
 	);
 }
 
-Products.getLayout = NormalLayoutWithFooter;
+Products.getLayout = getLayout;
 
 export default Products;
 

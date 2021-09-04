@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Head from "next/head";
 
-import { ProductSlider_WithThumbnail, NormalLayoutWithFooter, Header } from "components";
+import { ProductSlider_WithThumbnail, Header, getLayout } from "components";
 import { Product } from "models/Product";
 import connectToDatabase from "utils/connectToMongoDB";
 
@@ -51,7 +51,7 @@ function ProductCard({ product }: Props) {
 	);
 }
 
-ProductCard.getLayout = NormalLayoutWithFooter;
+ProductCard.getLayout = getLayout;
 
 export default ProductCard;
 
@@ -85,7 +85,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 		}
 	} catch (error) {
 		console.log(
-			`[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:91\n\t${typeof error}: 'error' =`,
+			`[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:88\n\t${typeof error}: 'error' =`,
 			error
 		);
 

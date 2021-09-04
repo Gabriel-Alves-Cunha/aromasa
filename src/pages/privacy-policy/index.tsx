@@ -1,4 +1,4 @@
-import { Header, NormalLayoutWithFooter } from "components";
+import { getLayout, Header } from "components";
 
 import { Container, Content } from "./styles";
 
@@ -66,7 +66,8 @@ function PrivacyPolicy() {
 					eles coletam, como as usamos e por que às vezes precisamos armazenar
 					esses cookies. Também compartilharemos como você pode impedir que
 					esses cookies sejam armazenados, no entanto, isso pode fazer o
-					downgrade ou 'quebrar' certos elementos da funcionalidade do site.
+					downgrade ou &apos;quebrar&apos; certos elementos da funcionalidade do
+					site.
 				</p>
 				<h3>Como usamos os cookies?</h3>
 				<p>
@@ -162,14 +163,14 @@ function PrivacyPolicy() {
 						possam ser chamadas sempre que você interagir com uma página for
 						afetada por suas preferências.
 						<br />
-					</li>{" "}
-				</ul>{" "}
-				<h3>Cookies de Terceiros</h3>{" "}
+					</li>
+				</ul>
+				<h3>Cookies de Terceiros</h3>
 				<p>
 					Em alguns casos especiais, também usamos cookies fornecidos por
 					terceiros confiáveis. A seção a seguir detalha quais cookies de
 					terceiros você pode encontrar através deste site.
-				</p>{" "}
+				</p>
 				<ul>
 					<li>
 						Este site usa o Google Analytics, que é uma das soluções de análise
@@ -178,12 +179,12 @@ function PrivacyPolicy() {
 						cookies podem rastrear itens como quanto tempo você gasta no site e
 						as páginas visitadas, para que possamos continuar produzindo
 						conteúdo atraente.
-					</li>{" "}
-				</ul>{" "}
+					</li>
+				</ul>
 				<p>
 					Para mais informações sobre cookies do Google Analytics, consulte a
 					página oficial do Google Analytics.
-				</p>{" "}
+				</p>
 				<ul>
 					<li>
 						As análises de terceiros são usadas para rastrear e medir o uso
@@ -209,7 +210,7 @@ function PrivacyPolicy() {
 						nossos custos de publicidade e produtos para garantir o melhor preço
 						possível.
 					</li>
-				</ul>{" "}
+				</ul>
 				<h3>Compromisso do Usuário</h3>
 				<p>
 					O usuário se compromete a fazer uso adequado dos conteúdos e da
@@ -234,15 +235,15 @@ function PrivacyPolicy() {
 						introduzir ou disseminar vírus informáticos ou quaisquer outros
 						sistemas de hardware ou software que sejam capazes de causar danos
 						anteriormente mencionados.
-					</li>{" "}
+					</li>
 				</ul>
-				<h3>Mais informações</h3>{" "}
+				<h3>Mais informações</h3>
 				<p>
 					Esperemos que esteja esclarecido e, como mencionado anteriormente, se
 					houver algo que você não tem certeza se precisa ou não, geralmente é
 					mais seguro deixar os cookies ativados, caso interaja com um dos
 					recursos que você usa em nosso site.
-				</p>{" "}
+				</p>
 				<p>
 					Esta política é efetiva a partir de <strong>July</strong>/
 					<strong>2021</strong>.
@@ -263,7 +264,6 @@ function PrivacyPolicy() {
 				</p>
 
 				<h2>2. Uso de Licença</h2>
-
 				<p>
 					É concedida permissão para baixar temporariamente uma cópia dos
 					materiais (informações ou software) no site Aromasa , apenas para
@@ -288,8 +288,8 @@ function PrivacyPolicy() {
 						propriedade dos materiais; ou 
 					</li>
 					<li>
-						transferir os materiais para outra pessoa ou 'espelhe' os materiais
-						em qualquer outro servidor.
+						transferir os materiais para outra pessoa ou &apos;espelhe&apos; os
+						materiais em qualquer outro servidor.
 					</li>
 				</ul>
 				<p>
@@ -301,15 +301,14 @@ function PrivacyPolicy() {
 				</p>
 
 				<h2>3. Isenção de responsabilidade</h2>
-
 				<ul>
 					<li>
-						Os materiais no site da Aromasa são fornecidos 'como estão'. Aromasa
-						não oferece garantias, expressas ou implícitas, e, por este meio,
-						isenta e nega todas as outras garantias, incluindo, sem limitação,
-						garantias implícitas ou condições de comercialização, adequação a um
-						fim específico ou não violação de propriedade intelectual ou outra
-						violação de direitos.
+						Os materiais no site da Aromasa são fornecidos &apos;como
+						estão&apos;. Aromasa não oferece garantias, expressas ou implícitas,
+						e, por este meio, isenta e nega todas as outras garantias,
+						incluindo, sem limitação, garantias implícitas ou condições de
+						comercialização, adequação a um fim específico ou não violação de
+						propriedade intelectual ou outra violação de direitos.
 					</li>
 					<li>
 						Além disso, o Aromasa não garante ou faz qualquer representação
@@ -331,6 +330,7 @@ function PrivacyPolicy() {
 					responsabilidade por danos conseqüentes ou incidentais, essas
 					limitações podem não se aplicar a você.
 				</p>
+
 				<h2>5. Precisão dos materiais</h2>
 				<p>
 					Os materiais exibidos no site da Aromasa podem incluir erros técnicos,
@@ -340,6 +340,7 @@ function PrivacyPolicy() {
 					momento, sem aviso prévio. No entanto, Aromasa não se compromete a
 					atualizar os materiais.
 				</p>
+
 				<h2>6. Links</h2>
 				<p>
 					O Aromasa não analisou todos os sites vinculados ao seu site e não é
@@ -354,8 +355,8 @@ function PrivacyPolicy() {
 					momento, sem aviso prévio. Ao usar este site, você concorda em ficar
 					vinculado à versão atual desses termos de serviço.
 				</p>
-				<h3>Lei aplicável</h3>
 
+				<h3>Lei aplicável</h3>
 				<p>
 					Estes termos e condições são regidos e interpretados de acordo com as
 					leis do Aromasa e você se submete irrevogavelmente à jurisdição
@@ -366,6 +367,6 @@ function PrivacyPolicy() {
 	);
 }
 
-PrivacyPolicy.getLayout = NormalLayoutWithFooter;
+PrivacyPolicy.getLayout = getLayout;
 
 export default PrivacyPolicy;

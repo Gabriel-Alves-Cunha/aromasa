@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/client";
 import Stripe from "stripe";
 
 import { envVariables } from "storage/env";
@@ -14,12 +15,15 @@ export default async function talkToServer(
 	switch (req.method) {
 		case "POST":
 			try {
+				const userSession = await getSession();
+				const date = new Date().toISOString();
+
 				const productsInfo = req.body.products;
 				console.log("productsInfo =", productsInfo);
 				console.log("req.body.metadata =", req.body.metadata);
 
 				const shippingAsAProductForStripe = await stripe.products.create({
-					name: "Frete",
+					name: `Frete para ${userSession?.user?.name} na data: ${date}`,
 				});
 				const priceForShipping = await stripe.prices.create({
 					product: shippingAsAProductForStripe.id,
@@ -52,12 +56,12 @@ export default async function talkToServer(
 				return res
 					.status(error.statusCode || 500)
 					.json(
-						"Erro no método POST em /api/payment/index.tsx" + error.message
+						"Erro no método POST em 'pages/api/payment/index.tsx'" +
+							error.message
 					);
 			}
 			break;
 		default:
-			res.setHeader("Allow", "POST");
 			return res.status(405).end("Method Not Allowed");
 			break;
 	}

@@ -8,7 +8,6 @@ import {
 } from "react";
 
 import { ClientChosenProduct, Product } from "models/Product";
-// import fakeProducts from "../../products_example2.json";
 
 export type CartContextProps = {
 	handleAddOneMoreToCart(productToBeAdded: ClientChosenProduct | Product): void;
@@ -23,24 +22,6 @@ type CartProviderProps = {
 	children: ReactNode;
 };
 
-// const fakeClientChosenProducts: ClientChosenProduct[] = fakeProducts.map(
-// 	product => ({
-// 		bottle: {
-// 			bottle_format: product.bottle.bottle_format ?? undefined,
-// 			volume: product.bottle.volume ?? undefined,
-// 			weight: product.bottle.weight ?? undefined,
-// 			amountThatWillBeBought: "1",
-// 		},
-// 		ingredients: product.ingredients ?? undefined,
-// 		imagePath: product.imagesPaths[0],
-// 		description: product.description,
-// 		categories: product.categories,
-// 		price: product.price,
-// 		title: product.title,
-// 		_id: product._id,
-// 	})
-// );
-
 export const CartContext = createContext({} as CartContextProps);
 
 function CartProvider({ children }: CartProviderProps) {
@@ -52,7 +33,7 @@ function CartProvider({ children }: CartProviderProps) {
 
 			const cookies = parseCookies();
 			console.log(
-				`[LOG]\n\tFile: useCart.tsx\n\tLine:55\n\t${typeof cookies}: 'cookies' =`,
+				`[LOG]\n\tFile: useCart.tsx\n\tLine:36\n\t${typeof cookies}: 'cookies' =`,
 				cookies
 			);
 
@@ -66,6 +47,7 @@ function CartProvider({ children }: CartProviderProps) {
 			maxAge: 30 * 24 * 60 * 60,
 			path: "/",
 		});
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	function handleAddPossibleNewProductToCart(newProduct: Product) {

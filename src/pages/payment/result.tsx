@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Image from "next/image";
 
-import { NormalLayoutWithFooter, Loading, Header } from "components";
+import { Loading, Header, getLayout } from "components";
 import { envVariables } from "storage/env";
 
 import error500_svg from "assets/errorVector/error_500.svg";
@@ -29,32 +29,26 @@ function Result() {
 				console.log("\nThere is data: ", data);
 
 				setSuccess(true);
-			} else {
-				setError(true);
-			}
+			} else setError(true);
 		})();
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	if (error)
 		return (
 			<>
 				<Header />
+
 				<Image src={error500_svg} alt="Ocorreu um erro no servidor!" />
 			</>
 		);
 
-	if (success)
-		return (
-			<>
-				<Header />
-				<Success />
-			</>
-		);
+	if (success) return <Success />;
 
 	return (
 		<>
 			<Header />
+
 			<Loading />
 		</>
 	);
@@ -64,6 +58,7 @@ function Success() {
 	return (
 		<>
 			<Header />
+
 			<div style={{ marginTop: "90px" }}>
 				<p>
 					We appreciate your business! If you have any questions, please email
@@ -74,6 +69,6 @@ function Success() {
 	);
 }
 
-Result.getLayout = NormalLayoutWithFooter;
+Result.getLayout = getLayout;
 
 export default Result;

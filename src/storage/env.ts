@@ -1,25 +1,16 @@
 export const envVariables = {
 	stripeWebhookEndpointSecret: "",
-	mercadoPagoAccessToken: "",
-	mercadoPagoPublicKey: "",
 	stripePublishableKey: "",
 	contactEmailPassword: "",
 	stripeSecretKey: "",
 	contactEmail: "",
 	aromasaUrl: "",
-	jwtSecret: "",
 	clientId: "",
 	db_name: "",
 	db_uri: "",
 };
 
 if (process.env.NODE_ENV === "development") {
-	envVariables.mercadoPagoAccessToken =
-		process.env.MERCADO_PAGO_ACCESS_TOKEN_TEST ?? "";
-
-	envVariables.mercadoPagoPublicKey =
-		process.env.MERCADO_PAGO_PUBLIC_KEY_TEST ?? "";
-
 	envVariables.db_uri = process.env.MONGODB_URI_DEVELOPMENT ?? "";
 
 	envVariables.clientId = process.env.GOOGLE_CLIENT_ID ?? "";
@@ -37,17 +28,9 @@ if (process.env.NODE_ENV === "development") {
 
 	envVariables.contactEmailPassword = process.env.CONTACT_EMAIL_PASSWORD ?? "";
 
-	envVariables.jwtSecret = process.env.JWT_SECRET ?? "";
-
 	envVariables.stripeWebhookEndpointSecret =
 		process.env.STRIPE_WEBHOOK_ENDPOINT_TEST_SECRET ?? "";
 } else if (process.env.NODE_ENV === "production") {
-	envVariables.mercadoPagoAccessToken =
-		process.env.MERCADO_PAGO_ACCESS_TOKEN_PRODUCTION ?? "";
-
-	envVariables.mercadoPagoPublicKey =
-		process.env.MERCADO_PAGO_PUBLIC_KEY_PRODUCTION ?? "";
-
 	envVariables.db_uri = process.env.MONGODB_URI_PRODUCTION ?? "";
 
 	envVariables.clientId = process.env.GOOGLE_CLIENT_ID ?? "";
@@ -64,8 +47,6 @@ if (process.env.NODE_ENV === "development") {
 	envVariables.contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "";
 
 	envVariables.contactEmailPassword = process.env.CONTACT_EMAIL_PASSWORD ?? "";
-
-	envVariables.jwtSecret = process.env.JWT_SECRET ?? "";
 
 	envVariables.stripeWebhookEndpointSecret =
 		process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET ?? "";

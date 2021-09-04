@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import cep from "cep-promise";
 
-import { CheckoutCardForProduct, NormalLayoutWithFooter, Header } from "components";
+import { CheckoutCardForProduct, getLayout, Header } from "components";
 import { ClientChosenProduct, Product } from "models/Product";
 import { envVariables } from "storage/env";
 import { useCart } from "hooks/useCart";
@@ -17,7 +17,6 @@ import {
 	handleFederalDocument,
 	InfoNotDownloaded,
 	urlDeNãoSeiMeuCep,
-	partialYupSchema,
 	defaultValues,
 	Availability,
 	cepFormatado,
@@ -656,6 +655,6 @@ function Checkout() {
 	);
 }
 
-Checkout.getLayout = NormalLayoutWithFooter;
+Checkout.getLayout = getLayout;
 
 export default Checkout;

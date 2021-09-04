@@ -21,6 +21,7 @@ export default async function talkToDbWithId(
 	} = req;
 
 	switch (method) {
+		// GET a product with id
 		case "GET" || undefined:
 			try {
 				const product = await ProductModel.findById(_id);
@@ -42,7 +43,8 @@ export default async function talkToDbWithId(
 			}
 			break;
 		///////////////////////////////////////////////
-		case "PUT": // update
+		// Update a product with a certain id with the things from req.body
+		case "PUT":
 			try {
 				const updatedProductOnDB = await ProductModel.findByIdAndUpdate(
 					_id,
@@ -65,12 +67,16 @@ export default async function talkToDbWithId(
 						.status(400)
 						.json({ success: false, data: "updatedProductOnDB returned null" });
 			} catch (err) {
-				console.error("\n[talkToDbWithId on api/products/[id].ts in PUT]", err);
+				console.error(
+					"\n[talkToDbWithId on 'pages/api/products/[id].ts' in PUT]",
+					err
+				);
 
 				return res.status(400).json({ success: false, data: err });
 			}
 			break;
 		///////////////////////////////////////////////
+		// Delete a product with id
 		case "DELETE":
 			try {
 				const deletedProductOnDB = await ProductModel.findByIdAndRemove(_id);
@@ -90,7 +96,7 @@ export default async function talkToDbWithId(
 						.json({ success: false, data: "deletedProductOnDB returned null" });
 			} catch (err) {
 				console.error(
-					"\n[talkToDbWithId on api/products/[id].ts in DELETE]",
+					"\n[talkToDbWithId on 'pages/api/products/[id].ts' in DELETE]",
 					err
 				);
 

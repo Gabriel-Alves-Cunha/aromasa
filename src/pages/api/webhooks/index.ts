@@ -3,7 +3,7 @@ import { buffer } from "micro";
 import { Stripe } from "stripe";
 import Cors from "micro-cors";
 
-import { envVariables } from "../../../storage/env";
+import { envVariables } from "storage/env";
 
 const cors = Cors({
 	allowMethods: ["POST", "HEAD"],
@@ -27,7 +27,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 				sig,
 				envVariables.stripeWebhookEndpointSecret
 			);
-		} catch (err) {
+		} catch (err: any) {
 			// On error, log and return the error message.
 			console.log(`❌ Error message: ${err.message}`);
 			res.status(400).send(`Webhook Error: ${err.message}`);

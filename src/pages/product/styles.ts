@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-import { HEADER_HEIGHT } from "./../../components/Header/styles";
-import theme from "../../styles/theme";
+import { HEADER_HEIGHT } from "components/Header/styles";
+import theme from "styles/theme";
 
 const { primary: f_primary, secondary: f_secondary } = theme.fonts;
 const { text_light } = theme.colors.light;

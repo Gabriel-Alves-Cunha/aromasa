@@ -95,12 +95,14 @@ export default async function talkToDb(
 							timestamps: true,
 							checkKeys: true,
 						});
+
 						const productCreatedOnStripe = await stripe.products.create({
 							active: productCreatedOnDB[0].isAvailableToSell,
 							description: productCreatedOnDB[0].description,
 							name: productCreatedOnDB[0].title,
 							id: productCreatedOnDB[0].id,
 						});
+
 						console.log(
 							"\nret from ProductModel.create() =",
 							productCreatedOnDB
