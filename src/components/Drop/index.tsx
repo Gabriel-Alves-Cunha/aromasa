@@ -2,8 +2,9 @@ import { FileError, useDropzone } from "react-dropzone";
 import React, { useState } from "react";
 import { IoIosClose } from "react-icons/io";
 import prettyBytes from "pretty-bytes";
+import Image from "next/image";
 
-import { Container, Rejectd, TrashTheImg } from "./styles";
+import useStyles, { Container, Rejectd, TrashTheImg } from "./styles";
 
 type Props = {
 	setFiles: React.Dispatch<React.SetStateAction<File[]>>;
@@ -16,6 +17,7 @@ type Preview = {
 };
 
 export function MyDropzone({ files, setFiles }: Props) {
+	const classes = useStyles();
 	const [previews, setPreviews] = useState([] as Preview[]);
 
 	const { getRootProps, getInputProps, fileRejections } = useDropzone({
@@ -54,7 +56,8 @@ export function MyDropzone({ files, setFiles }: Props) {
 
 	const fileRejectionJSXs = fileRejections.map(({ file, errors }) => (
 		<li key={file.name}>
-			"{file.name}"<br />
+			&#34;{file.name}&#34;
+			<br />
 			Tamanho: {prettyBytes(file.size)}
 			<ul>
 				{errors.map(e => (
@@ -101,14 +104,11 @@ export function MyDropzone({ files, setFiles }: Props) {
 				>
 					<IoIosClose size={20} />
 				</TrashTheImg>
-				<img
+				<Image
+					className={classes.img}
 					src={file.preview}
-					style={{
-						objectFit: "cover",
-						display: "block",
-						height: "auto",
-						width: "100%",
-					}}
+					height={200}
+					width={200}
 					alt=""
 				/>
 			</div>

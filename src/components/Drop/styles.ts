@@ -1,9 +1,19 @@
+import { makeStyles } from "@material-ui/core";
 import styled from "styled-components";
 
-import theme from "../../styles/theme";
+import theme from "styles/theme";
 
 const { primary } = theme.colors.light;
 const { primary: f_primary, secondary: f_secondary } = theme.fonts;
+
+export default makeStyles(_muiTheme => ({
+	img: {
+		objectFit: "cover",
+		display: "block",
+		height: "auto",
+		width: "100%",
+	},
+}));
 
 export const Container = styled.div`
 	flex: 1;
