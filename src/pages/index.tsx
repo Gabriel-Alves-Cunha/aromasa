@@ -5,8 +5,6 @@ import bg from "assets/bg.jpg";
 
 import { getLayout, Header } from "components";
 import { NewArrivals } from "modules/NewArrivals";
-import { Instagram } from "components/Instagram";
-import { Product } from "models/Product";
 
 import { HeroContainer, Container } from "styles/pages";
 
@@ -42,8 +40,6 @@ function Home() {
 				</HeroContainer>
 
 				<NewArrivals />
-
-				<Instagram />
 			</Container>
 		</>
 	);

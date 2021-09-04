@@ -1,8 +1,7 @@
 import { signIn, signOut, useSession } from "next-auth/client";
-import { toast, ToastContainer } from "react-toastify";
+import { memo, useEffect, useState } from "react";
 import { makeStyles, Modal } from "@material-ui/core";
 import { BsFillPersonFill } from "react-icons/bs";
-import { useEffect, useState } from "react";
 import { Avatar } from "@material-ui/core";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,12 +30,12 @@ type Props = {
 	currentPage?: HeaderData["label"];
 };
 
-export function Header({ currentPage }: Props) {
+function Header_({ currentPage }: Props) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [session] = useSession();
 	const classes = useStyles();
 
-	async function handleProfileClick(e: React.MouseEvent<HTMLButtonElement>) {
+	function handleProfileClick(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
 
 		if (!session) handleLogin();
@@ -61,7 +60,7 @@ export function Header({ currentPage }: Props) {
 			session && (
 				<Modal className={classes.modal} disableEnforceFocus open={isModalOpen}>
 					<ModalContainer>
-						<Avatar alt={session!.user?.name ?? "?"} />
+						<Avatar alt={session.user?.name ?? "?"} />
 
 						<SignOutButton onClick={handleLogout}>Deslogar</SignOutButton>
 					</ModalContainer>
@@ -112,6 +111,8 @@ export function Header({ currentPage }: Props) {
 		</Container>
 	);
 }
+
+export const Header = memo(Header_);
 
 const useStyles = makeStyles(_muiTheme => ({
 	button: {
