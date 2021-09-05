@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Loading, Header, getLayout } from "components";
 import { envVariables } from "storage/env";
 
-import error500_svg from "assets/errorVector/error_500.svg";
+import error500_svg from "src/assets/errorVector/error_500.svg";
 
 const contactEmail = envVariables.contactEmail;
 
