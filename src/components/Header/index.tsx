@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import cx from "classnames";
 
-import AromasaLogo from "/AromasaLogo.webp";
+import AromasaLogo from "../../../public/AromasaLogo.webp";
 
 import headerData, { HeaderData } from "./header.data";
 import { Cart } from "components";
