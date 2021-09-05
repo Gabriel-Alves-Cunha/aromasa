@@ -8,4 +8,7 @@ module.exports = withPlugins([], {
 		domains: [""],
 	},
 	webpack5: true,
+	serverRuntimeConfig: {
+		PROJECT_ROOT: __dirname,
+	},
 });
