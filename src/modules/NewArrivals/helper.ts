@@ -1,6 +1,6 @@
-import img01 from "/static/img01.jpg";
-import img02 from "/static/img02.jpg";
-import img03 from "/static/img03.jpg";
+import img01 from "/images/img01.jpg";
+import img02 from "/images/img02.jpg";
+import img03 from "/images/img03.jpg";
 
 export type Slide = {
 	img: StaticImageData;
