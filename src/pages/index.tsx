@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Head from "next/head";
 
-import bg from "assets/bg.jpg";
+import bg from "/assets/bg.jpg";
 
 import { getLayout, Header } from "components";
 import { NewArrivals } from "modules/NewArrivals";
