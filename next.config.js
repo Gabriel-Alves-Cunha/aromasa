@@ -1,12 +1,11 @@
 const withPlugins = require("next-compose-plugins");
 
-const nextConfig = {
+module.exports = withPlugins([], {
 	reactStrictMode: true,
 	next: "latest",
 	node: "--trace-warnings",
 	images: {
 		domains: [""],
 	},
-};
-
-module.exports = withPlugins([], nextConfig);
+	webpack5: true,
+});
