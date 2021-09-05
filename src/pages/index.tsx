@@ -4,7 +4,7 @@ import Head from "next/head";
 import { getLayout, Header } from "components";
 import { NewArrivals } from "modules/NewArrivals";
 
-import bg from "/bg.jpg";
+import bg from "/static/bg.jpg";
 
 import { HeroContainer, Container } from "styles/pages";
 
