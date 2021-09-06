@@ -61,7 +61,7 @@ export default async function talkToDb(
 		case "POST":
 			try {
 				const form = formidable({
-					uploadDir: "public/uploads/products_images",
+					uploadDir: "public/images/uploads/products_images",
 					maxFileSize: 20 * 1024 * 1024,
 					allowEmptyFiles: false,
 					keepExtensions: true,
