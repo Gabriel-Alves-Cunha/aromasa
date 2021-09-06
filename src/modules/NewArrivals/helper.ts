@@ -1,6 +1,6 @@
-import img01 from "public/images/img01.jpg";
-import img02 from "public/images/img02.jpg";
-import img03 from "public/images/img03.jpg";
+import Img01 from "public/images/Img01.jpg";
+import Img02 from "public/images/Img02.jpg";
+import Img03 from "public/images/Img03.jpg";
 
 export type Slide = {
 	img: StaticImageData;
@@ -10,17 +10,17 @@ export type Slide = {
 
 export const slides: Slide[] = [
 	{
-		img: img01,
+		img: Img01,
 		name: "Flower",
 		info: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia, saepe",
 	},
 	{
-		img: img02,
+		img: Img02,
 		name: "Perfume A",
 		info: "Consectetur at ex id harum corporis, nostrum excepturi dolores animi?",
 	},
 	{
-		img: img03,
+		img: Img03,
 		name: "Sabonete",
 		info: "Consequatur numquam temporibus esse quod labore aliquam repudiandae veniam ducimus.",
 	},

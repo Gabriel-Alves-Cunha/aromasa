@@ -4,7 +4,7 @@ import Head from "next/head";
 import { getLayout, Header } from "components";
 import { NewArrivals } from "modules/NewArrivals";
 
-import bg from "public/images/bg.jpg";
+import Bg from "public/images/Bg.jpg";
 
 import { HeroContainer, Container } from "styles/pages";
 
@@ -26,7 +26,7 @@ function Home() {
 						className="hero_img"
 						objectFit="cover"
 						priority
-						src={bg}
+						src={Bg}
 					/>
 
 					<div className="text_block">

@@ -2,7 +2,7 @@ import { BsChevronRight } from "react-icons/bs";
 import Image from "next/image";
 import Link from "next/link";
 
-import Sublogo from "public/images/sublogo_preto.png";
+import Sublogo from "public/images/Sublogo_preto.png";
 
 import { envVariables } from "storage/env";
 
