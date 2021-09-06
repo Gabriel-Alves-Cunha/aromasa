@@ -2,7 +2,7 @@ import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FiTrash2 } from "react-icons/fi";
 import Image from "next/image";
 
-import { ClientChosenProduct } from "../../models/Product";
+import { ClientChosenProduct } from "models/Product";
 
 import { ImgContainer, StyledButton, Title, Content, Amount } from "./styles";
 

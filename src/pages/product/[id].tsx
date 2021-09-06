@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "node_modules/next";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Head from "next/head";

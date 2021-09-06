@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import Stripe from "stripe";
 
 import { envVariables } from "storage/env";

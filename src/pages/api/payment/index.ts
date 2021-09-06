@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import { getSession } from "next-auth/client";
 import Stripe from "stripe";
 

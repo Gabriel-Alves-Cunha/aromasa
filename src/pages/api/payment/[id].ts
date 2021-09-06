@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import nodemailer from "nodemailer";
 import Stripe from "stripe";
 import axios from "axios";

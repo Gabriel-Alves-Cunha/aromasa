@@ -1,4 +1,4 @@
-import { NextApiResponse, NextApiRequest } from "next";
+import { NextApiResponse, NextApiRequest } from "node_modules/next";
 import { buffer } from "micro";
 import { Stripe } from "stripe";
 import Cors from "micro-cors";

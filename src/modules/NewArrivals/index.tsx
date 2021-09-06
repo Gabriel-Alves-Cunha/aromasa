@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 
-import { Slider } from "../../components/Slider";
+import { Slider } from "components/Slider";
 import { slides } from "./helper";
 
 import { Container, SlideInfo, SliderContainer } from "./styles";

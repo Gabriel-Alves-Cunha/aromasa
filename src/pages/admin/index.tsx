@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps } from "node_modules/next";
 import { getSession } from "next-auth/client";
 import { useState } from "react";
 

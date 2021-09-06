@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import formidable from "formidable";
 import Stripe from "stripe";
 import fs from "fs";

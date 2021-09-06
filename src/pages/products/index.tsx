@@ -1,5 +1,5 @@
 import { toast, ToastContainer } from "react-toastify";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps } from "node_modules/next";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@material-ui/core";

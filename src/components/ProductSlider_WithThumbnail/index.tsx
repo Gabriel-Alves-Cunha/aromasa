@@ -1,4 +1,4 @@
-import { SliderWithThumbnail } from "../SliderWithThumbnail";
+import { SliderWithThumbnail } from "components";
 import { useState } from "react";
 
 import { Container } from "./styles";
