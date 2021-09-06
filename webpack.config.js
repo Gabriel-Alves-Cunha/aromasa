@@ -1,3 +1,5 @@
+import CaseSensitivePathsPlugin from "case-sensitive-paths-webpack-plugin";
+
 module.exports = {
 	i18n: {
 		locales: ["en", "pt"],
@@ -19,4 +21,5 @@ module.exports = {
 
 		return config;
 	},
+	plugins: [new CaseSensitivePathsPlugin({ debug: true })],
 };
