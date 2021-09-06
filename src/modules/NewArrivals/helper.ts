@@ -1,6 +1,6 @@
-import img01 from "../../../public/img01.jpg";
-import img02 from "../../../public/img02.jpg";
-import img03 from "../../../public/img03.jpg";
+import img01 from "react-setup/public/img01.jpg";
+import img02 from "react-setup/public/img02.jpg";
+import img03 from "react-setup/public/img03.jpg";
 
 export type Slide = {
 	img: StaticImageData;

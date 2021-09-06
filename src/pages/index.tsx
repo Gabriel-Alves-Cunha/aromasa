@@ -4,7 +4,7 @@ import Head from "next/head";
 import { getLayout, Header } from "components";
 import { NewArrivals } from "modules/NewArrivals";
 
-import bg from "../../public/bg.jpg";
+import bg from "react-setup/public/bg.jpg";
 
 import { HeroContainer, Container } from "styles/pages";
 
