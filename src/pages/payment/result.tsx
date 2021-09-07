@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Loading, Header, getLayout } from "components";
 import { envVariables } from "storage/env";
 
-import Error500_svg from "public/images/Error_500.svg";
+// import Error500_svg from "public/images/Error_500.svg";
 
 const contactEmail = envVariables.contactEmail;
 
@@ -39,7 +39,7 @@ function Result() {
 			<>
 				<Header />
 
-				<Image src={Error500_svg} alt="Ocorreu um erro no servidor!" />
+				{/* <Image src={Error500_svg} alt="Ocorreu um erro no servidor!" /> */}
 			</>
 		);
 

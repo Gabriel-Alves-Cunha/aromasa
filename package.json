@@ -1,9 +1,9 @@
 {
 	"name": "aromasa",
-	"version": "0.1.0",
+	"version": "0.5.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
+		"dev": "node_modules/next/dist/bin/next",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint"
@@ -34,7 +34,6 @@
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
 		"react-dropzone": "^11.3.4",
-		"react-google-login": "^5.2.2",
 		"react-hook-form": "^7.12.1",
 		"react-icons": "^4.2.0",
 		"react-is": "^17.0.2",
@@ -59,7 +58,6 @@
 		"@types/react-input-mask": "^3.0.1",
 		"@types/react-is": "^17",
 		"@types/styled-components": "^5.1.11",
-		"babel-plugin-inline-react-svg": "^2.0.1",
 		"babel-plugin-styled-components": "^1.13.2",
 		"case-sensitive-paths-webpack-plugin": "^2.4.0",
 		"eslint": "7.30.0",
