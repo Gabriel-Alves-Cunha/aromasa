@@ -5,7 +5,7 @@ import fs from "fs";
 
 import { envVariables } from "storage/env";
 import { ProductModel } from "models/Product";
-import connectToDatabase from "utils/connectToMongoDB";
+import connectToMongoDB from "utils/connectToMongoDB";
 
 const stripe = new Stripe(envVariables.stripeSecretKey, {
 	apiVersion: "2020-08-27",
@@ -21,7 +21,7 @@ export default async function talkToDb(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	await connectToDatabase();
+	await connectToMongoDB();
 
 	res.on("end", something => {
 		console.log("\nApi response ended:\n", something);
@@ -44,12 +44,13 @@ export default async function talkToDb(
 		// Get all products
 		case "GET" || undefined:
 			try {
-				return res
-					.status(200)
-					.json({ success: true, data: await ProductModel.find({}) });
+				return res.status(200).json({
+					success: true,
+					data: await ProductModel.find({}),
+				});
 			} catch (err) {
 				console.log(
-					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:48\n\t${typeof err}: 'err' =`,
+					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:53\n\t${typeof err}: 'err' =`,
 					err
 				);
 

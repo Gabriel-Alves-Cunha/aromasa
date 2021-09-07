@@ -5,7 +5,7 @@ import Head from "next/head";
 
 import { ProductSlider_WithThumbnail, Header, getLayout } from "components";
 import { Product } from "models/Product";
-import connectToDatabase from "utils/connectToMongoDB";
+import connectToMongoDB from "utils/connectToMongoDB";
 
 import {
 	ProductSliderContainer,
@@ -57,7 +57,7 @@ export default ProductCard;
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
-		await connectToDatabase();
+		await connectToMongoDB();
 
 		const { data: products, status } = await axios.get<Product[]>(
 			"api/products"

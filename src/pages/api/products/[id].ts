@@ -3,7 +3,7 @@ import Stripe from "stripe";
 
 import { envVariables } from "storage/env";
 import { ProductModel } from "models/Product";
-import connectToDatabase from "utils/connectToMongoDB";
+import connectToMongoDB from "utils/connectToMongoDB";
 
 const stripe = new Stripe(envVariables.stripeSecretKey, {
 	apiVersion: "2020-08-27",
@@ -13,7 +13,7 @@ export default async function talkToDbWithId(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	await connectToDatabase();
+	await connectToMongoDB();
 
 	const {
 		query: { _id },

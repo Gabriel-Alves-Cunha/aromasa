@@ -8,7 +8,7 @@ import { AlterAProduct } from "modules/AlterAProduct";
 import { NavbarOptions } from "components/Navbar/navabar.data";
 import { AddAProduct } from "modules/AddAProduct";
 import { UserModel } from "models/User";
-import connectToDatabase from "utils/connectToMongoDB";
+import connectToMongoDB from "utils/connectToMongoDB";
 
 import { Container } from "./styles";
 
@@ -59,7 +59,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 
 async function checkIfUserIsAllowed(email: string) {
 	try {
-		await connectToDatabase();
+		await connectToMongoDB();
 
 		const user = await UserModel.find({ email });
 		console.log("user =", user);

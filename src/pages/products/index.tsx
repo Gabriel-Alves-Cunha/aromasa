@@ -7,7 +7,7 @@ import { Grid } from "@material-ui/core";
 import { ProductCard, Header, getLayout } from "components";
 import { ProductModel, Product } from "models/Product";
 import { useCart } from "hooks/useCart";
-import connectToDatabase from "utils/connectToMongoDB";
+import connectToMongoDB from "utils/connectToMongoDB";
 
 import useStyles from "./styles";
 import "react-toastify/dist/ReactToastify.css";
@@ -92,7 +92,7 @@ export default Products;
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
 	try {
-		await connectToDatabase();
+		await connectToMongoDB();
 
 		const products = await ProductModel.find({});
 

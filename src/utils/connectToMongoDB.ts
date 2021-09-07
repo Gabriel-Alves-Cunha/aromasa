@@ -2,44 +2,70 @@ import mongoose from "mongoose";
 
 import { envVariables } from "storage/env";
 
+console.log("envVariables.db_uri =", envVariables.db_uri);
+
+mongoose.set("bufferCommands", false);
+
+mongoose.connection.on("error", err =>
+	console.error("\nError on MongoDB:", err)
+);
+
+mongoose.connection.on("connected", e =>
+	console.log("\nSuccessfully connected to database.\n", e)
+);
+
+mongoose.connection.on("disconnected", e =>
+	console.log("\nDisconneted from database.\n", e)
+);
+
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-// @ts-ignore
-let cached = global.mongoose;
-// @ts-ignore
-if (!cached) cached = global.mongoose = { conn: null, promise: null };
+let cachedConnectionToMongoDB: {
+	promise: null | Promise<typeof mongoose>;
+	conn: null | typeof mongoose;
+	//@ts-ignore
+} = global.mongoose;
 
-export default async function connectToDatabase() {
-	if (cached.conn) return cached.conn;
+if (!cachedConnectionToMongoDB) {
+	// @ts-ignore
+	cachedConnectionToMongoDB = global.mongoose = {
+		promise: null,
+		conn: null,
+	};
+}
 
-	if (!cached.promise) {
-		cached.promise = mongoose
-			.connect(envVariables.db_uri, {
-				dbName: envVariables.db_name,
-				useUnifiedTopology: true,
-				useFindAndModify: false,
-				bufferCommands: false,
-				useNewUrlParser: true,
-				useCreateIndex: true,
-				bufferMaxEntries: 0,
-			})
-			.then(mongoose => mongoose)
-			.catch(err =>
-				console.error("\n[connectToMongoDB in 'if (!cached.promise)']", err)
-			);
+export default async function connectToMongoDB() {
+	if (cachedConnectionToMongoDB.conn) return cachedConnectionToMongoDB.conn;
+
+	if (
+		process.env.NODE_ENV === "development" &&
+		!cachedConnectionToMongoDB.promise
+	)
+		cachedConnectionToMongoDB.promise = mongoose.connect(envVariables.db_uri, {
+			keepAliveInitialDelay: 300_000,
+			dbName: envVariables.db_name,
+			useUnifiedTopology: true,
+			useFindAndModify: false,
+			bufferCommands: false,
+			useNewUrlParser: true,
+			useCreateIndex: true,
+			bufferMaxEntries: 0,
+			keepAlive: true,
+		});
+
+	try {
+		cachedConnectionToMongoDB.conn = await cachedConnectionToMongoDB.promise;
+	} catch (error) {
+		console.error(
+			`[ERROR]\n\tFile: connectToMongoDB.ts\n\tLine:63\n\t${typeof error}: 'error' =`,
+			error
+		);
 	}
-
-	mongoose.connection.on("error", err =>
-		console.error("\n[connectToMongoDB on connection]", err)
-	);
-
-	cached.conn = await cached.promise;
 	// console.log("\n[LOG] cached.conn =", cached.conn);
 	// console.log("\n[LOG] db =", cached.conn.connections[0].db);
-	console.log("\nSuccessfully connected to database.\n");
 
-	return cached.conn;
+	return cachedConnectionToMongoDB.conn;
 }
