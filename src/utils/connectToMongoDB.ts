@@ -10,8 +10,8 @@ mongoose.connection.on("error", err =>
 	console.error("\nError on MongoDB:", err)
 );
 
-mongoose.connection.on("connected", e =>
-	console.log("\nSuccessfully connected to database.\n", e)
+mongoose.connection.on("connected", () =>
+	console.log("\nSuccessfully connected to database.\n")
 );
 
 mongoose.connection.on("disconnected", e =>
@@ -41,7 +41,7 @@ export default async function connectToMongoDB() {
 	if (cachedConnectionToMongoDB.conn) return cachedConnectionToMongoDB.conn;
 
 	if (
-		process.env.NODE_ENV === "development" &&
+		// process.env.NODE_ENV === "development" &&
 		!cachedConnectionToMongoDB.promise
 	)
 		cachedConnectionToMongoDB.promise = mongoose.connect(envVariables.db_uri, {
