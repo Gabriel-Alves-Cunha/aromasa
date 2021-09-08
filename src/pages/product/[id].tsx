@@ -59,37 +59,45 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
 		await connectToMongoDB();
 
-		const { data: products, status } = await axios.get<Product[]>(
-			"api/products"
+		const {
+			data: products,
+			status,
+			statusText,
+		} = await axios.get<Product[]>("api/products");
+
+		console.log(
+			`[LOG]\n\tFile: [id].tsx\n\tLine:69\n\t${typeof products}: 'products' =`,
+			products
 		);
 
 		if (status === 200) {
 			return {
 				paths: products.map(product => ({
 					params: {
-						id: product._id.toString(),
-						product: JSON.stringify(product),
+						productStringifyed: JSON.stringify(product),
 					},
 				})),
 				fallback: false,
 			};
 		} else {
 			console.log(
-				`[LOG]\n\tFile: [id].tsx\n\tLine:81\n\t${typeof products}: 'data: products' =`,
+				`[LOG]\n\tFile: [id].tsx\n\tLine:84\n\t${typeof products}: 'data: products' =`,
 				products
 			);
 
 			throw new Error(
-				"Houve um problema ao pegar os produtos da base de dados."
+				`Houve um problema ao pegar os produtos da base de dados. Status = ${status} (${statusText}). Data = ${products}`
 			);
 		}
 	} catch (error) {
 		console.log(
-			`[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:88\n\t${typeof error}: 'error' =`,
+			`[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:94\n\t${typeof error}: 'error' =`,
 			error
 		);
 
-		throw new Error("Houve um problema ao pegar os produtos da base de dados.");
+		throw new Error(
+			"Houve um problema ao pegar os produtos da base de dados.\n" + error
+		);
 	}
 };
 
@@ -99,7 +107,9 @@ export const getStaticProps: GetStaticProps = async ctx => {
 		// const { data: product } = await axios.get<Product>(
 		// 	`api/products/${ctx.params?.id}`
 		// );
-		const product = JSON.parse(ctx.params?.product as string);
+		const product: Product = JSON.parse(
+			ctx.params?.productStringifyed as string
+		);
 		console.log("\nproduct =", product);
 
 		return {
@@ -107,12 +117,12 @@ export const getStaticProps: GetStaticProps = async ctx => {
 		};
 	} catch (error) {
 		console.log(
-			`[ERROR] File: [id].tsx\nLine:113\n${typeof error}: 'error' =`,
+			`[ERROR] File: [id].tsx\nLine:120\n${typeof error}: 'error' =`,
 			error
 		);
 
-		return {
-			props: { product: {} },
-		};
+		throw new Error(
+			"Houve um problema ao pegar os produtos da base de dados.\n" + error
+		);
 	}
 };
