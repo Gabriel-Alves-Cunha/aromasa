@@ -74,10 +74,10 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 			return {
 				paths: products.map(product => ({
 					params: {
-						productStringifyed: JSON.stringify(product),
+						product: JSON.stringify(product),
 					},
 				})),
-				fallback: false,
+				fallback: "blocking",
 			};
 		} else
 			throw new Error(
@@ -85,8 +85,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 			);
 	} catch (error) {
 		throw new Error(
-			"[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:94\n\t${typeof error}: 'error' = ${error}\nHouve um problema ao pegar os produtos da base de dados.\n" +
-				error
+			`[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:94\n\t${typeof error}: 'error' = ${error}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
 	}
 };
@@ -98,7 +97,7 @@ export const getStaticProps: GetStaticProps = async ctx => {
 		// 	`api/products/${ctx.params?.id}`
 		// );
 		const product: Product = JSON.parse(
-			ctx.params?.productStringifyed as string
+			ctx.params?.product as string
 		);
 		console.log("\nproduct =", product);
 

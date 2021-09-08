@@ -50,8 +50,7 @@ export default async function talkToDb(
 				});
 			} catch (err) {
 				console.log(
-					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:53\n\t${typeof err}: 'err' =`,
-					err
+					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:53\n\t${typeof err}: 'err' = ${err}`
 				);
 
 				return res.status(400).json({ success: false, data: err });
@@ -140,7 +139,7 @@ export default async function talkToDb(
 				});
 			} catch (error: any) {
 				console.log(
-					`\n\n[ERROR on talkToDB() on 'api/products/index.ts' in POST]:\n${error}`
+					`\n[ERROR on talkToDB() on 'api/products/index.ts' in POST]:\n${error}`
 				);
 
 				return res
