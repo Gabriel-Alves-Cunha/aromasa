@@ -62,6 +62,7 @@ export default async function connectToMongoDB() {
 	}
 
 	console.log("\n[LOG] cached.conn =", cachedConnectionToMongoDB.conn);
+	// cachedConnectionToMongoDB.conn?.Schema.on("error", err => console.log(err));
 	// console.log("\n[LOG] db =", cachedConnectionToMongoDB.conn.connections[0].db);
 
 	return cachedConnectionToMongoDB.conn as typeof mongoose;

@@ -59,6 +59,8 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
 		await connectToMongoDB();
 
+		console.log("axios defaults =", axios.defaults);
+
 		const {
 			data: products,
 			statusText,
@@ -83,10 +85,10 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 				`File: 'pages/api/products/[product].tsx'\nLine:84\n${typeof products}: 'data: products' = ${products}\nHouve um problema ao pegar os produtos da base de dados. Status = ${status} (${statusText}).`
 			);
 	} catch (error) {
-		console.log(axios.isAxiosError(error));
+		console.log(axios.getUri());
 
 		throw new Error(
-			`File: 'pages/products/[product].tsx'\nLine:89\n\t${typeof error}: 'error' = ${j(
+			`File: 'pages/products/[product].tsx'\nLine:89\n${typeof error}: 'error' = ${j(
 				error
 			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);

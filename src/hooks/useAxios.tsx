@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import useSWR from "swr";
 
+import { envVariables } from "storage/env";
+
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 type ApiUrl =
 	| "api/products/:id"
@@ -17,6 +19,7 @@ export function useAxios<DataFormat = any>(
 		url,
 		async () =>
 			await axios({
+				baseURL: envVariables.aromasaUrl,
 				url,
 				method,
 				timeout: 10_000, // 10 seconds
