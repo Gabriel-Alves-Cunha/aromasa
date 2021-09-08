@@ -2,6 +2,7 @@ export const envVariables = {
 	stripeWebhookEndpointSecret: "",
 	stripePublishableKey: "",
 	contactEmailPassword: "",
+	db_normalUser_uri: "",
 	stripeSecretKey: "",
 	NextAuthSecret: "",
 	contactEmail: "",
@@ -13,6 +14,8 @@ export const envVariables = {
 
 if (process.env.NODE_ENV === "development") {
 	envVariables.db_uri = process.env.MONGODB_URI_DEVELOPMENT ?? "";
+
+	envVariables.db_normalUser_uri = process.env.MONGODB_URI_NORMAL_USER ?? "";
 
 	envVariables.clientId = process.env.GOOGLE_CLIENT_ID ?? "";
 
@@ -34,7 +37,9 @@ if (process.env.NODE_ENV === "development") {
 	envVariables.stripeWebhookEndpointSecret =
 		process.env.STRIPE_WEBHOOK_ENDPOINT_TEST_SECRET ?? "";
 } else if (process.env.NODE_ENV === "production") {
-	envVariables.db_uri = process.env.MONGODB_URI_PRODUCTION ?? "";
+	envVariables.db_uri = process.env.MONGODB_URI_DEVELOPMENT ?? "";
+
+	envVariables.db_normalUser_uri = process.env.MONGODB_URI_NORMAL_USER ?? "";
 
 	envVariables.clientId = process.env.GOOGLE_CLIENT_ID ?? "";
 
