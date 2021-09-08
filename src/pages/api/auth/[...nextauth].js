@@ -1,6 +1,8 @@
 import Providers from "next-auth/providers";
 import NextAuth from "next-auth";
 
+import { envVariables } from "storage/env";
+
 export default NextAuth({
 	// Configure one or more authentication providers
 	providers: [
@@ -9,7 +11,7 @@ export default NextAuth({
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 		}),
 	],
-
+	secret: envVariables.NextAuthSecret,
 	// A database is optional, but required to persist accounts in a database
 	database: process.env.MONGODB_URI,
 	debug: true,

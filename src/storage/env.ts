@@ -3,6 +3,7 @@ export const envVariables = {
 	stripePublishableKey: "",
 	contactEmailPassword: "",
 	stripeSecretKey: "",
+	NextAuthSecret: "",
 	contactEmail: "",
 	aromasaUrl: "",
 	clientId: "",
@@ -28,6 +29,8 @@ if (process.env.NODE_ENV === "development") {
 
 	envVariables.contactEmailPassword = process.env.CONTACT_EMAIL_PASSWORD ?? "";
 
+	envVariables.NextAuthSecret = process.env.NEXTAUTH_SECRET ?? "";
+
 	envVariables.stripeWebhookEndpointSecret =
 		process.env.STRIPE_WEBHOOK_ENDPOINT_TEST_SECRET ?? "";
 } else if (process.env.NODE_ENV === "production") {
@@ -45,6 +48,8 @@ if (process.env.NODE_ENV === "development") {
 	envVariables.stripeSecretKey = process.env.STRIPE_SECRET_KEY ?? "";
 
 	envVariables.contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "";
+
+	envVariables.NextAuthSecret = process.env.NEXTAUTH_SECRET ?? "";
 
 	envVariables.contactEmailPassword = process.env.CONTACT_EMAIL_PASSWORD ?? "";
 
