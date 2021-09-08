@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "node_modules/next/dist/bin/next -p 8080",
-		"build": "PORT=8080 next build",
+		"build": "NODE_OPTIONS='--trace-exit --trace-warnings' PORT=8080 next build",
 		"start": "next start",
 		"lint": "next lint"
 	},
