@@ -61,8 +61,8 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 
 		const {
 			data: products,
-			status,
 			statusText,
+			status,
 		} = await axios.get<Product[]>("api/products");
 
 		console.log(
@@ -79,24 +79,14 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 				})),
 				fallback: false,
 			};
-		} else {
-			console.log(
-				`[LOG]\n\tFile: [id].tsx\n\tLine:84\n\t${typeof products}: 'data: products' =`,
-				products
-			);
-
+		} else
 			throw new Error(
-				`Houve um problema ao pegar os produtos da base de dados. Status = ${status} (${statusText}). Data = ${products}`
+				`[LOG]\n\tFile: [id].tsx\n\tLine:84\n\t${typeof products}: 'data: products' = ${products}\nHouve um problema ao pegar os produtos da base de dados. Status = ${status} (${statusText}).`
 			);
-		}
 	} catch (error) {
-		console.log(
-			`[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:94\n\t${typeof error}: 'error' =`,
-			error
-		);
-
 		throw new Error(
-			"Houve um problema ao pegar os produtos da base de dados.\n" + error
+			"[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:94\n\t${typeof error}: 'error' = ${error}\nHouve um problema ao pegar os produtos da base de dados.\n" +
+				error
 		);
 	}
 };
@@ -116,13 +106,8 @@ export const getStaticProps: GetStaticProps = async ctx => {
 			props: { product },
 		};
 	} catch (error) {
-		console.log(
-			`[ERROR] File: [id].tsx\nLine:120\n${typeof error}: 'error' =`,
-			error
-		);
-
 		throw new Error(
-			"Houve um problema ao pegar os produtos da base de dados.\n" + error
+			`[ERROR] File: [id].tsx\nLine:120\n${typeof error}: 'error'\nHouve um problema ao pegar os produtos da base de dados: ${error}`
 		);
 	}
 };
