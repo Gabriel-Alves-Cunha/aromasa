@@ -14,7 +14,7 @@ type ApiUrl =
 // 	process.env.NODE_ENV === "production"
 // 		? process.env.VERCEL_URL
 // 		: envVariables.aromasaUrl;
-const baseURL = `http://localhost:${8080}`
+const baseURL = "http://localhost:3000/";
 console.log("baseURL =", baseURL);
 
 export function useAxiosSWR<DataFormat = any>(
