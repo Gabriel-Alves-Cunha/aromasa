@@ -59,13 +59,16 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
 		await connectToMongoDB();
 
-		console.log("axios defaults =", axios.defaults);
-
 		const {
 			data: products,
 			statusText,
 			status,
+			headers,
+			request,
 		} = await axios.get<Product[]>("api/products");
+
+		console.log("axios headers =", headers);
+		console.log("axios request =", request);
 
 		console.log(
 			`[LOG]\n\tFile: [product].tsx\n\tLine:69\n\t${typeof products}: 'products' = ${products}`
