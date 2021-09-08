@@ -48,3 +48,5 @@ function Home() {
 Home.getLayout = getLayout;
 
 export default Home;
+
+console.log("node_env =", process.env.NODE_ENV);

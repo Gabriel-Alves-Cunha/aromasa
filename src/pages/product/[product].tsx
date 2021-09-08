@@ -66,7 +66,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 		} = await axios.get<Product[]>("api/products");
 
 		console.log(
-			`[LOG]\n\tFile: [id].tsx\n\tLine:69\n\t${typeof products}: 'products' =`,
+			`[LOG]\n\tFile: [product].tsx\n\tLine:69\n\t${typeof products}: 'products' =`,
 			products
 		);
 
@@ -81,11 +81,11 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 			};
 		} else
 			throw new Error(
-				`[LOG]\n\tFile: [id].tsx\n\tLine:84\n\t${typeof products}: 'data: products' = ${products}\nHouve um problema ao pegar os produtos da base de dados. Status = ${status} (${statusText}).`
+				`[LOG]\n\tFile: [product].tsx\n\tLine:84\n\t${typeof products}: 'data: products' = ${products}\nHouve um problema ao pegar os produtos da base de dados. Status = ${status} (${statusText}).`
 			);
 	} catch (error) {
 		throw new Error(
-			`[LOG]\n\tFile: 'pages/product/[id].tsx'\n\tLine:94\n\t${typeof error}: 'error' = ${error}\nHouve um problema ao pegar os produtos da base de dados.`
+			`[LOG]\n\tFile: 'pages/product/[product].tsx'\n\tLine:88\n\t${typeof error}: 'error' = ${error}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
 	}
 };
@@ -94,7 +94,7 @@ export const getStaticProps: GetStaticProps = async ctx => {
 	console.log("\ngetStaticProps ctx =", ctx);
 	try {
 		// const { data: product } = await axios.get<Product>(
-		// 	`api/products/${ctx.params?.id}`
+		// 	`api/products/${ctx.params?.product}`
 		// );
 		const product: Product = JSON.parse(
 			ctx.params?.product as string
@@ -106,7 +106,7 @@ export const getStaticProps: GetStaticProps = async ctx => {
 		};
 	} catch (error) {
 		throw new Error(
-			`[ERROR] File: [id].tsx\nLine:120\n${typeof error}: 'error'\nHouve um problema ao pegar os produtos da base de dados: ${error}`
+			`[ERROR] File: [product].tsx\nLine:120\n${typeof error}: 'error'\nHouve um problema ao pegar os produtos da base de dados: ${error}`
 		);
 	}
 };
