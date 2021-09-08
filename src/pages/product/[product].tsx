@@ -66,26 +66,29 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 		} = await axios.get<Product[]>("api/products");
 
 		console.log(
-			`[LOG]\n\tFile: [product].tsx\n\tLine:69\n\t${typeof products}: 'products' =`,
-			products
+			`[LOG]\n\tFile: [product].tsx\n\tLine:69\n\t${typeof products}: 'products' = ${products}`
 		);
 
 		if (status === 200) {
 			return {
 				paths: products.map(product => ({
 					params: {
-						product: JSON.stringify(product),
+						product: j(product),
 					},
 				})),
 				fallback: "blocking",
 			};
 		} else
 			throw new Error(
-				`[LOG]\n\tFile: [product].tsx\n\tLine:84\n\t${typeof products}: 'data: products' = ${products}\nHouve um problema ao pegar os produtos da base de dados. Status = ${status} (${statusText}).`
+				`File: 'pages/api/products/[product].tsx'\nLine:84\n${typeof products}: 'data: products' = ${products}\nHouve um problema ao pegar os produtos da base de dados. Status = ${status} (${statusText}).`
 			);
 	} catch (error) {
+		console.log(axios.isAxiosError(error));
+
 		throw new Error(
-			`[LOG]\n\tFile: 'pages/product/[product].tsx'\n\tLine:88\n\t${typeof error}: 'error' = ${error}\nHouve um problema ao pegar os produtos da base de dados.`
+			`File: 'pages/products/[product].tsx'\nLine:89\n\t${typeof error}: 'error' = ${j(
+				error
+			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
 	}
 };
@@ -96,9 +99,7 @@ export const getStaticProps: GetStaticProps = async ctx => {
 		// const { data: product } = await axios.get<Product>(
 		// 	`api/products/${ctx.params?.product}`
 		// );
-		const product: Product = JSON.parse(
-			ctx.params?.product as string
-		);
+		const product: Product = JSON.parse(ctx.params?.product as string);
 		console.log("\nproduct =", product);
 
 		return {
@@ -106,7 +107,11 @@ export const getStaticProps: GetStaticProps = async ctx => {
 		};
 	} catch (error) {
 		throw new Error(
-			`[ERROR] File: [product].tsx\nLine:120\n${typeof error}: 'error'\nHouve um problema ao pegar os produtos da base de dados: ${error}`
+			`File: 'pages/api/products/[product].tsx'\nLine:112\n${typeof error}: 'error' = ${j(
+				error
+			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
 	}
 };
+
+const j = (any: any) => JSON.stringify(any, null, 2);

@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 
 import { envVariables } from "storage/env";
 
-console.log("envVariables.db_uri =", envVariables.db_uri);
-
 mongoose.set("bufferCommands", false);
 
 mongoose.connection.on("error", err =>
@@ -52,7 +50,6 @@ export default async function connectToMongoDB() {
 			bufferCommands: false,
 			useNewUrlParser: true,
 			useCreateIndex: true,
-			bufferMaxEntries: 0,
 			keepAlive: true,
 		});
 
@@ -60,12 +57,12 @@ export default async function connectToMongoDB() {
 		cachedConnectionToMongoDB.conn = await cachedConnectionToMongoDB.promise;
 	} catch (error) {
 		console.error(
-			`[ERROR]\n\tFile: connectToMongoDB.ts\n\tLine:63\n\t${typeof error}: 'error' =`,
-			error
+			`File: connectToMongoDB.ts\n\tLine:60\n\t${typeof error}: 'error' = ${error}`
 		);
 	}
-	// console.log("\n[LOG] cached.conn =", cached.conn);
-	// console.log("\n[LOG] db =", cached.conn.connections[0].db);
 
-	return cachedConnectionToMongoDB.conn;
+	console.log("\n[LOG] cached.conn =", cachedConnectionToMongoDB.conn);
+	// console.log("\n[LOG] db =", cachedConnectionToMongoDB.conn.connections[0].db);
+
+	return cachedConnectionToMongoDB.conn as typeof mongoose;
 }
