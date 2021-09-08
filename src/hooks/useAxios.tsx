@@ -16,7 +16,7 @@ const baseURL =
 		: envVariables.aromasaUrl;
 console.log("baseURL =", baseURL);
 
-export function useAxios<DataFormat = any>(
+export function useAxiosSWR<DataFormat = any>(
 	method: Method,
 	url: ApiUrl,
 	reqData?: any
@@ -24,13 +24,10 @@ export function useAxios<DataFormat = any>(
 	const { data, error, mutate } = useSWR<AxiosResponse<DataFormat>>(
 		url,
 		async () =>
-			await axios({
+			await axiosInstance({
 				url,
 				method,
-				baseURL,
-				timeout: 10_000, // 10 seconds
 				data: reqData ?? {},
-				headers: { Authorization: "Bearer" },
 			}),
 		{
 			errorRetryCount: 3,
@@ -43,3 +40,9 @@ export function useAxios<DataFormat = any>(
 
 	return { data_, error, mutate };
 }
+
+export const axiosInstance = axios.create({
+	baseURL,
+	timeout: 5_000, // 5 seconds
+	headers: { Authorization: "Bearer" },
+});

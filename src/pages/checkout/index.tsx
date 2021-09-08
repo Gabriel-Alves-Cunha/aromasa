@@ -1,6 +1,6 @@
 import { Grid, InputAdornment, TextField, Typography } from "@material-ui/core";
 import { toast, ToastContainer } from "react-toastify";
-import axios, { AxiosPromise } from "axios";
+import { AxiosPromise } from "axios";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { validateCep } from "validations-br";
@@ -11,6 +11,7 @@ import cep from "cep-promise";
 
 import { CheckoutCardForProduct, getLayout, Header } from "components";
 import { ClientChosenProduct, Product } from "models/Product";
+import { axiosInstance } from "hooks/useAxios";
 import { envVariables } from "storage/env";
 import { useCart } from "hooks/useCart";
 import {
@@ -150,7 +151,7 @@ function Checkout() {
 
 		try {
 			// Call your backend to create the Checkout session.
-			const { data } = await axios.post<{ sessionId: string }>(
+			const { data } = await axiosInstance.post<{ sessionId: string }>(
 				"/api/payment",
 				{
 					products: productsInfo(),

@@ -1,9 +1,9 @@
 import { GetStaticPaths, GetStaticProps } from "node_modules/next";
 import { useRouter } from "next/router";
-import axios from "axios";
 import Head from "next/head";
 
 import { ProductSlider_WithThumbnail, Header, getLayout } from "components";
+import { axiosInstance } from "hooks/useAxios";
 import { Product } from "models/Product";
 import connectToMongoDB from "utils/connectToMongoDB";
 
@@ -65,7 +65,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 			status,
 			headers,
 			request,
-		} = await axios.get<Product[]>("api/products");
+		} = await axiosInstance.get<Product[]>("api/products");
 
 		console.log("axios headers =", headers);
 		console.log("axios request =", request);

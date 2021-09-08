@@ -9,8 +9,8 @@ import {
 	Dialog,
 	Fade,
 } from "@material-ui/core";
-import axios from "axios";
 
+import { axiosInstance } from "hooks/useAxios";
 import { ProductToAddToTheServer } from ".";
 import { myFormId } from "./helper";
 
@@ -56,7 +56,10 @@ export function ConfirmationModal({
 			buildFormData(formData, productInfo, "");
 			console.group("Form data = ", ...formData);
 
-			const newProductResponse = await axios.post("/api/products", formData);
+			const newProductResponse = await axiosInstance.post(
+				"/api/products",
+				formData
+			);
 
 			console.log("newProduct =", newProductResponse.data);
 

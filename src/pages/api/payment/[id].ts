@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import nodemailer from "nodemailer";
 import Stripe from "stripe";
-import axios from "axios";
 
+import { axiosInstance } from "hooks/useAxios";
 import { envVariables } from "storage/env";
 
 const contactEmailPassword = envVariables.contactEmailPassword;
@@ -34,7 +34,7 @@ export default async function handler(
 				checkout_session.payment_intent as Stripe.PaymentIntent
 			).charges.data
 				.map(data => data.receipt_url)
-				.map(url => url && axios.get(url));
+				.map(url => url && axiosInstance.get(url));
 
 			console.log(
 				"\n\nurl =",

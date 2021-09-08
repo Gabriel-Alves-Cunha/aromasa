@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 // import Image from "next/image";
 
 import { Loading, Header, getLayout } from "components";
+import { axiosInstance } from "hooks/useAxios";
 import { envVariables } from "storage/env";
 
 // import Error500_svg from "public/images/Error_500.svg";
@@ -21,7 +21,7 @@ function Result() {
 	useEffect(() => {
 		(async function talkToServer() {
 			console.log("sessionId =", sessionId);
-			const { data } = await axios.get(
+			const { data } = await axiosInstance.get(
 				`/api/payment/${sessionId}` as "api/payment/:id"
 			);
 
