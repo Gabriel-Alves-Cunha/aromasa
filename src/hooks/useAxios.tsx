@@ -10,10 +10,11 @@ type ApiUrl =
 	| "api/products"
 	| "api/test";
 
-const baseURL =
-	process.env.NODE_ENV === "production"
-		? process.env.VERCEL_URL
-		: envVariables.aromasaUrl;
+// const baseURL =
+// 	process.env.NODE_ENV === "production"
+// 		? process.env.VERCEL_URL
+// 		: envVariables.aromasaUrl;
+const baseURL = `http://localhost:${8080}`
 console.log("baseURL =", baseURL);
 
 export function useAxiosSWR<DataFormat = any>(
