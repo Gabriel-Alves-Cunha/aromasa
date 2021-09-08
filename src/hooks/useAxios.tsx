@@ -10,6 +10,12 @@ type ApiUrl =
 	| "api/products"
 	| "api/test";
 
+const baseURL =
+	process.env.NODE_ENV === "production"
+		? process.env.VERCEL_URL
+		: envVariables.aromasaUrl;
+console.log("baseURL =", baseURL);
+
 export function useAxios<DataFormat = any>(
 	method: Method,
 	url: ApiUrl,
@@ -19,9 +25,9 @@ export function useAxios<DataFormat = any>(
 		url,
 		async () =>
 			await axios({
-				baseURL: envVariables.aromasaUrl,
 				url,
 				method,
+				baseURL,
 				timeout: 10_000, // 10 seconds
 				data: reqData ?? {},
 				headers: { Authorization: "Bearer" },
