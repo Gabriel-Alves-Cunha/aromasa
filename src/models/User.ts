@@ -18,7 +18,7 @@ const userSchema = new Schema<MongoDBUser>({
 	updatedAt: String,
 });
 
-console.log("\nCompilando userSchema...\n");
+console.log("\nCompilando|recuperando userSchema...\n");
 
 export const UserModel: mongoose.Model<MongoDBUser, {}, {}> =
 	mongoose.models.users || model<MongoDBUser>("users", userSchema);

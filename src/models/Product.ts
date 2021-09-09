@@ -122,7 +122,7 @@ const productSchema = new Schema<Product>({
 	},
 });
 
-console.log("\nCompilando productSchema...\n");
+console.log("\nCompilando|recuperando productSchema...\n");
 
 export const ProductModel: mongoose.Model<Product, {}, {}> =
 	mongoose.models.Product || model<Product>("Product", productSchema);

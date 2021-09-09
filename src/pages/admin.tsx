@@ -10,7 +10,7 @@ import { AddAProduct } from "modules/AddAProduct";
 import { UserModel } from "models/User";
 import connectToMongoDB from "utils/connectToMongoDB";
 
-import { Container } from "./styles";
+import { Container } from "styles/pages/admin";
 
 function ControllPanel() {
 	const [activePage, setActivePage] = useState<NavbarOptions["label"]>(

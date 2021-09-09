@@ -2,7 +2,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Types } from "mongoose";
 import * as yup from "yup";
 
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 import { validateCPF } from "validations-br";
 
 export type InfoNotDownloaded = {

@@ -10,22 +10,20 @@ type Props = {
 
 export default function Layout({ children }: Props) {
 	return (
-		<>
-			<PageContainer>
-				<ContentWrap>
-					<main>{children}</main>
-				</ContentWrap>
+		<PageContainer>
+			<ContentWrap>
+				<main>{children}</main>
+			</ContentWrap>
 
-				<Footer />
-			</PageContainer>
-		</>
+			<Footer />
+		</PageContainer>
 	);
 }
 
 export const getLayout = (page: ReactNode) => <Layout>{page}</Layout>;
 
 export const ContentWrap = styled.div`
-	padding-bottom: ${FOOTER_HEIGHT}; /* Footer height */
+	padding-bottom: ${FOOTER_HEIGHT}; /* Account for footer height */
 `;
 
 export const PageContainer = styled.div`

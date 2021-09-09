@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import Stripe from "stripe";
 
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 import { ProductModel } from "models/Product";
 import connectToMongoDB from "utils/connectToMongoDB";
 

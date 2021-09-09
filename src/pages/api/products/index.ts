@@ -3,7 +3,7 @@ import formidable from "formidable";
 import Stripe from "stripe";
 import fs from "fs";
 
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 import { ProductModel } from "models/Product";
 import connectToMongoDB from "utils/connectToMongoDB";
 

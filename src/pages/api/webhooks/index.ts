@@ -3,7 +3,7 @@ import { buffer } from "micro";
 import { Stripe } from "stripe";
 import Cors from "micro-cors";
 
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 
 const cors = Cors({
 	allowMethods: ["POST", "HEAD"],

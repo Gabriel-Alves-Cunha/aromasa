@@ -9,7 +9,7 @@ import { ProductModel, Product } from "models/Product";
 import { useCart } from "hooks/useCart";
 import connectToMongoDB from "utils/connectToMongoDB";
 
-import useStyles from "./styles";
+import useStyles from "styles/pages/products";
 import "react-toastify/dist/ReactToastify.css";
 
 type Props = {
@@ -97,8 +97,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 		const products = await ProductModel.find({});
 
 		console.log(
-			"\nproducts from getServerSideProps in 'pages/products/index.tsx' =",
-			products
+			`Products from getServerSideProps in 'pages/products/index.tsx' = ${products}`
 		);
 
 		return {

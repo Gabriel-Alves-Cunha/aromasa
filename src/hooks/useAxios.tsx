@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import useSWR from "swr";
 
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 type ApiUrl =
@@ -14,7 +14,7 @@ type ApiUrl =
 // 	process.env.NODE_ENV === "production"
 // 		? process.env.VERCEL_URL
 // 		: envVariables.aromasaUrl;
-const baseURL = "http://localhost:3000/";
+const baseURL = envVariables.aromasaUrl;
 
 export function useAxiosSWR<DataFormat = any>(
 	method: Method,

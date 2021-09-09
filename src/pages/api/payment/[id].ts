@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 import Stripe from "stripe";
 
 import { axiosInstance } from "hooks/useAxios";
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 
 const contactEmailPassword = envVariables.contactEmailPassword;
 const stripe = new Stripe(envVariables.stripeSecretKey, {

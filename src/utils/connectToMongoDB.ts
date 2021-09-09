@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 
 mongoose.set("bufferCommands", false);
 

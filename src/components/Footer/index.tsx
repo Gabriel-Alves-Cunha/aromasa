@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import Sublogo from "public/images/Sublogo_preto.png";
 
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 
 import {
 	LogoContainer,

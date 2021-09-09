@@ -1,12 +1,9 @@
 import { GetStaticPaths, GetStaticProps } from "node_modules/next";
 import { useRouter } from "next/router";
-import axios from "axios";
 import Head from "next/head";
 
 import { ProductSlider_WithThumbnail, Header, getLayout } from "components";
-import { axiosInstance } from "hooks/useAxios";
 import { Product, ProductModel } from "models/Product";
-import talkToDbToGetProducts from "../api/products";
 import connectToMongoDB from "utils/connectToMongoDB";
 
 import {
@@ -16,7 +13,7 @@ import {
 	Container,
 	Details,
 	Title,
-} from "./styles";
+} from "styles/pages/product";
 
 type Props = {
 	product: Product;

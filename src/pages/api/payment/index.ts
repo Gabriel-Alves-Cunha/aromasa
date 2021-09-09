@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import { getSession } from "next-auth/client";
 import Stripe from "stripe";
 
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 
 const stripe = new Stripe(envVariables.stripeSecretKey, {
 	apiVersion: "2020-08-27",

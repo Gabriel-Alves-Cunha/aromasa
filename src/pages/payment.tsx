@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import { Loading, Header, getLayout } from "components";
 import { axiosInstance } from "hooks/useAxios";
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 
 // import Error500_svg from "public/images/Error_500.svg";
 

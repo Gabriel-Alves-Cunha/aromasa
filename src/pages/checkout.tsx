@@ -4,7 +4,6 @@ import { AxiosPromise } from "axios";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { validateCep } from "validations-br";
-import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import cep from "cep-promise";
@@ -12,7 +11,7 @@ import cep from "cep-promise";
 import { CheckoutCardForProduct, getLayout, Header } from "components";
 import { ClientChosenProduct, Product } from "models/Product";
 import { axiosInstance } from "hooks/useAxios";
-import { envVariables } from "storage/env";
+import { envVariables } from "utils/env";
 import { useCart } from "hooks/useCart";
 import {
 	handleFederalDocument,
@@ -25,9 +24,9 @@ import {
 	FrenetForm,
 	getStripe,
 	yupSchema,
-} from "./helper";
+} from "components/CheckoutCardForProduct/helperForCheckout";
 
-import useStyles, { ConfirmButton } from "./styles";
+import useStyles, { ConfirmButton } from "styles/pages/checkout";
 import "react-toastify/dist/ReactToastify.css";
 
 function Checkout() {

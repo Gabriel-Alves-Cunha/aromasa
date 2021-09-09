@@ -1,6 +1,6 @@
 import { getLayout, Header } from "components";
 
-import { Container, Content } from "./styles";
+import { Container, Content } from "styles/pages/privacy-policy";
 
 function PrivacyPolicy() {
 	return (
