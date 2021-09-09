@@ -17,7 +17,7 @@ export const config = {
 	},
 };
 
-export default async function talkToDb(
+export default async function talkToDbToGetProducts(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {

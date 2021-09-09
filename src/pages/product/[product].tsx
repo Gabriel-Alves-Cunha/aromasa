@@ -1,10 +1,12 @@
 import { GetStaticPaths, GetStaticProps } from "node_modules/next";
 import { useRouter } from "next/router";
+import axios from "axios";
 import Head from "next/head";
 
 import { ProductSlider_WithThumbnail, Header, getLayout } from "components";
 import { axiosInstance } from "hooks/useAxios";
-import { Product } from "models/Product";
+import { Product, ProductModel } from "models/Product";
+import talkToDbToGetProducts from "../api/products";
 import connectToMongoDB from "utils/connectToMongoDB";
 
 import {
@@ -57,39 +59,23 @@ export default ProductCard;
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
-		await connectToMongoDB();
-
-		const {
-			data: products,
-			statusText,
-			status,
-			headers,
-			request,
-		} = await axiosInstance.get<Product[]>("api/products");
-
-		console.log("axios headers =", headers);
-		console.log("axios request =", request);
+		const products = await getProductsFromDB();
 
 		console.log(
-			`[LOG]\n\tFile: [product].tsx\n\tLine:69\n\t${typeof products}: 'products' = ${products}`
+			`[LOG]\n\tFile: [product].tsx\n\tLine:65\n\t${typeof products}: 'products' = ${products}`
 		);
 
-		if (status === 200) {
-			return {
-				paths: products.map(product => ({
-					params: {
-						product: j(product),
-					},
-				})),
-				fallback: "blocking",
-			};
-		} else
-			throw new Error(
-				`File: 'pages/api/products/[product].tsx'\nLine:84\n${typeof products}: 'data: products' = ${products}\nHouve um problema ao pegar os produtos da base de dados. Status = ${status} (${statusText}).`
-			);
+		return {
+			paths: products.map(product => ({
+				params: {
+					product: j(product),
+				},
+			})),
+			fallback: "blocking",
+		};
 	} catch (error) {
 		throw new Error(
-			`File: 'pages/products/[product].tsx'\nLine:89\n${typeof error}: 'error' = ${j(
+			`File: 'pages/products/[product].tsx'\nLine:92\n${typeof error}: 'error' = ${j(
 				error
 			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
@@ -99,9 +85,6 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 export const getStaticProps: GetStaticProps = async ctx => {
 	console.log("\ngetStaticProps ctx =", ctx);
 	try {
-		// const { data: product } = await axios.get<Product>(
-		// 	`api/products/${ctx.params?.product}`
-		// );
 		const product: Product = JSON.parse(ctx.params?.product as string);
 		console.log("\nproduct =", product);
 
@@ -118,3 +101,15 @@ export const getStaticProps: GetStaticProps = async ctx => {
 };
 
 const j = (any: any) => JSON.stringify(any, null, 2);
+
+async function getProductsFromDB() {
+	try {
+		await connectToMongoDB();
+
+		return await ProductModel.find({});
+	} catch (error) {
+		throw new Error(
+			`File: 'pages/api/products/[product].tsx'\nLine:118\n${typeof error}: 'error' = ${error}\nHouve um problema ao pegar os produtos da base de dados.`
+		);
+	}
+}
