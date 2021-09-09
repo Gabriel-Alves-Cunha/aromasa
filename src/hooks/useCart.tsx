@@ -1,4 +1,4 @@
-import { parseCookies, setCookie } from "nookies";
+import { useCookies } from "react-cookie";
 import {
 	createContext,
 	useContext,
@@ -26,29 +26,30 @@ export const CartContext = createContext({} as CartContextProps);
 
 function CartProvider({ children }: CartProviderProps) {
 	const [cartProducts, setCartProducts] = useState([] as ClientChosenProduct[]);
+	const [cookies, setCookie] = useCookies(["cartProducts"]);
 
 	useEffect(() => {
 		if (cartProducts.length === 0) {
 			console.log("cartProducts.length === 0 |=> parsing cookies!");
 
-			const cookies = parseCookies();
 			console.log(
 				`[LOG]\n\tFile: useCart.tsx\n\tLine:36\n\t${typeof cookies}: 'cookies' =`,
-				cookies
+				cookies.cartProducts
 			);
 
-			const cartProductsFromCookies = (JSON.parse(cookies.cartProducts) ||
-				[]) as ClientChosenProduct[];
-			setCartProducts(_oldValue => cartProductsFromCookies);
+			setCartProducts(_oldValue => cookies.cartProducts);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-		// For client-side, omit context parameter.
-		setCookie(null, "cartProducts", JSON.stringify(cartProducts), {
+	useEffect(() => {
+		setCookie("cartProducts", JSON.stringify(cartProducts), {
 			maxAge: 30 * 24 * 60 * 60,
+			sameSite: true,
 			path: "/",
 		});
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cartProducts]);
 
 	function handleAddPossibleNewProductToCart(newProduct: Product) {
 		const isProductInCart = cartProducts.some(

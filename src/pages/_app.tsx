@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { CookiesProvider } from "react-cookie";
 import { AppLayoutProps } from "next/app";
 import { ThemeProvider } from "styled-components";
 import { Provider } from "next-auth/client";
@@ -16,9 +17,11 @@ export default function MyApp({ Component, pageProps }: AppLayoutProps) {
 			<GlobalStyle />
 
 			<Provider session={pageProps.session}>
-				<CartProvider>
-					<Component {...pageProps} />
-				</CartProvider>
+				<CookiesProvider>
+					<CartProvider>
+						<Component {...pageProps} />
+					</CartProvider>
+				</CookiesProvider>
 			</Provider>
 		</ThemeProvider>
 	);
