@@ -34,10 +34,10 @@ function CartProvider({ children }: CartProviderProps) {
 
 			console.log(
 				`[LOG]\n\tFile: useCart.tsx\n\tLine:36\n\t${typeof cookies}: 'cookies' =`,
-				cookies.cartProducts
+				cookies
 			);
 
-			setCartProducts(_oldValue => JSON.parse(cookies.cartProducts));
+			setCartProducts(cookies.cartProducts);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
