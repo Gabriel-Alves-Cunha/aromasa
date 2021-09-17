@@ -37,7 +37,7 @@ function CartProvider({ children }: CartProviderProps) {
 				cookies
 			);
 
-			setCartProducts(cookies.cartProducts);
+			setCartProducts(cookies.cartProducts ?? []);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
