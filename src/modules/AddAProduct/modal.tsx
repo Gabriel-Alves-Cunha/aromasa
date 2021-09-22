@@ -10,9 +10,9 @@ import {
 	Fade,
 } from "@material-ui/core";
 
-import { axiosInstance } from "hooks/useAxios";
+import { buildFormData, myFormId } from "./helper";
 import { ProductToAddToTheServer } from ".";
-import { myFormId } from "./helper";
+import { axiosInstance } from "hooks/useAxios";
 
 import { Container } from "./modalStyles";
 import { Button } from "./styles";
@@ -27,7 +27,7 @@ type Props = {
 	>;
 	setSaving: React.Dispatch<React.SetStateAction<boolean>>;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	reset: UseFormReset<ProductToAddToTheServer>;
+	reset(): void;
 	product: ProductToAddToTheServer;
 	files: File[];
 	open: boolean;
@@ -47,29 +47,32 @@ export function ConfirmationModal({
 	async function addAProduct(productInfo: ProductToAddToTheServer) {
 		setSaving(true);
 
+		const formData = new FormData();
+		files.forEach((file, index) =>
+			formData.append(`image.${index}`, file, file.name)
+		);
+
+		buildFormData(formData, productInfo, "");
+		console.group("Form data = ", ...formData);
+
 		try {
-			const formData = new FormData();
-			files.forEach((file, index) =>
-				formData.append(`image.${index}`, file, file.name)
-			);
-
-			buildFormData(formData, productInfo, "");
-			console.group("Form data = ", ...formData);
-
 			const newProductResponse = await axiosInstance.post(
 				"/api/products",
 				formData
 			);
 
-			console.log("newProduct =", newProductResponse.data);
+			console.log("newProduct =", newProductResponse);
 
 			if (newProductResponse.status === 201) {
 				setToast({ success: true, error: "", resolved: true });
 
-				//@ts-ignore
-				document.getElementById(myFormId)?.reset();
 				reset();
-			}
+			} else
+				setToast({
+					error: "Something happened! inspect the element on console.",
+					resolved: true,
+					success: false,
+				});
 		} catch (error: any) {
 			console.error("\nError in addAProduct() =", error);
 
@@ -177,8 +180,10 @@ export function ConfirmationModal({
 				<Button onClick={handleClose} color="primary">
 					Voltar
 				</Button>
+
 				<Button
 					onClick={() => {
+						console.log("Product =", product);
 						addAProduct(product);
 						setOpen(false);
 					}}
@@ -188,30 +193,4 @@ export function ConfirmationModal({
 			</DialogActions>
 		</Dialog>
 	);
-}
-
-function buildFormData(formData: FormData, data: any, parentKey: string) {
-	if (
-		data &&
-		typeof data === "object" &&
-		!(data instanceof Date) &&
-		!(data instanceof File) &&
-		!(data instanceof Blob)
-	) {
-		Object.keys(data).forEach(key => {
-			buildFormData(
-				formData,
-				data[key],
-				parentKey ? `${parentKey}.${key}` : key
-			);
-		});
-	} else {
-		console.log(
-			`[LOG] Entering 'else' clause on file: modal.tsx\nLine:207\n${typeof data}: 'data'`,
-			data
-		);
-		const value = data === null ? "" : data;
-
-		formData.append(parentKey, value);
-	}
 }

@@ -1,7 +1,5 @@
 import mongoose, { Schema, Types, model } from "mongoose";
 
-import { ImageModel } from "./Image";
-
 export type Product = {
 	bottle: {
 		available_quantity: string;
@@ -75,9 +73,8 @@ const productSchema = new Schema<Product>({
 	},
 	imagesPaths: [
 		{
-			// type: ImageModel.schema,
 			type: String,
-			maxLength: 300,
+			maxLength: 1_000,
 		},
 	],
 	title: {

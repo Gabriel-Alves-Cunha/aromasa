@@ -1,8 +1,10 @@
-import { FileError, useDropzone } from "react-dropzone";
-import React, { useState } from "react";
+import { FileError, FileRejection, useDropzone } from "react-dropzone";
+import React, { useEffect, useState } from "react";
 import { IoIosClose } from "react-icons/io";
 import prettyBytes from "pretty-bytes";
 import Image from "next/image";
+
+import { json2str } from "utils/json2str";
 
 import useStyles, { Container, Rejectd, TrashTheImg } from "./styles";
 
@@ -17,42 +19,53 @@ type Preview = {
 };
 
 export function MyDropzone({ files, setFiles }: Props) {
-	const classes = useStyles();
 	const [previews, setPreviews] = useState([] as Preview[]);
+	const classes = useStyles();
 
-	const { getRootProps, getInputProps, fileRejections } = useDropzone({
-		onDrop: (acceptedFiles: File[]) => {
-			acceptedFiles.forEach(file => {
-				const reader = new FileReader();
-				reader.readAsArrayBuffer(file);
+	const { getRootProps, getInputProps, fileRejections, acceptedFiles } =
+		useDropzone({
+			maxSize: 10 * 1_000_000, // 10 MB
+			accept: "image/*",
+			onDropAccepted,
+			onDropRejected,
+			multiple: true,
+			maxFiles: 15,
+			validator: (newFile: File) => {
+				let ret: FileError | null = null;
+				files.forEach(file => {
+					if (file.name === newFile.name)
+						ret = { code: "duplicated-file", message: "Duplicated file" };
+				});
+				return ret;
+			},
+		});
 
-				reader.onabort = () => console.log("file reading was aborted");
-				reader.onerror = () => console.log("file reading has failed");
-				reader.onload = () => {
-					setFiles(oldFiles => [...oldFiles, file]);
-					setPreviews(oldValues => [
-						...oldValues,
-						{ name: file.name, preview: URL.createObjectURL(file) },
-					]);
-				};
-			});
-		},
-		accept: "image/*",
-		maxFiles: 15,
-		maxSize: 5 * 1_000_000, // 5 MB
-		validator: newFile => {
-			let ret: FileError[] = [];
-			for (const file of files) {
-				if (file.name === newFile.name)
-					ret.push({
-						code: "same-name",
-						message: `O nome deste arquivo é o mesmo de outro. Verifique se não duplicados.`,
-					});
-				else continue;
-			}
-			return ret.length > 0 ? ret : null;
-		},
-	});
+	useEffect(
+		() => handleAcceptedFiles(),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[acceptedFiles]
+	);
+
+	useEffect(() => {
+		if (files.length === 0) {
+			previews.forEach(({ name, preview }) => URL.revokeObjectURL(preview));
+
+			setPreviews([]);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [files]);
+
+	function handleAcceptedFiles() {
+		setFiles(oldFiles => [...oldFiles, ...acceptedFiles]);
+
+		setPreviews(oldPreviews => [
+			...oldPreviews,
+			...acceptedFiles.map(file => ({
+				name: file.name,
+				preview: URL.createObjectURL(file),
+			})),
+		]);
+	}
 
 	const fileRejectionJSXs = fileRejections.map(({ file, errors }) => (
 		<li key={file.name}>
@@ -106,14 +119,20 @@ export function MyDropzone({ files, setFiles }: Props) {
 				</TrashTheImg>
 				<Image
 					className={classes.img}
+					unoptimized={true}
 					src={file.preview}
-					height={200}
-					width={200}
+					height={100}
+					width={100}
 					alt=""
 				/>
 			</div>
 		</div>
 	));
+
+	console.log(
+		`[LOG]\n\tFile: index.tsx\n\tLine:127\n\t${typeof previews}: 'previews' =`,
+		previews
+	);
 
 	return (
 		<section className="container">
@@ -132,6 +151,7 @@ export function MyDropzone({ files, setFiles }: Props) {
 			>
 				{thumbsJSXs.map(e => e)}
 			</div>
+
 			<aside>
 				{fileRejectionJSXs.length > 0 && (
 					<Rejectd>
@@ -143,3 +163,17 @@ export function MyDropzone({ files, setFiles }: Props) {
 		</section>
 	);
 }
+
+const onabort = () => console.error("File reading was aborted");
+const onerror = () => console.error("File reading has failed");
+const onDropRejected = (fileRejections: FileRejection[]) => {
+	console.error(`Files rejected on drop: ${json2str(fileRejections)}`);
+};
+const onDropAccepted = (files: File[]) => {
+	files.forEach(fileBlob => {
+		const reader = new FileReader();
+		reader.onabort = onabort;
+		reader.onerror = onerror;
+		reader.onload = () => reader.readAsArrayBuffer(fileBlob);
+	});
+};

@@ -16,7 +16,7 @@ type Props = {
 	products: Product[];
 };
 
-function Products({ products }: Props) {
+export default function Products({ products }: Props) {
 	const { handleAddPossibleNewProductToCart, cartProducts } = useCart();
 	const classes = useStyles();
 	const router = useRouter();
@@ -38,7 +38,7 @@ function Products({ products }: Props) {
 		handleAddPossibleNewProductToCart(product);
 
 		toast.success("🦄 Produto adicionado ao carrinho!", {
-			hideProgressBar: false,
+			hideProgressBar: true,
 			position: "top-left",
 			progress: undefined,
 			closeOnClick: true,
@@ -88,8 +88,6 @@ function Products({ products }: Props) {
 
 Products.getLayout = getLayout;
 
-export default Products;
-
 export const getServerSideProps: GetServerSideProps = async ctx => {
 	try {
 		await connectToMongoDB();
@@ -106,15 +104,6 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 			},
 		};
 	} catch (error) {
-		console.log(
-			`❗ File: index.tsx\nLine:115\n${typeof error}: 'error'`,
-			error
-		);
-
-		return {
-			props: {
-				products: [],
-			},
-		};
+		throw new Error(error as string);
 	}
 };

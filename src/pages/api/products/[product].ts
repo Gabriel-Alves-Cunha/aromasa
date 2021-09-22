@@ -35,7 +35,7 @@ export default async function talkToDbWithId(
 					});
 			} catch (err) {
 				console.error(
-					"\n[talkToDbWithId on 'api/products/[id].ts' in GET]",
+					"\n[talkToDbWithId on 'api/products/[product].ts' in GET]",
 					err
 				);
 
@@ -68,7 +68,7 @@ export default async function talkToDbWithId(
 						.json({ success: false, data: "updatedProductOnDB returned null" });
 			} catch (err) {
 				console.error(
-					"\n[talkToDbWithId on 'pages/api/products/[id].ts' in PUT]",
+					"\n[talkToDbWithId on 'pages/api/products/[product].ts' in PUT]",
 					err
 				);
 
@@ -96,7 +96,7 @@ export default async function talkToDbWithId(
 						.json({ success: false, data: "deletedProductOnDB returned null" });
 			} catch (err) {
 				console.error(
-					"\n[talkToDbWithId on 'pages/api/products/[id].ts' in DELETE]",
+					"\n[talkToDbWithId on 'pages/api/products/[product].ts' in DELETE]",
 					err
 				);
 
@@ -107,7 +107,7 @@ export default async function talkToDbWithId(
 		default:
 			return res.status(400).json({
 				success: false,
-				data: "Entered default case on 'pages/api/products/[id].ts'!",
+				data: "Entered default case on 'pages/api/products/[product].ts'!",
 			});
 			break;
 	}

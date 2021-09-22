@@ -3,10 +3,10 @@ import { toast as doToast, ToastContainer } from "react-toastify";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { nopeResolver } from "@hookform/resolvers/nope";
 import { green } from "@material-ui/core/colors";
 
-import { defaultProduct, myFormId, yupSchema } from "./helper";
+import { defaultProduct, myFormId, nopeSchema } from "./helper";
 import { Product as NotToUseProductModel } from "models/Product";
 import { ConfirmationModal } from "./modal";
 import { MyDropzone } from "components";
@@ -14,22 +14,27 @@ import { MyDropzone } from "components";
 import { Container } from "./styles";
 import "react-toastify/dist/ReactToastify.css";
 
-export type ProductToAddToTheServer = Omit<NotToUseProductModel, "_id">;
-
 export function AddAProduct() {
 	const classes = useStyles();
 
-	const [product, setProduct] = useState(defaultProduct);
 	const [openModal, setOpenModal] = useState(false);
-	const [files, setFiles] = useState<File[]>([]);
+	const [product, setProduct] = useState(defaultProduct);
 	const [saving, setSaving] = useState(false);
+	const [files, setFiles] = useState([] as File[]);
 	const [toast, setToast] = useState({
 		resolved: false,
 		success: false,
 		error: "",
 	});
 
-	// TODO: toast.promise
+	const reset = (resetForm: any) => {
+		//@ts-ignore
+		document.getElementById(myFormId)?.reset();
+		setProduct(defaultProduct);
+		setFiles([]);
+		resetForm();
+	};
+
 	useEffect(() => {
 		if (toast.resolved && toast.success)
 			doToast.success("🦄 Produto adicionado com sucesso!", {
@@ -58,12 +63,12 @@ export function AddAProduct() {
 
 	const {
 		formState: { errors },
+		reset: resetForm,
 		handleSubmit,
 		register,
 		control,
-		reset,
 	} = useForm<ProductToAddToTheServer>({
-		resolver: yupResolver(yupSchema),
+		resolver: nopeResolver(nopeSchema),
 		defaultValues: defaultProduct,
 	});
 
@@ -285,7 +290,7 @@ export function AddAProduct() {
 					/>
 				</>
 
-				<MyDropzone files={files} setFiles={setFiles} />
+				<MyDropzone setFiles={setFiles} files={files} />
 
 				<div className={classes.submit}>
 					<input type="submit" value="Confirmar" disabled={saving} />
@@ -296,13 +301,13 @@ export function AddAProduct() {
 			</form>
 
 			<ConfirmationModal
+				reset={() => reset(resetForm)}
 				setOpen={setOpenModal}
 				setSaving={setSaving}
 				setToast={setToast}
 				product={product}
 				open={openModal}
 				files={files}
-				reset={reset}
 			/>
 		</Container>
 	);
@@ -332,3 +337,5 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 	})
 );
+
+export type ProductToAddToTheServer = Omit<NotToUseProductModel, "_id">;

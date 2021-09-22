@@ -1,8 +1,9 @@
 import { getLayout, Header } from "components";
+import { envVariables } from "utils/env";
 
 import { Container, Content } from "styles/pages/privacy-policy";
 
-function PrivacyPolicy() {
+export default function PrivacyPolicy() {
 	return (
 		<Container>
 			<Header />
@@ -12,14 +13,14 @@ function PrivacyPolicy() {
 				<p>
 					A sua privacidade é importante para nós. É política do Aromasa
 					respeitar a sua privacidade em relação a qualquer informação sua que
-					possamos coletar no site <a href="https://www.aromasa.com">Aromasa</a>
+					possamos coletar no site <a href={envVariables.aromasaUrl}>Aromasa</a>
 					, e outros sites que possuímos e operamos.
 				</p>
 				<p>
 					Solicitamos informações pessoais apenas quando realmente precisamos
 					delas para lhe fornecer um serviço. Fazemo-lo por meios justos e
 					legais, com o seu conhecimento e consentimento. Também informamos por
-					que estamos coletando e como será usado.{" "}
+					que estamos coletando e como será usado.
 				</p>
 				<p>
 					Apenas retemos as informações coletadas pelo tempo necessário para
@@ -44,7 +45,7 @@ function PrivacyPolicy() {
 					>
 						políticas de privacidade
 					</a>
-					.{" "}
+					.
 				</p>
 				<p>
 					Você é livre para recusar a nossa solicitação de informações pessoais,
@@ -57,6 +58,7 @@ function PrivacyPolicy() {
 					você tiver alguma dúvida sobre como lidamos com dados do usuário e
 					informações pessoais, entre em contacto connosco.
 				</p>
+
 				<h2>Política de Cookies Aromasa</h2>
 				<h3>O que são cookies?</h3>
 				<p>
@@ -69,6 +71,7 @@ function PrivacyPolicy() {
 					downgrade ou &apos;quebrar&apos; certos elementos da funcionalidade do
 					site.
 				</p>
+
 				<h3>Como usamos os cookies?</h3>
 				<p>
 					Utilizamos cookies por vários motivos, detalhados abaixo.
@@ -78,6 +81,7 @@ function PrivacyPolicy() {
 					deixe todos os cookies se não tiver certeza se precisa ou não deles,
 					caso sejam usados ​​para fornecer um serviço que você usa.
 				</p>
+
 				<h3>Desativar cookies</h3>
 				<p>
 					Você pode impedir a configuração de cookies ajustando as configurações
@@ -88,6 +92,7 @@ function PrivacyPolicy() {
 					determinadas funcionalidades e recursos deste site. Portanto, é
 					recomendável que você não desative os cookies.
 				</p>
+
 				<h3>Cookies que definimos</h3>
 				<ul>
 					<li>
@@ -165,6 +170,7 @@ function PrivacyPolicy() {
 						<br />
 					</li>
 				</ul>
+
 				<h3>Cookies de Terceiros</h3>
 				<p>
 					Em alguns casos especiais, também usamos cookies fornecidos por
@@ -211,6 +217,7 @@ function PrivacyPolicy() {
 						possível.
 					</li>
 				</ul>
+
 				<h3>Compromisso do Usuário</h3>
 				<p>
 					O usuário se compromete a fazer uso adequado dos conteúdos e da
@@ -237,6 +244,7 @@ function PrivacyPolicy() {
 						anteriormente mencionados.
 					</li>
 				</ul>
+
 				<h3>Mais informações</h3>
 				<p>
 					Esperemos que esteja esclarecido e, como mencionado anteriormente, se
@@ -254,7 +262,7 @@ function PrivacyPolicy() {
 				<h2>1. Termos</h2>
 
 				<p>
-					Ao acessar ao site <a href="https://www.aromasa.com">Aromasa</a>,
+					Ao acessar ao site <a href={envVariables.aromasaUrl}>Aromasa</a>,
 					concorda em cumprir estes termos de serviço, todas as leis e
 					regulamentos aplicáveis ​​e concorda que é responsável pelo
 					cumprimento de todas as leis locais aplicáveis. Se você não concordar
@@ -271,7 +279,6 @@ function PrivacyPolicy() {
 					de uma licença, não uma transferência de título e, sob esta licença,
 					você não pode:
 				</p>
-
 				<ul>
 					<li>modificar ou copiar os materiais;  </li>
 					<li>
@@ -368,5 +375,3 @@ function PrivacyPolicy() {
 }
 
 PrivacyPolicy.getLayout = getLayout;
-
-export default PrivacyPolicy;

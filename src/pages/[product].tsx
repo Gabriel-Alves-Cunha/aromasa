@@ -4,6 +4,7 @@ import Head from "next/head";
 
 import { ProductSlider_WithThumbnail, Header, getLayout } from "components";
 import { Product, ProductModel } from "models/Product";
+import { json2str } from "utils/json2str";
 import connectToMongoDB from "utils/connectToMongoDB";
 
 import {
@@ -19,19 +20,19 @@ type Props = {
 	product: Product;
 };
 
-function ProductCard({ product }: Props) {
+export default function ProductCard({ product }: Props) {
 	const router = useRouter();
 
 	return (
 		<>
+			<Head>
+				<title>Aromasa Decor - Produto</title>
+				<meta name="description" content="Produto" />
+			</Head>
+
 			<Header currentPage="Home" />
 
 			<Container>
-				<Head>
-					<title>Aromasa Decor - Produto</title>
-					<meta name="description" content="Produto" />
-				</Head>
-
 				<FirstViewHeight>
 					<ProductSliderContainer>
 						<ProductSlider_WithThumbnail imagesPaths={product.imagesPaths} />
@@ -52,27 +53,25 @@ function ProductCard({ product }: Props) {
 
 ProductCard.getLayout = getLayout;
 
-export default ProductCard;
-
 export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
 		const products = await getProductsFromDB();
 
 		console.log(
-			`[LOG]\n\tFile: [product].tsx\n\tLine:65\n\t${typeof products}: 'products' = ${products}`
+			`[LOG]\n\tFile: [product].tsx\n\tLine:60\n\t${typeof products}: 'products' = ${products}`
 		);
 
 		return {
 			paths: products.map(product => ({
 				params: {
-					product: j(product),
+					product: json2str(product),
 				},
 			})),
 			fallback: "blocking",
 		};
 	} catch (error) {
 		throw new Error(
-			`File: 'pages/products/[product].tsx'\nLine:92\n${typeof error}: 'error' = ${j(
+			`File: 'pages/products/[product].tsx'\nLine:74\n${typeof error}: 'error' = ${json2str(
 				error
 			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
@@ -90,14 +89,12 @@ export const getStaticProps: GetStaticProps = async ctx => {
 		};
 	} catch (error) {
 		throw new Error(
-			`File: 'pages/api/products/[product].tsx'\nLine:112\n${typeof error}: 'error' = ${j(
+			`File: 'pages/api/products/[product].tsx'\nLine:92\n${typeof error}: 'error' = ${json2str(
 				error
 			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
 	}
 };
-
-const j = (any: any) => JSON.stringify(any, null, 2);
 
 async function getProductsFromDB() {
 	try {
@@ -106,7 +103,9 @@ async function getProductsFromDB() {
 		return await ProductModel.find({});
 	} catch (error) {
 		throw new Error(
-			`File: 'pages/api/products/[product].tsx'\nLine:118\n${typeof error}: 'error' = ${error}\nHouve um problema ao pegar os produtos da base de dados.`
+			`File: 'pages/api/products/[product].tsx'\nLine:106\n${typeof error}: 'error' = ${json2str(
+				error
+			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
 	}
 }

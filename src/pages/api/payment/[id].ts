@@ -4,6 +4,8 @@ import Stripe from "stripe";
 
 import { axiosInstance } from "hooks/useAxios";
 import { envVariables } from "utils/env";
+import { assert } from "utils/assert";
+import { json2str } from "utils/json2str";
 
 const contactEmailPassword = envVariables.contactEmailPassword;
 const stripe = new Stripe(envVariables.stripeSecretKey, {
@@ -20,14 +22,14 @@ export default async function handler(
 	const id = req.query.id as string;
 	console.log("\nsession_id =", id);
 
-	if (!id.startsWith("cs_")) throw Error("Incorrect CheckoutSession ID.");
+	assert(!id.startsWith("cs_"), "Incorrect CheckoutSession ID!");
 
 	try {
 		const checkout_session = await stripe.checkout.sessions.retrieve(id, {
 			expand: ["payment_intent"],
 		});
 
-		// console.log("\nCheckout_session =", checkout_session);
+		console.log("\nCheckout_session =", checkout_session);
 
 		if (checkout_session.payment_status === "paid") {
 			const urlPromises = (
@@ -87,10 +89,8 @@ export default async function handler(
 
 		return res.status(200).json(checkout_session);
 	} catch (err: any) {
-		return res
-			.status(500)
-			.json({
-				message: "Error on 'pages/api/payment/[id].ts': " + err.message,
-			});
+		return res.status(500).json({
+			message: "Error on 'pages/api/payment/[id].ts': " + json2str(err),
+		});
 	}
 }

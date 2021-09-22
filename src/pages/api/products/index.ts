@@ -1,14 +1,22 @@
 import { NextApiRequest, NextApiResponse } from "node_modules/next";
+import cloudinary from "cloudinary";
 import formidable from "formidable";
 import Stripe from "stripe";
-import fs from "fs";
 
+import { ProductToAddToTheServer } from "modules/AddAProduct";
 import { envVariables } from "utils/env";
 import { ProductModel } from "models/Product";
 import connectToMongoDB from "utils/connectToMongoDB";
+import { Compute } from "utils/types";
+
+const isTesting = false;
 
 const stripe = new Stripe(envVariables.stripeSecretKey, {
 	apiVersion: "2020-08-27",
+});
+
+cloudinary.v2.config({
+	cname: envVariables.cloudinaryURL,
 });
 
 export const config = {
@@ -28,7 +36,7 @@ export default async function talkToDbToGetProducts(
 		return;
 	});
 	res.on("error", err => {
-		console.log("\nApi response error:\n", err);
+		console.error("\nApi response error:\n", err);
 		return;
 	});
 	res.on("finish", () => {
@@ -50,7 +58,7 @@ export default async function talkToDbToGetProducts(
 				});
 			} catch (err) {
 				console.log(
-					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:53\n\t${typeof err}: 'err' = ${err}`
+					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:56\n\t${typeof err}: 'err' = ${err}`
 				);
 
 				return res.status(400).json({ success: false, data: err });
@@ -60,83 +68,100 @@ export default async function talkToDbToGetProducts(
 		// Create a product
 		case "POST":
 			try {
-				const form = formidable({
-					uploadDir: "public/images/uploads/products_images",
-					maxFileSize: 20 * 1024 * 1024,
-					allowEmptyFiles: false,
-					keepExtensions: true,
-					multiples: true,
-				});
+				const newProduct: Compute<
+					Partial<ProductToAddToTheServer> & {
+						files?: formidable.Files;
+					}
+				> = await new Promise((resolve, reject) => {
+					const form = new formidable.IncomingForm();
 
-				form.once("error", err => {
-					console.error(err);
-					res.status(err.statusCode ?? 400).json(err);
-				});
-				form.once("end", () => {
-					console.log("-> Upload to server done.");
-				});
+					form.once("error", err => reject(err));
 
-				form.parse(req, async (err, fields, files) => {
-					console.log("\ninside form.parse()\n");
-					// console.log("\nfields =", fields);
-					// console.log("\nfiles =", files);
-					// console.log(filesPaths);
-					const filesPaths: string[] = Object.entries(files).map(
-						([_key, value]) => (value as formidable.File).path
+					form.parse(req, (err, fields, files) =>
+						resolve({ ...fields, files })
+					);
+				});
+				const imgsUrls: string[] = [];
+
+				console.log("newProduct =", newProduct);
+
+				if (newProduct.files) {
+					const files = Object.entries(newProduct.files).map(
+						([key, file]) => file as formidable.File
 					);
 
-					const newProduct = { ...fields, imagesPaths: filesPaths };
+					const promisesFromCloudinary = files.map(
+						async file =>
+							await cloudinary.v2.uploader.upload(
+								file.path,
+								undefined,
+								(error, result) => console.log(error, result)
+							)
+					);
 
+					const cloudinaryUploadApiResponses = await Promise.all(
+						promisesFromCloudinary
+					);
+
+					console.log(
+						"responsesFromCloudinary =",
+						cloudinaryUploadApiResponses
+					);
+
+					cloudinaryUploadApiResponses.forEach(res =>
+						imgsUrls.push(res.secure_url)
+					);
+
+					delete newProduct["files"];
+
+					newProduct.imagesPaths = imgsUrls;
+				}
+
+				if (process.env.NODE_ENV === "production" || isTesting) {
 					try {
-						// const ret = "just testing";
 						const productCreatedOnDB = await ProductModel.create([newProduct], {
 							writeConcern: { j: true },
 							validateBeforeSave: true,
 							timestamps: true,
 							checkKeys: true,
 						});
-
-						const productCreatedOnStripe = await stripe.products.create({
-							active: productCreatedOnDB[0].isAvailableToSell,
-							description: productCreatedOnDB[0].description,
-							name: productCreatedOnDB[0].title,
-							id: productCreatedOnDB[0].id,
-						});
-
 						console.log(
 							"\nret from ProductModel.create() =",
 							productCreatedOnDB
 						);
-						console.log(
-							"\nret from productCreatedOnStripe.create() =",
-							productCreatedOnStripe
-						);
 
-						return res.status(201).json({
-							success: true,
-							data: { productCreatedOnDB, productCreatedOnStripe },
-						});
+						if (productCreatedOnDB[0]) {
+							const productCreatedOnStripe = await stripe.products.create({
+								active: productCreatedOnDB[0].isAvailableToSell,
+								description: productCreatedOnDB[0].description,
+								name: productCreatedOnDB[0].title,
+								id: productCreatedOnDB[0].id,
+							});
+
+							console.log(
+								"\nret from productCreatedOnStripe.create() =",
+								productCreatedOnStripe
+							);
+
+							return res.status(201).json({
+								success: true,
+								data: { productCreatedOnDB, productCreatedOnStripe },
+							});
+						} else
+							return res.status(400).json({
+								success: false,
+								data: "Product was not created on DB!",
+							});
 					} catch (error) {
-						console.log(`\nError creating ProductModel = ${error}`);
+						console.error(`\nError creating ProductModel = ${error}`);
 
-						filesPaths.forEach(filePath =>
-							fs.unlink(filePath, err => {
-								if (err && err.code == "ENOENT")
-									console.log(`\nError! File '${filePath}' doesn't exist.\n`);
-								else if (err)
-									console.error(
-										`\nSomething went wrong. Please try again later: ${err}\n`
-									);
-								else
-									console.log(
-										`\nSuccessfully removed file with the path of ${filePath}\n`
-									);
-							})
-						);
-
-						return res.status(400).json({ success: false, data: err + error });
+						return res.status(400).json({ success: false, data: error });
 					}
-				});
+				} else
+					return res.status(201).json({
+						success: true,
+						data: newProduct,
+					});
 			} catch (error: any) {
 				console.log(
 					`\n[ERROR on talkToDB() on 'api/products/index.ts' in POST]:\n${error}`

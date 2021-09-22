@@ -10,48 +10,31 @@ import { envVariables } from "utils/env";
 
 const contactEmail = envVariables.contactEmail;
 
-function Result() {
+export default function Result() {
 	const {
 		query: { session_id: sessionId },
 	} = useRouter();
 
 	const [success, setSuccess] = useState(false);
-	const [error, setError] = useState(false);
 
 	useEffect(() => {
 		(async function talkToServer() {
-			console.log("sessionId =", sessionId);
-			const { data } = await axiosInstance.get(
-				`/api/payment/${sessionId}` as "api/payment/:id"
-			);
+			try {
+				const { data } = await axiosInstance.get(
+					`/api/payment/${sessionId}` as "api/payment/:id"
+				);
 
-			if (data) {
 				console.log("\nThere is data: ", data);
-
 				setSuccess(true);
-			} else setError(true);
+			} catch (error) {
+				console.error(error);
+			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	if (error)
-		return (
-			<>
-				<Header />
-
-				{/* <Image src={Error500_svg} alt="Ocorreu um erro no servidor!" /> */}
-			</>
-		);
-
-	if (success) return <Success />;
-
-	return (
-		<>
-			<Header />
-
-			<Loading />
-		</>
-	);
+	success ? <Success /> : <Error />;
+	return <Loading_ />;
 }
 
 function Success() {
@@ -69,6 +52,24 @@ function Success() {
 	);
 }
 
-Result.getLayout = getLayout;
+function Error() {
+	return (
+		<>
+			<Header />
 
-export default Result;
+			{/* <Image src={Error500_svg} alt="Ocorreu um erro no servidor!" /> */}
+		</>
+	);
+}
+
+function Loading_() {
+	return (
+		<>
+			<Header />
+
+			<Loading />
+		</>
+	);
+}
+
+Result.getLayout = getLayout;

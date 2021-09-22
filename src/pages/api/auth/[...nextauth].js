@@ -11,10 +11,10 @@ export default NextAuth({
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 		}),
 	],
-	secret: envVariables.NextAuthSecret,
+	// secret: envVariables.NextAuthSecret,
 	// A database is optional, but required to persist accounts in a database
-	database: process.env.MONGODB_URI,
-	debug: true,
+	database: envVariables.db_uri,
+	debug: process.env.NODE_ENV === "development",
 	callbacks: {
 		session: async (session, user) => {
 			session.id = user.id;

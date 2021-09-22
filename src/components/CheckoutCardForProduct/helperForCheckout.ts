@@ -1,19 +1,7 @@
 import { loadStripe } from "@stripe/stripe-js";
-import { Types } from "mongoose";
-import * as yup from "yup";
+import Nope from "nope-validator";
 
 import { envVariables } from "utils/env";
-import { validateCPF } from "validations-br";
-
-export type InfoNotDownloaded = {
-	productsId: Array<Types.ObjectId>;
-	messages: Array<string>;
-};
-
-export type Availability = {
-	productsId: Array<Types.ObjectId>;
-	messages: Array<string>;
-};
 
 export type FrenetForm = {
 	sendEmailConfirmation: boolean;
@@ -54,127 +42,86 @@ export const urlDeNãoSeiMeuCep =
 export const urlDeBuscarInfoDeUmEstado = (uf: string) =>
 	`https://brasilapi.com.br/api/ibge/uf/v1/${uf}`;
 
-export const yupSchema = yup.object().shape({
-	email: yup
-		.string()
-		.trim()
+export const nopeSchema = Nope.object().shape({
+	email: Nope.string()
+
 		.email()
 		.required(
 			"E-mail do cliente, este campo é o mais importante de toda a API, será usado como chave para autenticação no painel administrativo e para os comunicados enviados pelo Frenet"
 		),
-	type: yup
-		.string()
-		.required(
-			"Identifica o tipo do cliente, por enquanto aceita apenas o valor 1 (Clientes)"
-		)
-		.default("1"),
-	password: yup
-		.string()
-		.min(8, "Uma senha de no mínimo 8 caracters é necessária!")
-		.optional(),
+	type: Nope.string().required(
+		"Identifica o tipo do cliente, por enquanto aceita apenas o valor 1 (Clientes)"
+	),
+	// TODO: RESOLVE THIS: .default("1"),
+	password: Nope.string().min(
+		8,
+		"Uma senha de no mínimo 8 caracters é necessária!"
+	),
 	// "Senha definida para o cliente, será a senha para autenticação no painel administrativo do Frenet, quando não informada será gerada uma senha aleatória e esta será enviada por e-mail ao cliente somente se o campo SendEmail for igual a true"
-	name: yup
-		.string()
-		.trim()
-		.required(
-			"Nome completo da pessoa física ou a Razão Social da pessoa Jurídica, o campo é utilizado para exibição do nome do cliente dentro do painel administrativo do Frenet"
-		),
-	pessoa: yup
-		.string()
-		.trim()
+	name: Nope.string().required(
+		"Nome completo da pessoa física ou a Razão Social da pessoa Jurídica, o campo é utilizado para exibição do nome do cliente dentro do painel administrativo do Frenet"
+	),
+	pessoa: Nope.string()
+
 		.required(
 			"Pessoa física ou jurídica, onde F identifica uma pessoa física e J uma pessoa jurídica"
 		)
 		.oneOf(["F", "J"]),
-	companyName: yup
-		.string()
-		.trim()
-		.required(
-			"Nome completo da pessoa física ou a Razão Social da pessoa Jurídica, o campo é utilizado na geração de boletos e comunicados via e-mail"
-		),
-	federalDocument: yup
-		.string()
-		.required("CPF da pessoa física ou CNPJ da pessoa jurídica"),
-	stateDocument: yup
-		.string()
-		.optional
-		// "Inscrição estadual da pessoa jurídica, não se aplica para pessoa fisica e se informado será ignorado"
-		(),
-	urlSite: yup
-		.string()
-		.default(envVariables.aromasaUrl)
+	companyName: Nope.string().required(
+		"Nome completo da pessoa física ou a Razão Social da pessoa Jurídica, o campo é utilizado na geração de boletos e comunicados via e-mail"
+	),
+	federalDocument: Nope.string().required(
+		"CPF da pessoa física ou CNPJ da pessoa jurídica"
+	),
+	stateDocument: Nope.string(),
+	// "Inscrição estadual da pessoa jurídica, não se aplica para pessoa fisica e se informado será ignorado"
+	urlSite: Nope.string()
+		// .default(envVariables.aromasaUrl)
 		.required("Url da loja/site da pessoa ou empresa"),
-	zipCode: yup
-		.string()
+	zipCode: Nope.string()
 		.required(
 			"CEP da empresa ou pessoa física, este campo é usado como CEP de origem no momento da cotação de Frete"
 		)
 		.min(8),
-	city: yup
-		.string()
-		.trim()
-		.required(
-			"Cidade da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
-		),
-	state: yup
-		.string()
-		.trim()
-		.required(
-			"Código abreviado do Estado da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
-		),
-	logradouro: yup
-		.string()
-		.trim()
-		.required(
-			"Logradouro da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
-		),
-	addressNumber: yup
-		.string()
-		.trim()
-		.required(
-			"Número do logradouro da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
-		),
-	addressComplement: yup.string().trim().optional(), //"Complemento do endereço da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
-	neighborhood: yup
-		.string()
-		.trim()
-		.required(
-			"Bairro da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
-		),
-	phoneNumber: yup.number().optional().min(10).max(11),
-	platformId: yup
-		.string()
-		.required(
-			"Código da plataforma, o valor para este campo será informado pela equipe de integração do Frenet"
-		),
-	platform: yup
-		.string()
-		.required(
-			"Nome da plataforma, o valor para este campo será informado pela equipe de integração do Frenet"
-		),
-	agencyId: yup
-		.string()
-		.required(
-			"Código da agência, o valor para este campo será informado pela equipe de integração do Frenet"
-		),
-	agency: yup
-		.string()
-		.required(
-			"Nome da agência, o valor para este campo será informado pela equipe de integração do Frenet"
-		),
-	plancode: yup
-		.string()
-		.default("1")
+	city: Nope.string().required(
+		"Cidade da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
+	),
+	state: Nope.string().required(
+		"Código abreviado do Estado da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
+	),
+	logradouro: Nope.string().required(
+		"Logradouro da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
+	),
+	addressNumber: Nope.string().required(
+		"Número do logradouro da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
+	),
+	addressComplement: Nope.string(), //"Complemento do endereço da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
+	neighborhood: Nope.string().required(
+		"Bairro da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
+	),
+	phoneNumber: Nope.number().min(10).max(11),
+	platformId: Nope.string().required(
+		"Código da plataforma, o valor para este campo será informado pela equipe de integração do Frenet"
+	),
+	platform: Nope.string().required(
+		"Nome da plataforma, o valor para este campo será informado pela equipe de integração do Frenet"
+	),
+	agencyId: Nope.string().required(
+		"Código da agência, o valor para este campo será informado pela equipe de integração do Frenet"
+	),
+	agency: Nope.string().required(
+		"Nome da agência, o valor para este campo será informado pela equipe de integração do Frenet"
+	),
+	plancode: Nope.string()
+		// .default("1")
 		.required(
 			"Código do plano, o valor para este campo será informado pela equipe de integração do Frenet"
 		),
-	timeout: yup
-		.string()
-		.default("10_000")
+	timeout: Nope.string()
+		// .default("10_000")
 		.required("Tempo máximo de resposta da API de cotação"),
-	sendEmailConfirmation: yup
-		.boolean()
-		.default(true)
+	sendEmailConfirmation: Nope.boolean()
+		// .default(true)
 		.required(
 			"Flag informando se após a chamada da API um e-mail para confirmação/validação será enviado para o cliente, é necessário para confirmação do e-mail informado no campo E-mail"
 		),
@@ -182,12 +129,13 @@ export const yupSchema = yup.object().shape({
 
 export const defaultValues: FrenetForm = {
 	sendEmailConfirmation: true,
+	phoneNumber: undefined,
 	addressComplement: "",
 	federalDocument: "",
 	stateDocument: "",
 	addressNumber: "",
 	neighborhood: "",
-	phoneNumber: undefined,
+	timeout: 10_000,
 	companyName: "",
 	platformId: 0,
 	logradouro: "",
@@ -198,7 +146,6 @@ export const defaultValues: FrenetForm = {
 	agencyId: 0,
 	urlSite: "",
 	zipCode: "",
-	timeout: 10_000,
 	agency: "",
 	state: "",
 	email: "",
@@ -224,18 +171,6 @@ export const cepFormatado = (cep: string) =>
 
 export const foneFormatado = (fone: string) =>
 	fone.replace(/(\d{2})?(\d{1})?(\d{4})?(\d{4})/, "($1) $2 $3-$4");
-
-export function handleFederalDocument(
-	event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-) {
-	const cpfStr = cpfFormatado(event.target.value);
-	console.log(`Entered handleFederalDocument(${cpfStr})`);
-	if (cpfStr.length < 14) return;
-
-	const isValid = validateCPF(cpfStr);
-	console.log(`CPF é valido (${cpfStr})? ${isValid}`);
-	if (!isValid) return;
-}
 
 // console.log(`\n\n${cepFormatado("56320700")}`);
 // console.log(`\n\n${cpfFormatado("04174360170")}`);

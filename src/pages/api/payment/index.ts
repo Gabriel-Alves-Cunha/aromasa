@@ -3,6 +3,8 @@ import { getSession } from "next-auth/client";
 import Stripe from "stripe";
 
 import { envVariables } from "utils/env";
+import { assert } from "utils/assert";
+import { json2str } from "utils/json2str";
 
 const stripe = new Stripe(envVariables.stripeSecretKey, {
 	apiVersion: "2020-08-27",
@@ -16,6 +18,7 @@ export default async function talkToServer(
 		case "POST":
 			try {
 				const userSession = await getSession();
+				assert(userSession, "There is no userSession!");
 				const date = new Date().toISOString();
 
 				const productsInfo = req.body.products;
@@ -23,7 +26,7 @@ export default async function talkToServer(
 				console.log("req.body.metadata =", req.body.metadata);
 
 				const shippingAsAProductForStripe = await stripe.products.create({
-					name: `Frete para ${userSession?.user?.name} na data: ${date}`,
+					name: `Frete para ${userSession.user?.name} na data: ${date}`,
 				});
 				const priceForShipping = await stripe.prices.create({
 					product: shippingAsAProductForStripe.id,
@@ -56,8 +59,8 @@ export default async function talkToServer(
 				return res
 					.status(error.statusCode || 500)
 					.json(
-						"Erro no método POST em 'pages/api/payment/index.tsx'" +
-							error.message
+						"Erro no método POST em 'pages/api/payment/index.tsx':" +
+							json2str(error)
 					);
 			}
 			break;

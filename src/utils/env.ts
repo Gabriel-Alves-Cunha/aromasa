@@ -5,6 +5,7 @@ export const envVariables = {
 	db_normalUser_uri: "",
 	stripeSecretKey: "",
 	NextAuthSecret: "",
+	cloudinaryURL: "",
 	contactEmail: "",
 	aromasaUrl: "",
 	clientId: "",
@@ -34,6 +35,8 @@ if (process.env.NODE_ENV === "development") {
 
 	envVariables.NextAuthSecret = process.env.NEXTAUTH_SECRET ?? "";
 
+	envVariables.cloudinaryURL = process.env.CLOUDINARY_URL ?? "";
+
 	envVariables.stripeWebhookEndpointSecret =
 		process.env.STRIPE_WEBHOOK_ENDPOINT_TEST_SECRET ?? "";
 } else if (process.env.NODE_ENV === "production") {
@@ -57,6 +60,8 @@ if (process.env.NODE_ENV === "development") {
 	envVariables.NextAuthSecret = process.env.NEXTAUTH_SECRET ?? "";
 
 	envVariables.contactEmailPassword = process.env.CONTACT_EMAIL_PASSWORD ?? "";
+
+	envVariables.cloudinaryURL = process.env.CLOUDINARY_URL ?? "";
 
 	envVariables.stripeWebhookEndpointSecret =
 		process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET ?? "";

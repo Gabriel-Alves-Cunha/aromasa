@@ -12,8 +12,8 @@ mongoose.connection.on("connected", () =>
 	console.log("\nSuccessfully connected to database.\n")
 );
 
-mongoose.connection.on("disconnected", e =>
-	console.log("\nDisconneted from database.\n", e)
+mongoose.connection.on("disconnected", () =>
+	console.log("\nDisconneted from database.\n")
 );
 
 /**
@@ -56,14 +56,13 @@ export default async function connectToMongoDB() {
 	try {
 		cachedConnectionToMongoDB.conn = await cachedConnectionToMongoDB.promise;
 	} catch (error) {
-		console.error(
+		throw new Error(
 			`File: connectToMongoDB.ts\n\tLine:60\n\t${typeof error}: 'error' = ${error}`
 		);
 	}
 
 	// console.log("\n[LOG] cached.conn =", cachedConnectionToMongoDB.conn);
-	// cachedConnectionToMongoDB.conn?.Schema.on("error", err => console.log(err));
 	// console.log("\n[LOG] db =", cachedConnectionToMongoDB.conn.connections[0].db);
 
-	return cachedConnectionToMongoDB.conn as typeof mongoose;
+	return cachedConnectionToMongoDB.conn;
 }

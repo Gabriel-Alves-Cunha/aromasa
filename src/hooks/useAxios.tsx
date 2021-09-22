@@ -10,10 +10,6 @@ type ApiUrl =
 	| "api/products"
 	| "api/test";
 
-// const baseURL =
-// 	process.env.NODE_ENV === "production"
-// 		? process.env.VERCEL_URL
-// 		: envVariables.aromasaUrl;
 const baseURL = envVariables.aromasaUrl;
 
 export function useAxiosSWR<DataFormat = any>(
@@ -23,16 +19,16 @@ export function useAxiosSWR<DataFormat = any>(
 ) {
 	const { data, error, mutate } = useSWR<AxiosResponse<DataFormat>>(
 		url,
-		async () =>
+		async (): Promise<AxiosResponse<DataFormat>> =>
 			await axiosInstance({
 				url,
 				method,
 				data: reqData ?? {},
 			}),
 		{
-			errorRetryCount: 3,
-			refreshWhenHidden: false,
 			revalidateOnReconnect: true,
+			refreshWhenHidden: false,
+			errorRetryCount: 3,
 		}
 	);
 
@@ -43,6 +39,6 @@ export function useAxiosSWR<DataFormat = any>(
 
 export const axiosInstance = axios.create({
 	baseURL,
-	timeout: 5_000, // 5 seconds
+	timeout: 15_000, // 15 seconds
 	headers: { Authorization: "Bearer" },
 });

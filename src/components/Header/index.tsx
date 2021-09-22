@@ -25,6 +25,7 @@ import {
 } from "./styles";
 import theme from "styles/theme";
 import "react-toastify/dist/ReactToastify.css";
+import { json2str } from "utils/json2str";
 
 type Props = {
 	currentPage?: HeaderData["label"];
@@ -48,7 +49,11 @@ function Header_({ currentPage }: Props) {
 	}, [isModalOpen]);
 
 	async function handleLogin() {
-		await signIn("google");
+		try {
+			await signIn("google");
+		} catch (error) {
+			console.error(json2str(error));
+		}
 	}
 
 	async function handleLogout() {

@@ -2,17 +2,19 @@ import { GetServerSideProps } from "node_modules/next";
 import { getSession } from "next-auth/client";
 import { useState } from "react";
 
-import { Header, Navbar } from "components";
+// TODO: lazy
 import { DeleteAProduct } from "modules/DeleteAProduct";
+import { Header, Navbar } from "components";
 import { AlterAProduct } from "modules/AlterAProduct";
 import { NavbarOptions } from "components/Navbar/navabar.data";
 import { AddAProduct } from "modules/AddAProduct";
 import { UserModel } from "models/User";
+import { assert } from "utils/assert";
 import connectToMongoDB from "utils/connectToMongoDB";
 
 import { Container } from "styles/pages/admin";
 
-function ControllPanel() {
+export default function ControllPanel() {
 	const [activePage, setActivePage] = useState<NavbarOptions["label"]>(
 		"Adicionar um produto"
 	);
@@ -36,28 +38,28 @@ function ControllPanel() {
 	);
 }
 
-export default ControllPanel;
-
 export const getServerSideProps: GetServerSideProps = async ctx => {
 	try {
 		const session = await getSession(ctx);
-		console.log("session =", session);
+		assert(session, "There is no session!");
+		const email = session.user?.email;
+		assert(email, "There is no email in session!");
 
-		// See if user is alowed using the DB.
-		const userIsAllowed = await checkIfUserIsAllowed(
-			session?.user?.email ?? ""
-		);
+		const userIsAllowed = await checkIfUserIsAllowedToUseDatabase(email);
 
-		if (session && userIsAllowed) return { props: {} };
+		if (userIsAllowed) return { props: {} };
 		else return { notFound: true };
 	} catch (error) {
-		console.log(`❗ File: index.tsx\nLine:58\n${typeof error}: 'error'`, error);
+		console.error(
+			`❗ File: index.tsx\nLine:53\n${typeof error}: 'error' =`,
+			error
+		);
 
 		return { notFound: true };
 	}
 };
 
-async function checkIfUserIsAllowed(email: string) {
+async function checkIfUserIsAllowedToUseDatabase(email: string) {
 	try {
 		await connectToMongoDB();
 

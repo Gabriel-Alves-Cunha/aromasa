@@ -4,7 +4,7 @@ import styled from "styled-components";
 import theme from "styles/theme";
 
 const { primary } = theme.colors.light;
-const { primary: f_primary, secondary: f_secondary } = theme.fonts;
+const { primary: f_primary } = theme.fonts;
 
 export default makeStyles(_muiTheme => ({
 	img: {
@@ -52,6 +52,7 @@ export const Rejectd = styled.div`
 
 export const TrashTheImg = styled.button`
 	position: absolute;
+	z-index: 1000;
 
 	background-color: red;
 
