@@ -1,12 +1,13 @@
 import styled from "styled-components";
 
-import theme from "../../styles/theme";
+import theme from "styles/theme";
 
 const { footer } = theme.colors.light;
 export const FOOTER_HEIGHT = "46vh";
 
 export const Container = styled.footer`
 	position: absolute;
+	bottom: 0;
 	width: 100%;
 	height: ${FOOTER_HEIGHT};
 
@@ -18,7 +19,6 @@ export const Container = styled.footer`
 	/* background-color: red; */
 	background-color: ${footer};
 
-	margin-top: 7rem;
 	padding-top: 2.4rem;
 	padding-bottom: 2.4rem;
 

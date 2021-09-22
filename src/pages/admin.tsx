@@ -2,7 +2,6 @@ import { GetServerSideProps } from "node_modules/next";
 import { getSession } from "next-auth/client";
 import { useState } from "react";
 
-// TODO: lazy
 import { DeleteAProduct } from "modules/DeleteAProduct";
 import { Header, Navbar } from "components";
 import { AlterAProduct } from "modules/AlterAProduct";
@@ -27,11 +26,14 @@ export default function ControllPanel() {
 				<Navbar activePage={activePage} setActivePage={setActivePage} />
 
 				{(() => {
-					if (activePage === "Adicionar um produto") return <AddAProduct />;
-					else if (activePage === "Alterar um produto")
-						return <AlterAProduct />;
-					else if (activePage === "Deletar um produto")
-						return <DeleteAProduct />;
+					switch (activePage) {
+						case "Adicionar um produto":
+							return <AddAProduct />;
+						case "Alterar um produto":
+							return <AlterAProduct />;
+						case "Deletar um produto":
+							return <DeleteAProduct />;
+					}
 				})()}
 			</Container>
 		</>

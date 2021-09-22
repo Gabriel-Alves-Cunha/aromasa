@@ -4,8 +4,8 @@ import { Container, Span } from "./styles";
 
 type BulletsProps = {
 	onClick(index: number): void;
-	slides: StaticImageData[];
 	activeSlide: number;
+	slides: string[];
 };
 
 export type BulletProps = {
@@ -21,7 +21,7 @@ export function Bullets({ slides, activeSlide, onClick }: BulletsProps) {
 				<Bullet
 					active={activeSlide === i}
 					onClick={onClick}
-					key={slide.src}
+					key={slide}
 					index={i}
 				/>
 			))}

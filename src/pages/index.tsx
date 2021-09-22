@@ -1,5 +1,4 @@
-import { Image as CImage } from "cloudinary-react";
-import Image from "next/image";
+import { Image } from "cloudinary-react";
 import Head from "next/head";
 
 import { getLayout, Header } from "components";
@@ -29,7 +28,7 @@ export default function Home() {
 						priority
 						src={Bg}
 					/> */}
-					<CImage
+					<Image
 						publicId="https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,h_150,w_150/r_20/l_cloudinary_icon_blue,g_south_east,x_5,y_5,w_50,o_60,e_brightness:200/a_10/front_face.png"
 						fetch-format="auto"
 						quality="auto"

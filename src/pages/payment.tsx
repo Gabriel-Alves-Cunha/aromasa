@@ -1,74 +1,84 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-// import Image from "next/image";
+import { Image } from "cloudinary-react";
 
 import { Loading, Header, getLayout } from "components";
 import { axiosInstance } from "hooks/useAxios";
 import { envVariables } from "utils/env";
 
-// import Error500_svg from "public/images/Error_500.svg";
+import { Wrapper } from "styles/pages/payment";
 
 const contactEmail = envVariables.contactEmail;
 
 export default function Result() {
 	const {
-		query: { session_id: sessionId },
+		query: { session_id },
 	} = useRouter();
 
 	const [success, setSuccess] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		(async function talkToServer() {
 			try {
 				const { data } = await axiosInstance.get(
-					`/api/payment/${sessionId}` as "api/payment/:id"
+					`/api/payment/${session_id}` as "api/payment/:id"
 				);
 
 				console.log("\nThere is data: ", data);
+				setLoading(false);
 				setSuccess(true);
 			} catch (error) {
 				console.error(error);
+				setLoading(false);
+				setSuccess(false);
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	success ? <Success /> : <Error />;
-	return <Loading_ />;
+	// return <Success />;
+	if (loading) return <Loading />;
+	else if (success && !loading) return <Success />;
+	else if (!success && !loading) return <Error />;
 }
 
 function Success() {
 	return (
-		<>
+		<Wrapper>
 			<Header />
 
-			<div style={{ marginTop: "90px" }}>
+			<div>
 				<p>
 					We appreciate your business! If you have any questions, please email
 					<a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
 				</p>
 			</div>
-		</>
+		</Wrapper>
 	);
 }
 
 function Error() {
 	return (
-		<>
+		<Wrapper>
 			<Header />
 
-			{/* <Image src={Error500_svg} alt="Ocorreu um erro no servidor!" /> */}
-		</>
+			<Image
+				src="https://res.cloudinary.com/aromasa-decor/image/upload/v1632330726/Error_500_uv7srs.svg"
+				alt="Ocorreu um erro no servidor!"
+				className="error_img"
+			/>
+		</Wrapper>
 	);
 }
 
 function Loading_() {
 	return (
-		<>
+		<Wrapper>
 			<Header />
 
 			<Loading />
-		</>
+		</Wrapper>
 	);
 }
 

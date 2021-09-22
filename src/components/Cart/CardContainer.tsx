@@ -1,6 +1,6 @@
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { FiTrash2 } from "react-icons/fi";
-import Image from "next/image";
+import { Image } from "cloudinary-react";
 
 import { ClientChosenProduct } from "models/Product";
 
@@ -24,11 +24,10 @@ export function CardContainer({
 			<ImgContainer>
 				<Image
 					alt="Imagem ilustrativa do produto."
-					src={"/" + product.imagePath}
-					objectFit="cover"
+					src={product.imagePath}
+					fetch-format="auto"
 					className="img"
-					height={200}
-					width={200}
+					quality="auto"
 				/>
 			</ImgContainer>
 

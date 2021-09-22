@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useEmblaCarousel } from "embla-carousel/react";
-import Image from "next/image";
+import { Image } from "cloudinary-react";
 
 import { Arrow, Bullets } from "components";
 
@@ -8,8 +8,8 @@ import { Embla, EmblaContainer, EmblaViewport, Slide } from "./styles";
 
 type Props = {
 	setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
-	slides: StaticImageData[];
 	selectedIndex: number;
+	slides: string[];
 	loop?: boolean;
 };
 
@@ -55,8 +55,8 @@ export function Slider({
 			<EmblaViewport ref={viewportRef}>
 				<EmblaContainer>
 					{slides.map(slide => (
-						<Slide key={slide.src}>
-							<Image layout="fill" objectFit="cover" src={slide} alt="" />
+						<Slide key={slide}>
+							<Image src={slide} alt="" />
 						</Slide>
 					))}
 				</EmblaContainer>

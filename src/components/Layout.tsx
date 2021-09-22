@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import styled from "styled-components";
 
-import { FOOTER_HEIGHT } from "./Footer/styles";
 import { Footer } from "./Footer";
 
 type Props = {
@@ -11,9 +10,7 @@ type Props = {
 export default function Layout({ children }: Props) {
 	return (
 		<PageContainer>
-			<ContentWrap>
-				<main>{children}</main>
-			</ContentWrap>
+			<main>{children}</main>
 
 			<Footer />
 		</PageContainer>
@@ -22,11 +19,7 @@ export default function Layout({ children }: Props) {
 
 export const getLayout = (page: ReactNode) => <Layout>{page}</Layout>;
 
-export const ContentWrap = styled.div`
-	padding-bottom: ${FOOTER_HEIGHT}; /* Account for footer height */
-`;
-
-export const PageContainer = styled.div`
+const PageContainer = styled.div`
 	position: relative;
 	min-height: 100vh;
 `;
