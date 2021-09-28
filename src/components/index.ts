@@ -3,6 +3,7 @@ export { ProductsToBeBoughtSlider } from "./ProductsToBeBoughtSlider";
 export { CheckoutCardForProduct } from "./CheckoutCardForProduct";
 export { SliderWithThumbnail } from "./SliderWithThumbnail";
 export { ThumbnailSlider } from "./ThumbnailSlider";
+export { AccountButton } from "./AccountButton";
 export { ProductCard } from "./ProductCard";
 export { MyDropzone } from "./Drop";
 export { getLayout } from "./Layout";

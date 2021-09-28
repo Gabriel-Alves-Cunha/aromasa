@@ -1,4 +1,4 @@
-import { Grid, InputAdornment, TextField, Typography } from "@material-ui/core";
+import { Grid, InputAdornment, TextField, Typography } from "@mui/material";
 import { validateCep, validateCPF } from "validations-br";
 import { toast, ToastContainer } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
@@ -178,8 +178,6 @@ export default function Checkout() {
 						draggable: true,
 					}
 				);
-
-				setIsLoading(false);
 			}
 		} catch (error: any) {
 			console.log(error);
@@ -192,9 +190,9 @@ export default function Checkout() {
 				autoClose: 5000,
 				draggable: true,
 			});
+		} finally {
+			setIsLoading(false);
 		}
-
-		setIsLoading(false);
 	}
 
 	function gotoProductPage(product: ClientChosenProduct) {

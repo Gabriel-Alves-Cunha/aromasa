@@ -1,9 +1,10 @@
+import { IconButton } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import styled from "styled-components";
-import { IconButton } from "@material-ui/core";
 
-import theme from "../../styles/theme";
+import theme from "styles/theme";
 
-const { primary: f_primary, secondary: f_secondary } = theme.fonts;
+const { primary: f_primary } = theme.fonts;
 const { text } = theme.colors.light;
 
 export const HEADER_HEIGHT = 60;
@@ -31,6 +32,8 @@ export const Container = styled.header`
 
 export const LogoContainer = styled.div`
 	margin: 1rem 6rem;
+
+	cursor: pointer;
 
 	width: 100%;
 
@@ -101,16 +104,20 @@ export const CartContainer = styled.div`
 	align-items: center;
 
 	margin-right: 2rem;
+
+	/* border: 1px solid red;
+	background: linear-gradient(red, red) no-repeat center/1px 100%; */
 `;
 
-export const ModalContainer = styled.div`
+export const ModalContainer = styled.div``;
 
-`;
+export const SignInButton = styled.button``;
 
-export const SignInButton = styled.button`
+export const SignOutButton = styled.button``;
 
-`;
-
-export const SignOutButton = styled.button`
-
-`;
+export const useStyles = makeStyles(_muiTheme => ({
+	button: {
+		color: theme.colors.light.primary,
+	},
+	modal: {},
+}));

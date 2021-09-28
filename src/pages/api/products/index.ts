@@ -6,8 +6,8 @@ import Stripe from "stripe";
 import { ProductToAddToTheServer } from "modules/AddAProduct";
 import { envVariables } from "utils/env";
 import { ProductModel } from "models/Product";
-import connectToMongoDB from "utils/connectToMongoDB";
 import { Compute } from "utils/types";
+import connectToMongoDB from "utils/connectToMongoDB";
 
 const isTesting = false;
 
@@ -50,7 +50,7 @@ export default async function talkToDbToGetProducts(
 
 	switch (req.method) {
 		// Get all products
-		case "GET" || undefined:
+		case "GET":
 			try {
 				return res.status(200).json({
 					success: true,
@@ -58,7 +58,7 @@ export default async function talkToDbToGetProducts(
 				});
 			} catch (err) {
 				console.log(
-					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:56\n\t${typeof err}: 'err' = ${err}`
+					`[ERROR]\n\tFile: 'api/products/index.ts' in GET on talkToDB()\n\tLine:61\n\t${typeof err}: 'err' = ${err}`
 				);
 
 				return res.status(400).json({ success: false, data: err });

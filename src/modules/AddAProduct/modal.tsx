@@ -8,7 +8,7 @@ import {
 	TextField,
 	Dialog,
 	Fade,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { buildFormData, myFormId } from "./helper";
 import { ProductToAddToTheServer } from ".";

@@ -2,7 +2,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { GetServerSideProps } from "node_modules/next";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 
 import { ProductCard, Header, getLayout } from "components";
 import { ProductModel, Product } from "models/Product";

@@ -44,7 +44,7 @@ function CartProvider({ children }: CartProviderProps) {
 
 	useEffect(() => {
 		setCookie("cartProducts", JSON.stringify(cartProducts), {
-			maxAge: 30 * 24 * 60 * 60,
+			maxAge: 30 * 24 * 60 * 60, // 30 dias
 			sameSite: true,
 			path: "/",
 		});

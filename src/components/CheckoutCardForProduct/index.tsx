@@ -6,7 +6,7 @@ import {
 	Typography,
 	CardMedia,
 	Card,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { ClientChosenProduct } from "models/Product";
 import { useCart } from "hooks/useCart";

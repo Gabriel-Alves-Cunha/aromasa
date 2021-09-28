@@ -1,3 +1,14 @@
+import { createTheme, Theme } from "@mui/material/styles";
+
+import shadows, { customShadows } from "./shadows";
+
+export const muiTheme = createTheme(
+	{
+		shadows,
+	},
+	customShadows
+);
+
 const theme = {
 	colors: {
 		dark: {
@@ -9,7 +20,7 @@ const theme = {
 
 			footer: "#02C4DB",
 
-			navbar: "#11101d",
+			navbar: "white",
 		},
 		light: {
 			background: "white",
@@ -20,7 +31,7 @@ const theme = {
 
 			footer: "#6098be",
 
-			navbar: "#11101d",
+			navbar: "white",
 		},
 	},
 	fonts: {
@@ -29,5 +40,9 @@ const theme = {
 		brand: "Nesans",
 	},
 };
+
+declare module "@mui/styles" {
+	interface DefaultTheme extends Theme {}
+}
 
 export default theme;

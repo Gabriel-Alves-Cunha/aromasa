@@ -1,8 +1,8 @@
-import { signIn, signOut, useSession } from "next-auth/client";
-import { memo, useEffect, useState } from "react";
-import { makeStyles, Modal } from "@material-ui/core";
+import { signIn, useSession } from "next-auth/client";
 import { BsFillPersonFill } from "react-icons/bs";
-import { Avatar } from "@material-ui/core";
+import { IconButton } from "@mui/material";
+import { useRouter } from "next/router";
+import { memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import cx from "classnames";
@@ -10,45 +10,31 @@ import cx from "classnames";
 import AromasaLogo from "public/images/AromasaLogo.webp";
 
 import headerData, { HeaderData } from "./header.data";
-import { Cart } from "components";
+import { Cart, AccountButton } from "components";
+import { json2str } from "utils/json2str";
 
 import {
-	ModalContainer,
-	SignOutButton,
 	CartContainer,
 	LogoContainer,
-	SignInButton,
-	StyledButton,
 	Container,
+	useStyles,
 	Options,
 	Option,
 } from "./styles";
-import theme from "styles/theme";
 import "react-toastify/dist/ReactToastify.css";
-import { json2str } from "utils/json2str";
 
 type Props = {
 	currentPage?: HeaderData["label"];
 };
 
 function Header_({ currentPage }: Props) {
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [session] = useSession();
 	const classes = useStyles();
+	const router = useRouter();
 
-	function handleProfileClick(e: React.MouseEvent<HTMLButtonElement>) {
+	async function handleLogin(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
 
-		if (!session) handleLogin();
-		else setIsModalOpen(oldValue => !oldValue);
-	}
-
-	useEffect(() => {
-		handleOpenOrCloseModal();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isModalOpen]);
-
-	async function handleLogin() {
 		try {
 			await signIn("google");
 		} catch (error) {
@@ -56,31 +42,15 @@ function Header_({ currentPage }: Props) {
 		}
 	}
 
-	async function handleLogout() {
-		await signOut();
-	}
-
-	function handleOpenOrCloseModal() {
-		return (
-			session && (
-				<Modal className={classes.modal} disableEnforceFocus open={isModalOpen}>
-					<ModalContainer>
-						<Avatar alt={session.user?.name ?? "?"} />
-
-						<SignOutButton onClick={handleLogout}>Deslogar</SignOutButton>
-					</ModalContainer>
-				</Modal>
-			)
-		);
-	}
+	const go2HomePage = async () => await router.push("/");
 
 	return (
 		<Container>
-			<LogoContainer>
+			<LogoContainer onClick={go2HomePage}>
 				<Image
 					alt="Logo da Aromasa"
-					objectFit="cover"
 					src={AromasaLogo}
+					objectFit="cover"
 					priority
 				/>
 			</LogoContainer>
@@ -88,7 +58,7 @@ function Header_({ currentPage }: Props) {
 			<Options>
 				{headerData.map((menuItem, index) => (
 					<Option key={index}>
-						<Link href={menuItem.link}>
+						<Link href={menuItem.link} prefetch={false}>
 							<a>
 								<div
 									className={cx("background", {
@@ -104,12 +74,17 @@ function Header_({ currentPage }: Props) {
 			</Options>
 
 			<CartContainer>
-				<StyledButton
-					classes={{ root: classes.button }}
-					onClick={handleProfileClick}
-				>
-					<BsFillPersonFill size={18} />
-				</StyledButton>
+				{!session ? (
+					<IconButton
+						classes={{ root: classes.button }}
+						onClick={handleLogin}
+						size="large"
+					>
+						<BsFillPersonFill size={18} />
+					</IconButton>
+				) : (
+					<AccountButton session={session} />
+				)}
 
 				<Cart />
 			</CartContainer>
@@ -117,11 +92,6 @@ function Header_({ currentPage }: Props) {
 	);
 }
 
-export const Header = memo(Header_);
-
-const useStyles = makeStyles(_muiTheme => ({
-	button: {
-		color: theme.colors.light.primary,
-	},
-	modal: {},
-}));
+export const Header = memo(Header_, (prevProps, nextProps) =>
+	prevProps.currentPage === nextProps.currentPage ? true : false
+);

@@ -1,10 +1,10 @@
-import { InputAdornment, TextField, CircularProgress } from "@material-ui/core";
+import { InputAdornment, TextField, CircularProgress } from "@mui/material";
 import { toast as doToast, ToastContainer } from "react-toastify";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { nopeResolver } from "@hookform/resolvers/nope";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 
 import { defaultProduct, myFormId, nopeSchema } from "./helper";
 import { Product as NotToUseProductModel } from "models/Product";
@@ -27,7 +27,7 @@ export function AddAProduct() {
 		error: "",
 	});
 
-	const reset = (resetForm: any) => {
+	const reset = () => {
 		//@ts-ignore
 		document.getElementById(myFormId)?.reset();
 		setProduct(defaultProduct);
@@ -301,19 +301,19 @@ export function AddAProduct() {
 			</form>
 
 			<ConfirmationModal
-				reset={() => reset(resetForm)}
 				setOpen={setOpenModal}
 				setSaving={setSaving}
 				setToast={setToast}
 				product={product}
 				open={openModal}
 				files={files}
+				reset={reset}
 			/>
 		</Container>
 	);
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(theme =>
 	createStyles({
 		root: {
 			"& > *": {

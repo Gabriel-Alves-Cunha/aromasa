@@ -1,10 +1,11 @@
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import { IconButton } from "@mui/material";
 import { FiTrash2 } from "react-icons/fi";
 import { Image } from "cloudinary-react";
 
 import { ClientChosenProduct } from "models/Product";
 
-import { ImgContainer, StyledButton, Title, Content, Amount } from "./styles";
+import { ImgContainer, Title, Content, Amount } from "./styles";
 
 type Props = {
 	handleAddOneMoreToCart(product: ClientChosenProduct): void;
@@ -35,35 +36,35 @@ export function CardContainer({
 				<Title>{product.title}</Title>
 
 				<div className="info">
-					<StyledButton
+					<IconButton
 						onClick={() => handleSubtractAmount(product)}
 						title="Subtrair um"
 					>
 						<AiOutlineMinus />
-					</StyledButton>
+					</IconButton>
 
 					<Amount>
 						R$ {product.price.replace(".", ",")}{" "}
 						<span>× {product.bottle.amountThatWillBeBought || "1"}</span>
 					</Amount>
 
-					<StyledButton
+					<IconButton
 						onClick={() => handleAddOneMoreToCart(product)}
 						title="Adicionar um"
 					>
 						<AiOutlinePlus />
-					</StyledButton>
+					</IconButton>
 				</div>
 
 				<div className="total">
 					<h3>Total: R$ {getPriceWithAmount(product)}</h3>
 
-					<StyledButton
+					<IconButton
 						onClick={() => handleRemoveFromCart(product)}
 						title="Remover"
 					>
 						<FiTrash2 size={19} />
-					</StyledButton>
+					</IconButton>
 				</div>
 			</div>
 		</Content>

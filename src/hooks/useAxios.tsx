@@ -21,9 +21,9 @@ export function useAxiosSWR<DataFormat = any>(
 		url,
 		async (): Promise<AxiosResponse<DataFormat>> =>
 			await axiosInstance({
-				url,
-				method,
 				data: reqData ?? {},
+				method,
+				url,
 			}),
 		{
 			revalidateOnReconnect: true,
@@ -38,7 +38,7 @@ export function useAxiosSWR<DataFormat = any>(
 }
 
 export const axiosInstance = axios.create({
-	baseURL,
-	timeout: 15_000, // 15 seconds
 	headers: { Authorization: "Bearer" },
+	timeout: 15_000, // 15 seconds
+	baseURL,
 });

@@ -22,7 +22,7 @@ export default async function talkToDbWithId(
 
 	switch (method) {
 		// GET a product with id
-		case "GET" || undefined:
+		case "GET":
 			try {
 				const product = await ProductModel.findById(_id);
 
@@ -33,13 +33,13 @@ export default async function talkToDbWithId(
 						success: false,
 						data: `GET product with id = ${_id} was not found!`,
 					});
-			} catch (err) {
+			} catch (errorGet) {
 				console.error(
-					"\n[talkToDbWithId on 'api/products/[product].ts' in GET]",
-					err
+					`[talkToDbWithId on 'pages/api/products/[product].ts' in DELETE]\n\tLine:38\n\t${typeof errorGet}: 'errorGet' =`,
+					errorGet
 				);
 
-				return res.status(400).json({ success: false, data: err });
+				return res.status(400).json({ success: false, data: errorGet });
 			}
 			break;
 		///////////////////////////////////////////////
@@ -66,13 +66,13 @@ export default async function talkToDbWithId(
 					return res
 						.status(400)
 						.json({ success: false, data: "updatedProductOnDB returned null" });
-			} catch (err) {
+			} catch (errorPut) {
 				console.error(
-					"\n[talkToDbWithId on 'pages/api/products/[product].ts' in PUT]",
-					err
+					`[talkToDbWithId on 'pages/api/products/[product].ts' in DELETE]\n\tLine:71\n\t${typeof errorPut}: 'errorPut' =`,
+					errorPut
 				);
 
-				return res.status(400).json({ success: false, data: err });
+				return res.status(400).json({ success: false, data: errorPut });
 			}
 			break;
 		///////////////////////////////////////////////
@@ -94,13 +94,13 @@ export default async function talkToDbWithId(
 					return res
 						.status(400)
 						.json({ success: false, data: "deletedProductOnDB returned null" });
-			} catch (err) {
+			} catch (errorDelete) {
 				console.error(
-					"\n[talkToDbWithId on 'pages/api/products/[product].ts' in DELETE]",
-					err
+					`[talkToDbWithId on 'pages/api/products/[product].ts' in DELETE]\n\tLine:99\n\t${typeof errorDelete}: 'errorDelete' =`,
+					errorDelete
 				);
 
-				return res.status(400).json({ success: false, data: err });
+				return res.status(400).json({ success: false, data: errorDelete });
 			}
 			break;
 		///////////////////////////////////////////////

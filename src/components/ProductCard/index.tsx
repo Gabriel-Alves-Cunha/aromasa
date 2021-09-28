@@ -1,4 +1,4 @@
-import { AddShoppingCart } from "@material-ui/icons";
+import { FaCartPlus } from "react-icons/fa";
 import { memo } from "react";
 import {
 	CardActionArea,
@@ -8,7 +8,7 @@ import {
 	Typography,
 	CardMedia,
 	Card,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { Product } from "models/Product";
 
@@ -24,7 +24,7 @@ function _ProductCard({ product, gotoProductPage, handleAddToCart }: Props) {
 	const classes = useStyles();
 
 	return (
-		<Card className={classes.root} square>
+        <Card className={classes.root} square>
 			<CardActionArea
 				onClick={() => gotoProductPage(product)}
 				className={classes.actionArea}
@@ -53,14 +53,14 @@ function _ProductCard({ product, gotoProductPage, handleAddToCart }: Props) {
 
 			<CardActions disableSpacing className={classes.cardActions}>
 				<IconButton
-					aria-label="Adicionar ao carrinho"
-					onClick={() => handleAddToCart(product)}
-				>
-					<AddShoppingCart className={classes.price} />
+                    aria-label="Adicionar ao carrinho"
+                    onClick={() => handleAddToCart(product)}
+                    size="large">
+					<FaCartPlus className={classes.price} />
 				</IconButton>
 			</CardActions>
 		</Card>
-	);
+    );
 }
 
 export const ProductCard = memo(_ProductCard);

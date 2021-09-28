@@ -9,7 +9,7 @@ import { Embla, EmblaContainer, EmblaViewport, Slide } from "./styles";
 type Props = {
 	setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
 	selectedIndex: number;
-	slides: string[];
+	slidesUrls: string[];
 	loop?: boolean;
 };
 
@@ -17,7 +17,7 @@ export function Slider({
 	setSelectedIndex,
 	selectedIndex,
 	loop = false,
-	slides,
+	slidesUrls,
 }: Props) {
 	const [viewportRef, emblaApi] = useEmblaCarousel({ loop });
 
@@ -54,9 +54,9 @@ export function Slider({
 		<Embla>
 			<EmblaViewport ref={viewportRef}>
 				<EmblaContainer>
-					{slides.map(slide => (
-						<Slide key={slide}>
-							<Image src={slide} alt="" />
+					{slidesUrls.map(slideUrl => (
+						<Slide key={slideUrl}>
+							<Image src={slideUrl} alt="" />
 						</Slide>
 					))}
 				</EmblaContainer>
@@ -74,9 +74,9 @@ export function Slider({
 
 				<Bullets
 					activeSlide={selectedIndex}
+					slidesUrls={slidesUrls}
 					onClick={scrollTo}
-					slides={slides}
-				/>
+					/>
 			</EmblaViewport>
 		</Embla>
 	);

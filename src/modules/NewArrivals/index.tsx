@@ -12,7 +12,7 @@ export function NewArrivals() {
 		<Container>
 			<SliderContainer>
 				<Slider
-					slides={slides.map(({ img }) => img)}
+					slidesUrls={slides.map(({ url }) => url)}
 					setSelectedIndex={setSelectedIndex}
 					selectedIndex={selectedIndex}
 				/>

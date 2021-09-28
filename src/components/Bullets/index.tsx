@@ -4,8 +4,8 @@ import { Container, Span } from "./styles";
 
 type BulletsProps = {
 	onClick(index: number): void;
+	slidesUrls: string[];
 	activeSlide: number;
-	slides: string[];
 };
 
 export type BulletProps = {
@@ -14,14 +14,14 @@ export type BulletProps = {
 	index: number;
 };
 
-export function Bullets({ slides, activeSlide, onClick }: BulletsProps) {
+export function Bullets({ slidesUrls, activeSlide, onClick }: BulletsProps) {
 	return (
 		<Container>
-			{slides.map((slide, i) => (
+			{slidesUrls.map((slideUrl, i) => (
 				<Bullet
 					active={activeSlide === i}
 					onClick={onClick}
-					key={slide}
+					key={slideUrl}
 					index={i}
 				/>
 			))}

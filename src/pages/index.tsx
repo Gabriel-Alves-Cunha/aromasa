@@ -4,8 +4,6 @@ import Head from "next/head";
 import { getLayout, Header } from "components";
 import { NewArrivals } from "modules/NewArrivals";
 
-import Bg from "public/images/Bg.jpg";
-
 import { HeroContainer, Container } from "styles/pages";
 
 export default function Home() {
@@ -21,13 +19,6 @@ export default function Home() {
 
 			<Container>
 				<HeroContainer>
-					{/* <Image
-						alt="Photo by Alesia Kozik from Pexels"
-						className="hero_img"
-						objectFit="cover"
-						priority
-						src={Bg}
-					/> */}
 					<Image
 						publicId="https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,h_150,w_150/r_20/l_cloudinary_icon_blue,g_south_east,x_5,y_5,w_50,o_60,e_brightness:200/a_10/front_face.png"
 						fetch-format="auto"

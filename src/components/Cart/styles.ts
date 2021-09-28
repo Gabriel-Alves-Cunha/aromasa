@@ -1,18 +1,9 @@
 import styled from "styled-components";
-import { IconButton } from "@material-ui/core";
 
-import theme from "../../styles/theme";
+import theme from "styles/theme";
 
 const { primary } = theme.colors.light;
 const { primary: f_primary } = theme.fonts;
-
-export const StyledButton = styled(IconButton)`
-	position: fixed;
-	width: 20px;
-	height: 20px;
-
-	z-index: 100;
-`;
 
 export const DrawerContainer = styled.aside`
 	font-family: ${theme.fonts.secondary};

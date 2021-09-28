@@ -21,6 +21,8 @@ type Props = {
 };
 
 export default function ProductCard({ product }: Props) {
+	console.log("Client-side product =", product);
+	// TODO: add carts for more products
 	const router = useRouter();
 
 	return (
@@ -58,20 +60,21 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 		const products = await getProductsFromDB();
 
 		console.log(
-			`[LOG]\n\tFile: [product].tsx\n\tLine:60\n\t${typeof products}: 'products' = ${products}`
+			`[LOG]\n\tFile: 'pages/[product].tsx'\n\tLine:61\n\t${typeof products}: 'products' =`,
+			products
 		);
 
 		return {
 			paths: products.map(product => ({
 				params: {
-					product: json2str(product),
+					product: JSON.stringify(product),
 				},
 			})),
 			fallback: "blocking",
 		};
 	} catch (error) {
 		throw new Error(
-			`File: 'pages/products/[product].tsx'\nLine:74\n${typeof error}: 'error' = ${json2str(
+			`File: 'pages/products/[product].tsx'\nLine:76\n${typeof error}: 'error' = ${json2str(
 				error
 			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
@@ -80,6 +83,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 
 export const getStaticProps: GetStaticProps = async ctx => {
 	console.log("\ngetStaticProps ctx =", ctx);
+
 	try {
 		const product: Product = JSON.parse(ctx.params?.product as string);
 		console.log("\nproduct =", product);
@@ -87,10 +91,10 @@ export const getStaticProps: GetStaticProps = async ctx => {
 		return {
 			props: { product },
 		};
-	} catch (error) {
+	} catch (errorGetStaticProps) {
 		throw new Error(
-			`File: 'pages/api/products/[product].tsx'\nLine:92\n${typeof error}: 'error' = ${json2str(
-				error
+			`File: 'pages/[product].tsx'\nLine:95\n${typeof errorGetStaticProps}: 'errorGetStaticProps' = ${json2str(
+				errorGetStaticProps
 			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
 	}
@@ -100,11 +104,13 @@ async function getProductsFromDB() {
 	try {
 		await connectToMongoDB();
 
-		return await ProductModel.find({});
-	} catch (error) {
+		const products = await ProductModel.find({});
+
+		return products;
+	} catch (errorGetProductsFromDB) {
 		throw new Error(
-			`File: 'pages/api/products/[product].tsx'\nLine:106\n${typeof error}: 'error' = ${json2str(
-				error
+			`File: 'pages/[product].tsx'\nLine:109\n${typeof errorGetProductsFromDB}: 'errorGetProductsFromDB' = ${json2str(
+				errorGetProductsFromDB
 			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
 	}

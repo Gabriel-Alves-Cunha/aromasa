@@ -1,6 +1,6 @@
+import { Drawer, Badge, IconButton } from "@mui/material";
 import { FiShoppingCart } from "react-icons/fi";
-import { Drawer, Badge } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -8,13 +8,7 @@ import { CardContainer } from "./CardContainer";
 import { Divider } from "components";
 import { useCart } from "hooks/useCart";
 
-import {
-	DrawerContainer,
-	ConfirmButton,
-	StyledButton,
-	NoItems,
-	Header,
-} from "./styles";
+import { DrawerContainer, ConfirmButton, NoItems, Header } from "./styles";
 import theme from "styles/theme";
 
 export function Cart() {
@@ -45,10 +39,12 @@ export function Cart() {
 
 	return (
 		<>
-			<StyledButton
+			<IconButton
 				classes={{ root: classes.button }}
 				onClick={() => handleOpenCart()}
 				aria-label="Carrinho de compras"
+				color="primary"
+				size="large"
 			>
 				<Badge
 					badgeContent={cartProducts.length}
@@ -59,7 +55,7 @@ export function Cart() {
 				>
 					<FiShoppingCart size={18} />
 				</Badge>
-			</StyledButton>
+			</IconButton>
 
 			<Drawer anchor="right" open={show} onClose={() => handleOpenCart()}>
 				<DrawerContainer>

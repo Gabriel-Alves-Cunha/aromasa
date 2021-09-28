@@ -12,11 +12,11 @@ export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 
-	width: calc(100vw - ${NAVBAR_WIDTH}px);
-	height: calc(100vh - ${HEADER_HEIGHT}px);
+	/* width: calc(100vw - ${NAVBAR_WIDTH}px);
+	height: calc(100vh - ${HEADER_HEIGHT}px); */
 
-	margin-top: ${HEADER_HEIGHT}px;
-	margin-left: ${NAVBAR_WIDTH}px;
+	/* margin-top: ${HEADER_HEIGHT}px;
+	margin-left: ${NAVBAR_WIDTH}px; */
 
 	font-family: ${f_primary};
 
