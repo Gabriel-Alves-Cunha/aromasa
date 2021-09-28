@@ -49,7 +49,7 @@ const productSchema = new Schema<Product>({
 		trim: true,
 		maxlength: [3000, "A descrição não pode ter mais de 3.000 caracteres!"],
 	},
-	dicas_de_uso: {
+	usage_tips: {
 		type: String,
 		required: false,
 		unique: false,
@@ -67,10 +67,12 @@ const productSchema = new Schema<Product>({
 		],
 		required: false,
 	},
-	categories: {
-		type: Array,
-		required: [true, "Uma categoria do produto é necessária!"],
-	},
+	categories: [
+		{
+			type: String,
+			required: [true, "Uma categoria do produto é necessária!"],
+		},
+	],
 	imagesPaths: [
 		{
 			type: String,
