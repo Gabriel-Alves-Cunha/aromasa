@@ -9,7 +9,7 @@ module.exports = withPlugins([withTM], {
 	next: "latest",
 	node: "--trace-warnings",
 	images: {
-		domains: [""], //, "res.cloudinary.com"
+		domains: ["", "lh3.googleusercontent.com"], //, "res.cloudinary.com"
 	},
 	serverRuntimeConfig: {
 		PROJECT_ROOT: __dirname,

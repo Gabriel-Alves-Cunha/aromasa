@@ -25,9 +25,10 @@ export default function Result() {
 					`/api/payment/${session_id}` as "api/payment/:id"
 				);
 
-				console.log("\nThere is data: ", data);
+				console.log("\nThe data =", data);
+				data ? setSuccess(true) : setSuccess(false);
+
 				setLoading(false);
-				setSuccess(true);
 			} catch (error) {
 				console.error(error);
 				setLoading(false);
@@ -38,7 +39,7 @@ export default function Result() {
 	}, []);
 
 	// return <Success />;
-	if (loading) return <Loading />;
+	if (loading) return <Loading_ />;
 	else if (success && !loading) return <Success />;
 	else if (!success && !loading) return <Error />;
 }

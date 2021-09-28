@@ -31,6 +31,7 @@ export default function Checkout() {
 	const router = useRouter();
 
 	const [canGoToBuyPage, setCanGoToBuyPage] = useState(false);
+
 	const [isLoading, setIsLoading] = useState(false);
 	const [shipData, setShipData] = useState({} as FrenetForm);
 
@@ -43,7 +44,7 @@ export default function Checkout() {
 
 	const onSubmit = (data: FrenetForm) => {
 		console.log(
-			`[LOG]\n\tFile: 'pages/checkout/index.tsx'\n\tLine:66\n\t${typeof data}: 'data' =`,
+			`[LOG]\n\tFile: 'pages/checkout/index.tsx'\n\tLine:47\n\t${typeof data}: 'data' =`,
 			data
 		);
 	};
@@ -83,7 +84,7 @@ export default function Checkout() {
 		} catch (error: any) {
 			console.log("error from cep =", error);
 
-			errors.zipCode = error;
+			errors.zipCode = error.message;
 		}
 	}
 
@@ -108,6 +109,8 @@ export default function Checkout() {
 	async function handleCheckout(event: React.MouseEvent<HTMLInputElement>) {
 		event.preventDefault();
 
+		setIsLoading(true);
+
 		checkIfAmountOfProductsIsAvailable();
 
 		if (!canGoToBuyPage) {
@@ -121,10 +124,9 @@ export default function Checkout() {
 				draggable: true,
 			});
 
+			setIsLoading(false);
 			return;
 		}
-
-		setIsLoading(true);
 
 		const productsInfo = cartProducts.map(product => ({
 			price_data: {
@@ -142,7 +144,7 @@ export default function Checkout() {
 		// ];
 
 		try {
-			// Call your backend to create the Checkout session.
+			// Call the backend to create the Checkout session.
 			const { data } = await axiosInstance.post<{ sessionId: string }>(
 				"/api/payment",
 				{
@@ -180,7 +182,8 @@ export default function Checkout() {
 				);
 			}
 		} catch (error: any) {
-			console.log(error);
+			console.error(error);
+
 			toast.error(`🦄 Houve um erro ao comprar o produto!\n${error.message}`, {
 				hideProgressBar: false,
 				position: "top-right",
@@ -195,10 +198,10 @@ export default function Checkout() {
 		}
 	}
 
-	function gotoProductPage(product: ClientChosenProduct) {
+	async function gotoProductPage(product: ClientChosenProduct) {
 		console.log("gotoProductPage with product:", product._id);
 
-		router.push(`/product/${product._id.toString()}`);
+		await router.push(`/product/${product._id.toString()}`);
 	}
 
 	function checkIfAmountOfProductsIsAvailable() {

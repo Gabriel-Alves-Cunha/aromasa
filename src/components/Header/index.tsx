@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import cx from "classnames";
 
 import AromasaLogo from "public/images/AromasaLogo.webp";
 
@@ -61,9 +60,9 @@ function Header_({ currentPage }: Props) {
 						<Link href={menuItem.link} prefetch={false}>
 							<a>
 								<div
-									className={cx("background", {
-										active: currentPage === menuItem.label,
-									})}
+									className={`background ${
+										currentPage === menuItem.label && "active"
+									}`}
 								>
 									{menuItem.label}
 								</div>

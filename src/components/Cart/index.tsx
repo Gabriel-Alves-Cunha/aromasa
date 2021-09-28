@@ -1,8 +1,8 @@
 import { Drawer, Badge, IconButton } from "@mui/material";
 import { FiShoppingCart } from "react-icons/fi";
+import { useReducer } from "react";
 import { makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 import { CardContainer } from "./CardContainer";
 import { Divider } from "components";
@@ -23,13 +23,14 @@ export function Cart() {
 	} = useCart();
 
 	console.log(
-		`[LOG]\n\tFile: 'components/Cart/index.tsx'\n\tLine:33\n\t${typeof cartProducts}: 'cartProducts' =`,
+		`[LOG]\n\tFile: 'components/Cart/index.tsx'\n\tLine:26\n\t${typeof cartProducts}: 'cartProducts' =`,
 		cartProducts
 	);
 
-	const [show, setShow] = useState(false);
-
-	const handleOpenCart = () => setShow(oldValue => !oldValue);
+	const [show, toggleOpenCart] = useReducer(
+		previousValue => !previousValue,
+		false
+	);
 
 	async function handleBuyProducts(event: React.MouseEvent<HTMLButtonElement>) {
 		event.preventDefault();
@@ -41,8 +42,8 @@ export function Cart() {
 		<>
 			<IconButton
 				classes={{ root: classes.button }}
-				onClick={() => handleOpenCart()}
 				aria-label="Carrinho de compras"
+				onClick={toggleOpenCart}
 				color="primary"
 				size="large"
 			>
@@ -57,7 +58,7 @@ export function Cart() {
 				</Badge>
 			</IconButton>
 
-			<Drawer anchor="right" open={show} onClose={() => handleOpenCart()}>
+			<Drawer anchor="right" open={show} onClose={toggleOpenCart}>
 				<DrawerContainer>
 					<Header>
 						Você tem <span>{cartProducts.length}</span>{" "}

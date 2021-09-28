@@ -1,5 +1,5 @@
 import { Button, Divider, Typography, Avatar, Box } from "@mui/material";
-import { useRef, useState } from "react";
+import { useRef, useReducer } from "react";
 import { signOut } from "next-auth/client";
 import { Session } from "next-auth";
 
@@ -11,9 +11,8 @@ type Props = {
 
 export function AccountButton({ session }: Props) {
 	const anchorEl = useRef<HTMLButtonElement>(null);
-	const [open, setOpen] = useState(false);
+	const [open, toggleOpen] = useReducer(previousValue => !previousValue, false);
 
-	const handleToggle = () => setOpen(oldValue => !oldValue);
 	const handleLogout = async () => await signOut();
 
 	return (
@@ -28,7 +27,7 @@ export function AccountButton({ session }: Props) {
 					padding: 0,
 					width: 42,
 				}}
-				onClick={handleToggle}
+				onClick={toggleOpen}
 				ref={anchorEl}
 			>
 				<Avatar
@@ -40,7 +39,7 @@ export function AccountButton({ session }: Props) {
 
 			<MenuPopover
 				anchorEl={anchorEl!.current}
-				onClose={handleToggle}
+				onClose={toggleOpen}
 				sx={{ width: 220 }}
 				open={open}
 			>

@@ -9,11 +9,11 @@ mongoose.connection.on("error", err =>
 );
 
 mongoose.connection.on("connected", () =>
-	console.log("\nSuccessfully connected to database.\n")
+	console.info("\nSuccessfully connected to database.\n")
 );
 
 mongoose.connection.on("disconnected", () =>
-	console.log("\nDisconneted from database.\n")
+	console.warn("\nDisconneted from database.\n")
 );
 
 /**
@@ -38,18 +38,12 @@ if (!cachedConnectionToMongoDB) {
 export default async function connectToMongoDB() {
 	if (cachedConnectionToMongoDB.conn) return cachedConnectionToMongoDB.conn;
 
-	if (
-		// process.env.NODE_ENV === "development" &&
-		!cachedConnectionToMongoDB.promise
-	)
+	if (!cachedConnectionToMongoDB.promise)
 		cachedConnectionToMongoDB.promise = mongoose.connect(envVariables.db_uri, {
 			keepAliveInitialDelay: 300_000,
 			dbName: envVariables.db_name,
-			useUnifiedTopology: true,
-			useFindAndModify: false,
 			bufferCommands: false,
-			useNewUrlParser: true,
-			useCreateIndex: true,
+			autoCreate: false,
 			keepAlive: true,
 		});
 

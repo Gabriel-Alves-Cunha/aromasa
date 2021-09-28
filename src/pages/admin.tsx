@@ -1,6 +1,6 @@
+import { useState, useReducer } from "react";
 import { GetServerSideProps } from "node_modules/next";
 import { getSession } from "next-auth/client";
-import { useState } from "react";
 
 import { DeleteAProduct } from "modules/DeleteAProduct";
 import { AlterAProduct } from "modules/AlterAProduct";
@@ -16,7 +16,10 @@ import connectToMongoDB from "utils/connectToMongoDB";
 export default function ControllPanel() {
 	const [activePage, setActivePage] =
 		useState<NavbarOptions["label"]>("Dashboard");
-	const [navBarOpen, setNavBarOpen] = useState(false);
+	const [navBarOpen, toggleNavBarOpen] = useReducer(
+		previousValue => !previousValue,
+		false
+	);
 
 	return (
 		<div
@@ -25,8 +28,8 @@ export default function ControllPanel() {
 			}}
 		>
 			<AdminHeader
+				toggleNavBarOpen={toggleNavBarOpen}
 				setActivePage={setActivePage}
-				setNavBarOpen={setNavBarOpen}
 				activePage={activePage}
 				navBarOpen={navBarOpen}
 			/>
@@ -54,7 +57,10 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 		const email = session.user?.email;
 		assert(email, "There is no email in session!");
 
-		const userIsAllowed = await checkIfUserIsAllowedToUseDatabase(email);
+		// I know it is faaaar from beign safe...
+		const userIsAllowed = await checkIfUserIsAllowedToMessWithTheDatabase(
+			email
+		);
 
 		if (userIsAllowed) return { props: {} };
 		else return { notFound: true };
@@ -68,7 +74,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 	}
 };
 
-async function checkIfUserIsAllowedToUseDatabase(email: string) {
+async function checkIfUserIsAllowedToMessWithTheDatabase(email: string) {
 	try {
 		await connectToMongoDB();
 
@@ -78,7 +84,7 @@ async function checkIfUserIsAllowedToUseDatabase(email: string) {
 		if (user[0] && user[0].admin) return true;
 		else return false;
 	} catch (error) {
-		console.error(error);
+		if (process.env.NODE_ENV === "development") console.error(error);
 		return false;
 	}
 }

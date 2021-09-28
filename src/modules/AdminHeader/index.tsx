@@ -1,26 +1,26 @@
 import { Toolbar } from "@mui/material";
 
 import { NavbarOptions } from "components/Navbar/navabar.data";
-import { Navbar } from "components/Navbar";
+import { Navbar } from "components";
 
 type Props = {
 	setActivePage: React.Dispatch<React.SetStateAction<NavbarOptions["label"]>>;
-	setNavBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleNavBarOpen: React.DispatchWithoutAction;
 	activePage: NavbarOptions["label"];
 	navBarOpen: boolean;
 };
 
 export function AdminHeader({
+	toggleNavBarOpen,
 	setActivePage,
-	setNavBarOpen,
 	activePage,
 	navBarOpen,
 }: Props) {
 	return (
 		<Toolbar variant="dense">
 			<Navbar
+				toggleNavBarOpen={toggleNavBarOpen}
 				setActivePage={setActivePage}
-				setNavBarOpen={setNavBarOpen}
 				activePage={activePage}
 				navBarOpen={navBarOpen}
 			/>

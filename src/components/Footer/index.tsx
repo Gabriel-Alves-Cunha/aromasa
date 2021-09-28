@@ -47,8 +47,8 @@ export function Footer() {
 				<div className="border-bottom-size" />
 
 				<Options>
-					{informationOptions.map((item, index) => (
-						<Option key={item.link + index}>
+					{informationOptions.map(item => (
+						<Option key={item.link}>
 							<Link href={item.link}>
 								<a>
 									<div>
@@ -78,25 +78,25 @@ const socialNetworkOptions = [
 	// 	title: "FACEBOOK",
 	// 	link: "",
 	// },
-	{
-		title: "WhatsApp",
-		link: "/",
-	},
+	// {
+	// 	title: "WhatsApp",
+	// 	link: "/",
+	// },
 ];
 
 const informationOptions = [
-	{
-		title: "Pagamentos",
-		link: "/",
-	},
+	// {
+	// 	title: "Pagamentos",
+	// 	link: "/",
+	// },
 	{
 		title: "Fale conosco",
 		link: `mailto:${envVariables.contactEmail}`,
 	},
-	{
-		title: "Entregas e devoluções",
-		link: "/",
-	},
+	// {
+	// 	title: "Entregas e devoluções",
+	// 	link: "/",
+	// },
 	{
 		title: "Política de privacidade e termos de uso",
 		link: "/privacy-policy",

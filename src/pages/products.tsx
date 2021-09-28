@@ -28,10 +28,10 @@ export default function Products({ products }: Props) {
 		);
 	}, [cartProducts]);
 
-	function gotoProductPage(product: Product) {
+	async function gotoProductPage(product: Product) {
 		console.log("gotoProductPage");
 
-		router.push(`/product/${product._id.toString()}`);
+		await router.push(`/product/${product._id.toString()}`);
 	}
 
 	function handleAddToCart(product: Product) {

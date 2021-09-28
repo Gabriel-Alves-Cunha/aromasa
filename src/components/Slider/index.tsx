@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useEmblaCarousel } from "embla-carousel/react";
 import { Image } from "cloudinary-react";
+import useEmblaCarousel from "embla-carousel-react";
 
 import { Arrow, Bullets } from "components";
 
@@ -76,7 +76,7 @@ export function Slider({
 					activeSlide={selectedIndex}
 					slidesUrls={slidesUrls}
 					onClick={scrollTo}
-					/>
+				/>
 			</EmblaViewport>
 		</Embla>
 	);

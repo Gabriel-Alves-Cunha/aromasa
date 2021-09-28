@@ -104,6 +104,7 @@ export const CartContainer = styled.div`
 	align-items: center;
 
 	margin-right: 2rem;
+	gap: 2rem;
 
 	/* border: 1px solid red;
 	background: linear-gradient(red, red) no-repeat center/1px 100%; */

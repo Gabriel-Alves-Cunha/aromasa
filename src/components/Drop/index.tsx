@@ -129,11 +129,6 @@ export function MyDropzone({ files, setFiles }: Props) {
 		</div>
 	));
 
-	console.log(
-		`[LOG]\n\tFile: index.tsx\n\tLine:127\n\t${typeof previews}: 'previews' =`,
-		previews
-	);
-
 	return (
 		<section className="container">
 			<Container {...getRootProps({ className: "dropzone" })}>
@@ -166,14 +161,12 @@ export function MyDropzone({ files, setFiles }: Props) {
 
 const onabort = () => console.error("File reading was aborted");
 const onerror = () => console.error("File reading has failed");
-const onDropRejected = (fileRejections: FileRejection[]) => {
+const onDropRejected = (fileRejections: FileRejection[]) =>
 	console.error(`Files rejected on drop: ${json2str(fileRejections)}`);
-};
-const onDropAccepted = (files: File[]) => {
+const onDropAccepted = (files: File[]) =>
 	files.forEach(fileBlob => {
 		const reader = new FileReader();
 		reader.onabort = onabort;
 		reader.onerror = onerror;
 		reader.onload = () => reader.readAsArrayBuffer(fileBlob);
 	});
-};

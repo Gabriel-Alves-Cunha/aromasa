@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import styled from "styled-components";
 
 import { Footer } from "./Footer";
 
@@ -9,17 +8,12 @@ type Props = {
 
 export default function Layout({ children }: Props) {
 	return (
-		<PageContainer>
+		<div style={{ position: "relative", minHeight: "100vh" }}>
 			<main>{children}</main>
 
 			<Footer />
-		</PageContainer>
+		</div>
 	);
 }
 
 export const getLayout = (page: ReactNode) => <Layout>{page}</Layout>;
-
-const PageContainer = styled.div`
-	position: relative;
-	min-height: 100vh;
-`;

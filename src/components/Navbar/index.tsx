@@ -2,7 +2,6 @@ import { Drawer, IconButton } from "@mui/material";
 import { IoMenuOutline } from "react-icons/io5";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import cx from "classnames";
 
 import navbarOptions, { NavbarOptions } from "./navabar.data";
 
@@ -12,29 +11,28 @@ import { Container, Option, LogoContainer } from "./styles";
 
 type Props = {
 	setActivePage: React.Dispatch<React.SetStateAction<NavbarOptions["label"]>>;
-	setNavBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleNavBarOpen: React.DispatchWithoutAction;
 	activePage: NavbarOptions["label"];
 	navBarOpen: boolean;
 };
 
 export function Navbar({
-	setNavBarOpen,
+	toggleNavBarOpen,
 	setActivePage,
 	activePage,
 	navBarOpen,
 }: Props) {
 	const router = useRouter();
 
-	const handleToggle = () => setNavBarOpen(oldValue => !oldValue);
 	const go2HomePage = async () => await router.push("/");
 
 	return (
 		<>
-			<IconButton onClick={handleToggle}>
+			<IconButton onClick={toggleNavBarOpen}>
 				<IoMenuOutline size={20} />
 			</IconButton>
 
-			<Drawer anchor="left" open={navBarOpen} onClose={handleToggle}>
+			<Drawer anchor="left" open={navBarOpen} onClose={toggleNavBarOpen}>
 				<Container>
 					<LogoContainer onClick={go2HomePage}>
 						<Image
@@ -49,11 +47,11 @@ export function Navbar({
 						<Option
 							onClick={() => {
 								setActivePage(option.label);
-								handleToggle();
+								toggleNavBarOpen();
 							}}
-							className={cx("background", {
-								active: activePage === option.label,
-							})}
+							className={`background ${
+								activePage === option.label && "active"
+							}`}
 							key={option.label}
 						>
 							{option.Icon}

@@ -3,6 +3,7 @@ import { FiTrash2 } from "react-icons/fi";
 import {
 	CardActions,
 	CardContent,
+	IconButton,
 	Typography,
 	CardMedia,
 	Card,
@@ -11,7 +12,6 @@ import {
 import { ClientChosenProduct } from "models/Product";
 import { useCart } from "hooks/useCart";
 
-import { StyledButton } from "components/Cart/styles";
 import useStyles from "./styles";
 
 type Props = {
@@ -46,24 +46,24 @@ export function CheckoutCardForProduct({ gotoProductPage, product }: Props) {
 			</CardContent>
 
 			<CardActions disableSpacing className={classes.cardActions}>
-				<StyledButton
+				<IconButton
 					onClick={() => handleAddOneMoreToCart(product)}
-					title="Adicionar um"
+					title="Adicionar um item"
 				>
 					<AiOutlinePlus />
-				</StyledButton>
-				<StyledButton
+				</IconButton>
+				<IconButton
 					onClick={() => handleRemoveFromCart(product)}
-					title="Remover"
+					title="Remover o produto"
 				>
 					<FiTrash2 size={19} />
-				</StyledButton>
-				<StyledButton
+				</IconButton>
+				<IconButton
 					onClick={() => handleSubtractAmount(product)}
-					title="Subtrair um"
+					title="Subtrair um item"
 				>
 					<AiOutlineMinus />
-				</StyledButton>
+				</IconButton>
 			</CardActions>
 		</Card>
 	);

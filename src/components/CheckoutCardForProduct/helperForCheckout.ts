@@ -44,7 +44,6 @@ export const urlDeBuscarInfoDeUmEstado = (uf: string) =>
 
 export const nopeSchema = Nope.object().shape({
 	email: Nope.string()
-
 		.email()
 		.required(
 			"E-mail do cliente, este campo é o mais importante de toda a API, será usado como chave para autenticação no painel administrativo e para os comunicados enviados pelo Frenet"

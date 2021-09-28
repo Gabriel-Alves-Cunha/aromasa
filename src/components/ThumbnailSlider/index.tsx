@@ -1,5 +1,5 @@
 import { memo, useCallback } from "react";
-import { useEmblaCarousel } from "embla-carousel/react";
+import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 
 import {
@@ -48,7 +48,7 @@ export function ThumbnailSlider({
 								isSelected={index === selectedProduct}
 								onClick={() => onThumbClick(index)}
 								imgSrc={slide}
-								key={slide + index}
+								key={slide}
 							/>
 						))}
 					</EmblaContainer>
@@ -67,13 +67,13 @@ type ThumbProps = {
 function _Thumb({ isSelected, onClick, imgSrc }: ThumbProps) {
 	return (
 		<EmblaSlide
-			className={`embla__slide--thumb ${isSelected ? "is-selected" : ""}`}
+			className={`embla__slide--thumb ${isSelected && "is-selected"}`}
 		>
 			<EmblaSlideButton onClick={onClick}>
 				<Image
 					className="embla-slide-thumb-img embla__slide__thumbnail"
-					src={imgSrc[0] === "/" ? imgSrc : "/" + imgSrc}
 					layout="fill"
+					src={imgSrc}
 					alt=""
 				/>
 			</EmblaSlideButton>

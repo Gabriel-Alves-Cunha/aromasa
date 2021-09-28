@@ -145,9 +145,9 @@ function CartProvider({ children }: CartProviderProps) {
 
 	function getSubtotal() {
 		const subtotal = cartProducts.reduce(
-			(acc, { bottle: { amountThatWillBeBought }, price: price_ }) => {
+			(acc, { bottle: { amountThatWillBeBought }, price: priceStr }) => {
 				const amount = parseFloat(amountThatWillBeBought) || 1;
-				const price = parseFloat(price_);
+				const price = parseFloat(priceStr);
 				return acc + amount * price;
 			},
 			0

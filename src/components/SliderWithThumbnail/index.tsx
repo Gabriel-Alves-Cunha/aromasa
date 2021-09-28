@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useState } from "react";
-import { useEmblaCarousel } from "embla-carousel/react";
 import { Image } from "cloudinary-react";
+import useEmblaCarousel from "embla-carousel-react";
 
 import { Arrow } from "components";
 
@@ -122,11 +122,7 @@ function _MainSliderImg({ slide }: { slide: string }) {
 	return (
 		<EmblaSlide key={slide}>
 			<EmblaSlideInner>
-				<Image
-					className="embla-slide-img"
-					src={slide}
-					alt=""
-				/>
+				<Image className="embla-slide-img" src={slide} alt="" />
 			</EmblaSlideInner>
 		</EmblaSlide>
 	);
@@ -145,7 +141,7 @@ type ThumbProps = {
 function _Thumb({ isSelected, onClick, imgSrc }: ThumbProps) {
 	return (
 		<EmblaSlide
-			className={`embla__slide--thumb ${isSelected ? "is-selected" : ""}`}
+			className={`embla__slide--thumb ${isSelected && "is-selected"}`}
 		>
 			<EmblaSlideButton onClick={onClick}>
 				<Image
