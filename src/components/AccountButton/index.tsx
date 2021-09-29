@@ -10,8 +10,8 @@ type Props = {
 };
 
 export function AccountButton({ session }: Props) {
-	const anchorEl = useRef<HTMLButtonElement>(null);
 	const [open, toggleOpen] = useReducer(previousValue => !previousValue, false);
+	const anchorEl = useRef<HTMLButtonElement>(null);
 
 	const handleLogout = async () => await signOut();
 
@@ -27,6 +27,7 @@ export function AccountButton({ session }: Props) {
 					padding: 0,
 					width: 42,
 				}}
+				aria-label="Abrir aba para deslogar"
 				onClick={toggleOpen}
 				ref={anchorEl}
 			>
@@ -57,6 +58,7 @@ export function AccountButton({ session }: Props) {
 				<Box sx={{ p: 2, pt: 1.5 }}>
 					<Button
 						onClick={handleLogout}
+						aria-label="Deslogar"
 						variant="outlined"
 						color="inherit"
 						fullWidth

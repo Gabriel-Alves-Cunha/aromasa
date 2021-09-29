@@ -30,7 +30,7 @@ export function Footer() {
 				<Options>
 					{socialNetworkOptions.map((item, index) => (
 						<Option key={index}>
-							<a href={item.link}>
+							<a href={item.link} target="_blank" rel="noopener noreferrer">
 								<div className={"name"}>
 									<BsChevronRight size={15} style={{ marginRight: 10 }} />
 									{item.title}
@@ -50,7 +50,7 @@ export function Footer() {
 					{informationOptions.map(item => (
 						<Option key={item.link}>
 							<Link href={item.link}>
-								<a>
+								<a target="_blank" rel="noopener noreferrer">
 									<div>
 										<BsChevronRight size={15} style={{ marginRight: 10 }} />
 										{item.title}

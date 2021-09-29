@@ -28,7 +28,7 @@ export function Navbar({
 
 	return (
 		<>
-			<IconButton onClick={toggleNavBarOpen}>
+			<IconButton onClick={toggleNavBarOpen} aria-label="Abrir/Fechar menu">
 				<IoMenuOutline size={20} />
 			</IconButton>
 

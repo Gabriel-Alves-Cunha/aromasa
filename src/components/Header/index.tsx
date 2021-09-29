@@ -18,7 +18,6 @@ import {
 	Container,
 	useStyles,
 	Options,
-	Option,
 } from "./styles";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -31,7 +30,7 @@ function Header_({ currentPage }: Props) {
 	const classes = useStyles();
 	const router = useRouter();
 
-	async function handleLogin(e: React.MouseEvent<HTMLButtonElement>) {
+	const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 
 		try {
@@ -39,7 +38,7 @@ function Header_({ currentPage }: Props) {
 		} catch (error) {
 			console.error(json2str(error));
 		}
-	}
+	};
 
 	const go2HomePage = async () => await router.push("/");
 
@@ -55,34 +54,33 @@ function Header_({ currentPage }: Props) {
 			</LogoContainer>
 
 			<Options>
-				{headerData.map((menuItem, index) => (
-					<Option key={index}>
-						<Link href={menuItem.link} prefetch={false}>
-							<a>
-								<div
-									className={`background ${
-										currentPage === menuItem.label && "active"
-									}`}
-								>
-									{menuItem.label}
-								</div>
-							</a>
-						</Link>
-					</Option>
+				{headerData.map(menuItem => (
+					<Link href={menuItem.link} prefetch={false} key={menuItem.label}>
+						<a className="option">
+							<div
+								className={`background ${
+									currentPage === menuItem.label && "active"
+								}`}
+							>
+								{menuItem.label}
+							</div>
+						</a>
+					</Link>
 				))}
 			</Options>
 
 			<CartContainer>
-				{!session ? (
+				{session ? (
+					<AccountButton session={session} />
+				) : (
 					<IconButton
 						classes={{ root: classes.button }}
 						onClick={handleLogin}
+						aria-label="Logar"
 						size="large"
 					>
 						<BsFillPersonFill size={18} />
 					</IconButton>
-				) : (
-					<AccountButton session={session} />
 				)}
 
 				<Cart />

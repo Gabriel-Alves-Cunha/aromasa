@@ -28,7 +28,7 @@ export default function Home() {
 					/>
 
 					<div className="text_block">
-						<h2>Aromas</h2>
+						<h1>Aromas</h1>
 						<p>
 							Perfumor is the place where you can get high-quality fragrances
 							from certified consultants, who are not just professionals but

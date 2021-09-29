@@ -6,7 +6,7 @@ const { secondary: f_secondary } = theme.fonts;
 const { navbar, primary } = theme.colors.light;
 export const NAVBAR_WIDTH = 250 as const;
 
-export const Container = styled.div`
+export const Container = styled.nav`
 	display: flex;
 	flex-direction: column;
 

@@ -28,7 +28,7 @@ export const SlideInfo = styled.div`
 	justify-content: center;
 	align-items: center;
 
-	h4 {
+	h1 {
 		margin-top: 4rem;
 
 		font-family: ${f_primary};
@@ -40,7 +40,7 @@ export const SlideInfo = styled.div`
 		color: ${primary};
 	}
 
-	h1 {
+	h4 {
 		margin-top: 3rem;
 
 		font-family: ${f_secondary};

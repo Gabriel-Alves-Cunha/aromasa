@@ -19,13 +19,13 @@ export function NewArrivals() {
 			</SliderContainer>
 
 			<SlideInfo>
-				<h4>NOVOS PRODUTOS</h4>
+				<h1>NOVOS PRODUTOS</h1>
 
 				{slides.map(
 					({ name, info }, index) =>
 						index === selectedIndex && (
 							<Fragment key={name}>
-								<h1>{name}</h1>
+								<h4>{name}</h4>
 								<p>{info}</p>
 							</Fragment>
 						)

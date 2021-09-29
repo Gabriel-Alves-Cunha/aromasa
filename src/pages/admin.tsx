@@ -2,15 +2,17 @@ import { useState, useReducer } from "react";
 import { GetServerSideProps } from "node_modules/next";
 import { getSession } from "next-auth/client";
 
-import { DeleteAProduct } from "modules/DeleteAProduct";
-import { AlterAProduct } from "modules/AlterAProduct";
 import { NavbarOptions } from "components/Navbar/navabar.data";
 import { NAVBAR_WIDTH } from "components/Navbar/styles";
-import { AddAProduct } from "modules/AddAProduct";
-import { AdminHeader } from "modules/AdminHeader";
-import { Dashboard } from "modules/Dashboard";
 import { UserModel } from "models/User";
 import { assert } from "utils/assert";
+import {
+	DeleteAProduct,
+	AlterAProduct,
+	AddAProduct,
+	Dashboard,
+	AdminHeader,
+} from "modules/index";
 import connectToMongoDB from "utils/connectToMongoDB";
 
 export default function ControllPanel() {
@@ -66,7 +68,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 		else return { notFound: true };
 	} catch (error) {
 		console.error(
-			`❗ File: index.tsx\nLine:57\n${typeof error}: 'error' =`,
+			`❗ File: index.tsx\nLine:69\n${typeof error}: 'error' =`,
 			error
 		);
 

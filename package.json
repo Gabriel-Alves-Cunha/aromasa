@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "NODE_OPTIONS='--trace-exit --trace-warnings' node_modules/next/dist/bin/next -p 3000",
-		"build": "NODE_OPTIONS='--trace-exit --trace-warnings' PORT=3000 next build",
+		"build": "next build",
 		"start": "next start",
 		"lint": "next lint"
 	},
@@ -12,10 +12,12 @@
 		"@emotion/react": "^11.4.1",
 		"@emotion/styled": "^11.3.0",
 		"@hookform/resolvers": "latest",
-		"@mui/material": "^5.0.1",
+		"@linaria/core": "^3.0.0-beta.13",
+		"@linaria/react": "^3.0.0-beta.13",
+		"@mui/material": "^5.0.2",
 		"@mui/styled-engine-sc": "^5.0.0",
 		"@mui/styles": "^5.0.1",
-		"@stripe/react-stripe-js": "^1.4.1",
+		"@stripe/react-stripe-js": "^1.5.0",
 		"@stripe/stripe-js": "^1.18.0",
 		"@vercel/node": "^1.12.1",
 		"axios": "latest",
@@ -49,6 +51,10 @@
 		"vercel": "^23.1.2"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.15.5",
+		"@linaria/babel-preset": "^3.0.0-beta.13",
+		"@linaria/shaker": "^3.0.0-beta.13",
+		"@linaria/webpack-loader": "^3.0.0-beta.13",
 		"@types/cookie": "latest",
 		"@types/formidable": "latest",
 		"@types/node": "^14.17.6",
@@ -62,6 +68,7 @@
 		"case-sensitive-paths-webpack-plugin": "latest",
 		"eslint": "latest",
 		"eslint-config-next": "latest",
+		"next-linaria": "1.0.0-beta",
 		"typescript": "latest"
 	}
 }

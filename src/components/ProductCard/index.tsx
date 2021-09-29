@@ -53,8 +53,8 @@ function _ProductCard({ product, gotoProductPage, handleAddToCart }: Props) {
 
 			<CardActions disableSpacing className={classes.cardActions}>
 				<IconButton
-					aria-label="Adicionar ao carrinho"
 					onClick={() => handleAddToCart(product)}
+					aria-label="Adicionar ao carrinho"
 					size="large"
 				>
 					<FaCartPlus className={classes.price} />

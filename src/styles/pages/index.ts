@@ -29,7 +29,7 @@ export const HeroContainer = styled.div`
 		top: 35%;
 		margin-left: 6em;
 
-		h2 {
+		h1 {
 			font-family: ${f_primary};
 			font-size: 4em;
 			letter-spacing: 0.1em;

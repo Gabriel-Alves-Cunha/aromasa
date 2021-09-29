@@ -1,4 +1,3 @@
-import { IconButton } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import styled from "styled-components";
 
@@ -28,6 +27,39 @@ export const Container = styled.header`
 	align-items: center;
 
 	box-shadow: 0 0 5px 0 rgb(1 3 4 / 19%);
+
+	.option {
+		font-family: ${f_primary};
+		font-weight: 200;
+		font-size: 1rem;
+
+		border: none;
+		background: transparent;
+
+		color: ${text};
+
+		list-style: none;
+
+		margin: 6px 15px;
+		margin-left: 20px;
+
+		/* outline: auto; */
+
+		.background {
+			will-change: transform;
+			transition: transform 350ms 150ms;
+		}
+
+		&:hover .background {
+			transition: transform 125ms;
+
+			transform: translateY(-5px);
+		}
+
+		.active {
+			font-weight: 400;
+		}
+	}
 `;
 
 export const LogoContainer = styled.div`
@@ -43,57 +75,13 @@ export const LogoContainer = styled.div`
 	}
 `;
 
-export const StyledButton = styled(IconButton)`
-	position: fixed;
-	width: 20px;
-	height: 20px;
-
-	z-index: 100;
-
-	background-color: ${theme.colors.light.primary};
-	color: ${theme.colors.light.primary};
-`;
-
-export const Options = styled.ul`
+export const Options = styled.div`
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 
 	margin-right: 6rem;
-`;
-
-export const Option = styled.button`
-	font-family: ${f_primary};
-	font-weight: 200;
-	font-size: 1rem;
-
-	border: none;
-	background: transparent;
-
-	color: ${text};
-
-	list-style: none;
-
-	margin: 6px 15px;
-	margin-left: 20px;
-
-	/* outline: auto; */
-
-	.background {
-		will-change: transform;
-		transition: transform 350ms 150ms;
-	}
-
-	&:hover .background {
-		transition: transform 125ms;
-
-		transform: translateY(-5px);
-	}
-
-	.active {
-		font-weight: 400;
-	}
 `;
 
 export const CartContainer = styled.div`
@@ -110,15 +98,8 @@ export const CartContainer = styled.div`
 	background: linear-gradient(red, red) no-repeat center/1px 100%; */
 `;
 
-export const ModalContainer = styled.div``;
-
-export const SignInButton = styled.button``;
-
-export const SignOutButton = styled.button``;
-
 export const useStyles = makeStyles(_muiTheme => ({
 	button: {
 		color: theme.colors.light.primary,
 	},
-	modal: {},
 }));

@@ -3,15 +3,25 @@ const withTM = require("next-transpile-modules")([
 	"@mui/material",
 	"@mui/system",
 ]);
+const withLinaria = require("next-linaria");
 
-module.exports = withPlugins([withTM], {
-	reactStrictMode: true,
-	next: "latest",
-	node: "--trace-warnings",
-	images: {
-		domains: ["", "lh3.googleusercontent.com"], //, "res.cloudinary.com"
-	},
-	serverRuntimeConfig: {
-		PROJECT_ROOT: __dirname,
-	},
-});
+const dev = process.env.NODE_ENV === "development";
+const prod = process.env.NODE_ENV === "production";
+
+module.exports = withLinaria(
+	withPlugins([withTM], {
+		reactStrictMode: true,
+		linaria: {
+			cacheDirectory: ".next/cache/linaria",
+			sourceMap: !dev,
+		},
+		next: "latest",
+		node: "--trace-warnings",
+		images: {
+			domains: ["", "lh3.googleusercontent.com"], //, "res.cloudinary.com"
+		},
+		serverRuntimeConfig: {
+			PROJECT_ROOT: __dirname,
+		},
+	})
+);

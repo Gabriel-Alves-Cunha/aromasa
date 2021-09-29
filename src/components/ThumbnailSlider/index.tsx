@@ -69,7 +69,7 @@ function _Thumb({ isSelected, onClick, imgSrc }: ThumbProps) {
 		<EmblaSlide
 			className={`embla__slide--thumb ${isSelected && "is-selected"}`}
 		>
-			<EmblaSlideButton onClick={onClick}>
+			<EmblaSlideButton onClick={onClick} aria-label="Próxima imagem">
 				<Image
 					className="embla-slide-thumb-img embla__slide__thumbnail"
 					layout="fill"

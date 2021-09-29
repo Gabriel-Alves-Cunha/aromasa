@@ -105,8 +105,11 @@ async function getProductsFromDB() {
 		await connectToMongoDB();
 
 		const products = await ProductModel.find({});
+		console.log("\nFrom 'pages/[product].tsx: products =", products);
 
-		return products;
+		if (products[0]) return products;
+
+		throw new Error(`There are no products`);
 	} catch (errorGetProductsFromDB) {
 		throw new Error(
 			`File: 'pages/[product].tsx'\nLine:109\n${typeof errorGetProductsFromDB}: 'errorGetProductsFromDB' = ${json2str(
