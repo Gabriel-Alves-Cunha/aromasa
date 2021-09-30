@@ -59,11 +59,6 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
 		const products = await getProductsFromDB();
 
-		console.log(
-			`[LOG]\n\tFile: 'pages/[product].tsx'\n\tLine:61\n\t${typeof products}: 'products' =`,
-			products
-		);
-
 		return {
 			paths: products.map(product => ({
 				params: {
@@ -72,32 +67,22 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 			})),
 			fallback: "blocking",
 		};
-	} catch (error) {
+	} catch (errorGetStaticPaths) {
 		throw new Error(
-			`File: 'pages/products/[product].tsx'\nLine:76\n${typeof error}: 'error' = ${json2str(
-				error
-			)}\nHouve um problema ao pegar os produtos da base de dados.`
+			`File: 'pages/products/[product].tsx'\nLine:72\n${typeof errorGetStaticPaths}: 'error' = ${errorGetStaticPaths}\nHouve um problema ao pegar os produtos da base de dados.`
 		);
 	}
 };
 
-export const getStaticProps: GetStaticProps = async ctx => {
+export const getStaticProps: GetStaticProps = ctx => {
 	console.log("\ngetStaticProps ctx =", ctx);
 
-	try {
-		const product: Product = JSON.parse(ctx.params?.product as string);
-		console.log("\nproduct =", product);
+	const product: Product = JSON.parse(ctx.params?.product as string);
+	console.log("\nproduct =", product);
 
-		return {
-			props: { product },
-		};
-	} catch (errorGetStaticProps) {
-		throw new Error(
-			`File: 'pages/[product].tsx'\nLine:95\n${typeof errorGetStaticProps}: 'errorGetStaticProps' = ${json2str(
-				errorGetStaticProps
-			)}\nHouve um problema ao pegar os produtos da base de dados.`
-		);
-	}
+	return {
+		props: { product },
+	};
 };
 
 async function getProductsFromDB() {
@@ -107,12 +92,10 @@ async function getProductsFromDB() {
 		const products = await ProductModel.find({});
 		console.log("\nFrom 'pages/[product].tsx: products =", products);
 
-		if (products[0]) return products;
-
-		throw new Error(`There are no products`);
+		return products;
 	} catch (errorGetProductsFromDB) {
 		throw new Error(
-			`File: 'pages/[product].tsx'\nLine:109\n${typeof errorGetProductsFromDB}: 'errorGetProductsFromDB' = ${json2str(
+			`File: 'pages/[product].tsx'\nLine:106\n${typeof errorGetProductsFromDB}: 'errorGetProductsFromDB' = ${json2str(
 				errorGetProductsFromDB
 			)}\nHouve um problema ao pegar os produtos da base de dados.`
 		);

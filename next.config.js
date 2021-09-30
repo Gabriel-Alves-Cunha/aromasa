@@ -11,6 +11,7 @@ const prod = process.env.NODE_ENV === "production";
 module.exports = withLinaria(
 	withPlugins([withTM], {
 		reactStrictMode: true,
+		webpack5: true,
 		linaria: {
 			cacheDirectory: ".next/cache/linaria",
 			sourceMap: !dev,

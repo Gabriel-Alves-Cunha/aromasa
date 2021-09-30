@@ -6,17 +6,17 @@ export type Slide = {
 
 export const slides: Slide[] = [
 	{
-		url: "Img01_URL",
+		url: "url_img_1",
 		name: "Flower",
 		info: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia, saepe",
 	},
 	{
-		url: "Img02_URL",
+		url: "url_img_2",
 		name: "Perfume A",
 		info: "Consectetur at ex id harum corporis, nostrum excepturi dolores animi?",
 	},
 	{
-		url: "Img03_URL",
+		url: "url_img_3",
 		name: "Sabonete",
 		info: "Consequatur numquam temporibus esse quod labore aliquam repudiandae veniam ducimus.",
 	},

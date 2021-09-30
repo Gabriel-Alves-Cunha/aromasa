@@ -56,7 +56,7 @@ export function Slider({
 				<EmblaContainer>
 					{slidesUrls.map(slideUrl => (
 						<Slide key={slideUrl}>
-							<Image src={slideUrl} alt="" />
+							{/* <Image publicId src={slideUrl} alt="" /> */}
 						</Slide>
 					))}
 				</EmblaContainer>

@@ -21,10 +21,10 @@ export default function Home() {
 				<HeroContainer>
 					<Image
 						publicId="https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,h_150,w_150/r_20/l_cloudinary_icon_blue,g_south_east,x_5,y_5,w_50,o_60,e_brightness:200/a_10/front_face.png"
+						alt="Photo by Alesia Kozik from Pexels"
+						className="hero_img"
 						fetch-format="auto"
 						quality="auto"
-						className="hero_img"
-						alt="Photo by Alesia Kozik from Pexels"
 					/>
 
 					<div className="text_block">
