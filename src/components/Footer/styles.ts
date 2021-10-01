@@ -6,21 +6,19 @@ const { footer } = theme.colors.light;
 export const FOOTER_HEIGHT = "46vh";
 
 export const Container = styled.footer`
-	position: absolute;
-	bottom: 0;
 	width: 100%;
 	height: ${FOOTER_HEIGHT};
 
 	display: flex;
 	flex-direction: row;
+	flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
 
 	justify-content: space-around;
 
 	/* background-color: red; */
 	background-color: ${footer};
 
-	padding-top: 2.4rem;
-	padding-bottom: 2.4rem;
+	padding: 2.4rem 0 2.4rem;
 
 	.border-bottom-size {
 		width: 30%;

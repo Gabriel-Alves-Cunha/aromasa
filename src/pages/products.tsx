@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
 
-import { ProductCard, Header, getLayout } from "components";
+import { ProductCard, Header, LayoutWithFooter } from "components";
 import { ProductModel, Product } from "models/Product";
 import { useCart } from "hooks/useCart";
 import connectToMongoDB from "utils/connectToMongoDB";
@@ -86,7 +86,7 @@ export default function Products({ products }: Props) {
 	);
 }
 
-Products.getLayout = getLayout;
+Products.getLayout = LayoutWithFooter;
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
 	try {

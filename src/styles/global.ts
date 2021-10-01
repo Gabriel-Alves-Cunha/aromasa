@@ -13,6 +13,7 @@ export default createGlobalStyle`
 
 	html {
 		scroll-behavior: smooth;
+		height: 100%;
 	}
 
 	a {
@@ -20,9 +21,16 @@ export default createGlobalStyle`
 		text-decoration: none;
 	}
 
+	main {
+		flex: 1 0 auto;
+	}
+
 	body {
 		background: ${({ theme }) => theme.colors.light.background};
 		color: ${({ theme }) => theme.colors.light.text};
+
+		display: flex;
+    flex-direction: column;
 		height: 100%;
 
   	overflow-y: scroll; /* Show vertical scrollbar */

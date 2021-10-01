@@ -10,7 +10,7 @@ export const Container = styled.div`
 	width: 100%;
 `;
 
-export const FirstViewHeight = styled.div`
+export const FirstViewHeight = styled.section`
 	border: 1px solid red;
 
 	display: flex;

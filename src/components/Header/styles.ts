@@ -65,13 +65,15 @@ export const Container = styled.header`
 export const LogoContainer = styled.div`
 	margin: 1rem 6rem;
 
-	cursor: pointer;
-
 	width: 100%;
 
 	img {
 		height: 40px;
 		width: auto;
+	}
+
+	.logo {
+		cursor: pointer;
 	}
 `;
 

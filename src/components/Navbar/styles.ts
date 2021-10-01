@@ -10,9 +10,6 @@ export const Container = styled.nav`
 	display: flex;
 	flex-direction: column;
 
-	position: fixed;
-	left: 0px;
-	top: 0px;
 	height: 100vh;
 	width: ${NAVBAR_WIDTH}px;
 

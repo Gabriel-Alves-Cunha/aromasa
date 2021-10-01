@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Image } from "cloudinary-react";
 
-import { Loading, Header, getLayout } from "components";
-import { axiosInstance } from "hooks/useAxios";
+import { Loading, Header, LayoutWithFooter, Cart } from "components";
+import { axiosInstance } from "utils/axiosInstance";
 import { envVariables } from "utils/env";
 
 import { Wrapper } from "styles/pages/payment";
@@ -21,18 +21,14 @@ export default function Result() {
 	useEffect(() => {
 		(async function talkToServer() {
 			try {
-				const { data } = await axiosInstance.get(
-					`/api/payment/${session_id}` as "api/payment/:id"
-				);
-
+				const { data } = await axiosInstance.get(`/api/payment/${session_id}`);
 				console.log("\nThe data =", data);
 				data ? setSuccess(true) : setSuccess(false);
-
-				setLoading(false);
 			} catch (error) {
 				console.error(error);
-				setLoading(false);
 				setSuccess(false);
+			} finally {
+				setLoading(false);
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,12 +45,12 @@ function Success() {
 		<Wrapper>
 			<Header />
 
-			<div>
+			<section>
 				<p>
 					We appreciate your business! If you have any questions, please email
 					<a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
 				</p>
-			</div>
+			</section>
 		</Wrapper>
 	);
 }
@@ -62,7 +58,9 @@ function Success() {
 function Error() {
 	return (
 		<Wrapper>
-			<Header />
+			<Header>
+				<Cart />
+			</Header>
 
 			<Image
 				src="https://res.cloudinary.com/aromasa-decor/image/upload/v1632330726/Error_500_uv7srs.svg"
@@ -76,11 +74,13 @@ function Error() {
 function Loading_() {
 	return (
 		<Wrapper>
-			<Header />
+			<Header>
+				<Cart />
+			</Header>
 
 			<Loading />
 		</Wrapper>
 	);
 }
 
-Result.getLayout = getLayout;
+Result.getLayout = LayoutWithFooter;

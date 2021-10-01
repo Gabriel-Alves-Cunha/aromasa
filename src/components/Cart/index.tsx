@@ -27,23 +27,23 @@ export function Cart() {
 		cartProducts
 	);
 
-	const [show, toggleOpenCart] = useReducer(
+	const [show, toggleShowCart] = useReducer(
 		previousValue => !previousValue,
 		false
 	);
 
-	async function handleBuyProducts(event: React.MouseEvent<HTMLButtonElement>) {
+	const handleBuyProducts = async (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 
 		await router.push("/checkout");
-	}
+	};
 
 	return (
 		<>
 			<IconButton
 				classes={{ root: classes.button }}
 				aria-label="Carrinho de compras"
-				onClick={toggleOpenCart}
+				onClick={toggleShowCart}
 				color="primary"
 				size="large"
 			>
@@ -58,7 +58,7 @@ export function Cart() {
 				</Badge>
 			</IconButton>
 
-			<Drawer anchor="right" open={show} onClose={toggleOpenCart}>
+			<Drawer anchor="right" open={show} onClose={toggleShowCart}>
 				<DrawerContainer>
 					<Header>
 						Você tem <span>{cartProducts.length}</span>{" "}

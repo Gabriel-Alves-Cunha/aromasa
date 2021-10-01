@@ -1,19 +1,11 @@
 import { ReactNode } from "react";
 
-import { Footer } from "./Footer";
+import { Footer } from "components";
 
-type Props = {
-	children: ReactNode;
-};
+export const LayoutWithFooter = (page: ReactNode) => (
+	<main style={{ position: "relative", minHeight: "100vh" }}>
+		{page}
 
-export default function Layout({ children }: Props) {
-	return (
-		<div style={{ position: "relative", minHeight: "100vh" }}>
-			<main>{children}</main>
-
-			<Footer />
-		</div>
-	);
-}
-
-export const getLayout = (page: ReactNode) => <Layout>{page}</Layout>;
+		<Footer />
+	</main>
+);

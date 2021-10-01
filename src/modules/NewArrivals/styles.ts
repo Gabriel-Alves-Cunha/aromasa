@@ -5,7 +5,7 @@ import theme from "styles/theme";
 const { primary: f_primary, secondary: f_secondary } = theme.fonts;
 const { primary, text_light } = theme.colors.light;
 
-export const Container = styled.div`
+export const Container = styled.section`
 	display: flex;
 	flex-direction: row;
 
@@ -20,7 +20,7 @@ export const SliderContainer = styled.div`
 	object-fit: cover;
 `;
 
-export const SlideInfo = styled.div`
+export const SlideInfo = styled.aside`
 	width: 40%;
 
 	margin: 3rem;

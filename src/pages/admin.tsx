@@ -3,7 +3,6 @@ import { GetServerSideProps } from "node_modules/next";
 import { getSession } from "next-auth/client";
 
 import { NavbarOptions } from "components/Navbar/navabar.data";
-import { NAVBAR_WIDTH } from "components/Navbar/styles";
 import { UserModel } from "models/User";
 import { assert } from "utils/assert";
 import {
@@ -24,11 +23,7 @@ export default function ControllPanel() {
 	);
 
 	return (
-		<div
-			style={{
-				padding: `90 0 0 ${navBarOpen ? NAVBAR_WIDTH : 0}`,
-			}}
-		>
+		<>
 			<AdminHeader
 				toggleNavBarOpen={toggleNavBarOpen}
 				setActivePage={setActivePage}
@@ -48,7 +43,7 @@ export default function ControllPanel() {
 						return <DeleteAProduct />;
 				}
 			})()}
-		</div>
+		</>
 	);
 }
 
@@ -84,9 +79,9 @@ async function checkIfUserIsAllowedToMessWithTheDatabase(email: string) {
 		console.log("user =", user);
 
 		if (user[0] && user[0].admin) return true;
-		else return false;
+		return false;
 	} catch (error) {
-		if (process.env.NODE_ENV === "development") console.error(error);
+		console.error(error);
 		return false;
 	}
 }

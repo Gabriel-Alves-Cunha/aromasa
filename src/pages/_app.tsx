@@ -18,7 +18,6 @@ export default function MyApp({ Component, pageProps }: AppLayoutProps) {
 	const getLayout = Component.getLayout ?? ((page: ReactNode) => page);
 
 	return getLayout(
-		// <StyledEngineProvider injectFirst>
 		<ThemeProvider theme={muiTheme}>
 			<SCThemeProvider theme={theme}>
 				<GlobalStyle />
@@ -34,6 +33,5 @@ export default function MyApp({ Component, pageProps }: AppLayoutProps) {
 				</Provider>
 			</SCThemeProvider>
 		</ThemeProvider>
-		// </StyledEngineProvider>
 	);
 }

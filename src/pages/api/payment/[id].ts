@@ -2,10 +2,10 @@ import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import nodemailer from "nodemailer";
 import Stripe from "stripe";
 
-import { axiosInstance } from "hooks/useAxios";
+import { axiosInstance } from "utils/axiosInstance";
 import { envVariables } from "utils/env";
-import { assert } from "utils/assert";
 import { json2str } from "utils/json2str";
+import { assert } from "utils/assert";
 
 const contactEmailPassword = envVariables.contactEmailPassword;
 const stripe = new Stripe(envVariables.stripeSecretKey, {

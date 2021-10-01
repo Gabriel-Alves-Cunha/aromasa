@@ -1,15 +1,15 @@
 import { signIn, useSession } from "next-auth/client";
 import { BsFillPersonFill } from "react-icons/bs";
+import { memo, ReactNode } from "react";
 import { IconButton } from "@mui/material";
 import { useRouter } from "next/router";
-import { memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import AromasaLogo from "public/images/AromasaLogo.webp";
 
 import headerData, { HeaderData } from "./header.data";
-import { Cart, AccountButton } from "components";
+import { AccountButton } from "components";
 import { json2str } from "utils/json2str";
 
 import {
@@ -23,9 +23,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 type Props = {
 	currentPage?: HeaderData["label"];
+	children?: ReactNode;
 };
 
-function Header_({ currentPage }: Props) {
+function Header_({ children, currentPage }: Props) {
 	const [session] = useSession();
 	const classes = useStyles();
 	const router = useRouter();
@@ -44,11 +45,13 @@ function Header_({ currentPage }: Props) {
 
 	return (
 		<Container>
-			<LogoContainer onClick={go2HomePage}>
+			<LogoContainer>
 				<Image
+					onClick={go2HomePage}
 					alt="Logo da Aromasa"
 					src={AromasaLogo}
 					objectFit="cover"
+					className="logo"
 					priority
 				/>
 			</LogoContainer>
@@ -83,7 +86,7 @@ function Header_({ currentPage }: Props) {
 					</IconButton>
 				)}
 
-				<Cart />
+				{children}
 			</CartContainer>
 		</Container>
 	);

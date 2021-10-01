@@ -1,7 +1,7 @@
 import { Image } from "cloudinary-react";
 import Head from "next/head";
 
-import { getLayout, Header } from "components";
+import { Cart, LayoutWithFooter, Header } from "components";
 import { NewArrivals } from "modules/NewArrivals";
 
 import { HeroContainer, Container } from "styles/pages";
@@ -15,7 +15,9 @@ export default function Home() {
 				<link rel="icon" href="/favicon.png" />
 			</Head>
 
-			<Header currentPage="Home" />
+			<Header currentPage="Home">
+				<Cart />
+			</Header>
 
 			<Container>
 				<HeroContainer>
@@ -43,4 +45,4 @@ export default function Home() {
 	);
 }
 
-Home.getLayout = getLayout;
+Home.getLayout = LayoutWithFooter;

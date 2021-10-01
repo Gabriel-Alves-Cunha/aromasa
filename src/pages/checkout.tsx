@@ -7,9 +7,9 @@ import { useState } from "react";
 import Head from "next/head";
 import cep from "cep-promise";
 
-import { CheckoutCardForProduct, getLayout, Header } from "components";
+import { CheckoutCardForProduct, LayoutWithFooter, Header, Cart } from "components";
 import { ClientChosenProduct } from "models/Product";
-import { axiosInstance } from "hooks/useAxios";
+import { axiosInstance } from "utils/axiosInstance";
 import { useCart } from "hooks/useCart";
 import {
 	urlDeNãoSeiMeuCep,
@@ -479,7 +479,9 @@ export default function Checkout() {
 				<meta name="description" content="Checkout" />
 			</Head>
 
-			<Header />
+			<Header>
+				<Cart />
+			</Header>
 			<ToastContainer />
 
 			{isCartEmpty ? <Empty /> : <Filled />}
@@ -487,4 +489,4 @@ export default function Checkout() {
 	);
 }
 
-Checkout.getLayout = getLayout;
+Checkout.getLayout = LayoutWithFooter;

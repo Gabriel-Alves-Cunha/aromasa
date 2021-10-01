@@ -2,9 +2,13 @@ import { GetStaticPaths, GetStaticProps } from "node_modules/next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-import { ProductSlider_WithThumbnail, Header, getLayout } from "components";
 import { Product, ProductModel } from "models/Product";
 import { json2str } from "utils/json2str";
+import {
+	ProductSlider_WithThumbnail,
+	LayoutWithFooter,
+	Header,
+} from "components";
 import connectToMongoDB from "utils/connectToMongoDB";
 
 import {
@@ -53,7 +57,7 @@ export default function ProductCard({ product }: Props) {
 	);
 }
 
-ProductCard.getLayout = getLayout;
+ProductCard.getLayout = LayoutWithFooter;
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {

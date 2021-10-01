@@ -1,4 +1,4 @@
-import { getLayout, Header } from "components";
+import { LayoutWithFooter, Header } from "components";
 import { envVariables } from "utils/env";
 
 import { Container, Content } from "styles/pages/privacy-policy";
@@ -374,4 +374,4 @@ export default function PrivacyPolicy() {
 	);
 }
 
-PrivacyPolicy.getLayout = getLayout;
+PrivacyPolicy.getLayout = LayoutWithFooter;

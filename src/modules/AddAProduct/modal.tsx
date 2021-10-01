@@ -1,4 +1,3 @@
-import { UseFormReset } from "react-hook-form";
 import {
 	DialogContentText,
 	InputAdornment,
@@ -10,9 +9,9 @@ import {
 	Fade,
 } from "@mui/material";
 
-import { buildFormData, myFormId } from "./helper";
 import { ProductToAddToTheServer } from ".";
-import { axiosInstance } from "hooks/useAxios";
+import { axiosInstance } from "utils/axiosInstance";
+import { buildFormData } from "./helper";
 
 import { Container } from "./modalStyles";
 import { Button } from "./styles";

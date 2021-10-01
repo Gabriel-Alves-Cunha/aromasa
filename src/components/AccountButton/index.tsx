@@ -58,12 +58,11 @@ export function AccountButton({ session }: Props) {
 				<Box sx={{ p: 2, pt: 1.5 }}>
 					<Button
 						onClick={handleLogout}
-						aria-label="Deslogar"
 						variant="outlined"
 						color="inherit"
 						fullWidth
 					>
-						Logout
+						Deslogar
 					</Button>
 				</Box>
 			</MenuPopover>

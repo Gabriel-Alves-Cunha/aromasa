@@ -1,3 +1,4 @@
+import { HEADER_HEIGHT } from "components/Header/styles";
 import styled from "styled-components";
 
 import theme from "../theme";
@@ -7,9 +8,11 @@ const { primary: f_primary } = theme.fonts;
 export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
+
+	margin-top: ${HEADER_HEIGHT}px;
 `;
 
-export const HeroContainer = styled.div`
+export const HeroContainer = styled.section`
 	position: relative;
 
 	.hero_img {
