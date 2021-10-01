@@ -8,10 +8,11 @@ export default createGlobalStyle`
 		padding: 0;
 		box-sizing: content-box;
 		font-family: 400 16px Roboto, sans-serif;
-		-webkit-font-smoothing: antialiased;
 	}
 
 	html {
+		-webkit-font-smoothing: antialiased;
+		text-rendering: optimizeLegibility;
 		scroll-behavior: smooth;
 		height: 100%;
 	}

@@ -9,7 +9,7 @@ export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 
-	margin-top: ${HEADER_HEIGHT}px;
+	margin: ${HEADER_HEIGHT}px 0;
 `;
 
 export const HeroContainer = styled.section`

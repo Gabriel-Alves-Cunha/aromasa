@@ -15,7 +15,7 @@ import { Product } from "models/Product";
 import useStyles from "./styles";
 
 type Props = {
-	handleAddToCart(product: Product): void;
+	handleAddToCart?: (product: Product) => void;
 	gotoProductPage(product: Product): void;
 	product: Product;
 };
@@ -51,15 +51,17 @@ function _ProductCard({ product, gotoProductPage, handleAddToCart }: Props) {
 				</CardContent>
 			</CardActionArea>
 
-			<CardActions disableSpacing className={classes.cardActions}>
-				<IconButton
-					onClick={() => handleAddToCart(product)}
-					aria-label="Adicionar ao carrinho"
-					size="large"
-				>
-					<FaCartPlus className={classes.price} />
-				</IconButton>
-			</CardActions>
+			{handleAddToCart && (
+				<CardActions disableSpacing className={classes.cardActions}>
+					<IconButton
+						onClick={() => handleAddToCart(product)}
+						aria-label="Adicionar ao carrinho"
+						size="large"
+					>
+						<FaCartPlus className={classes.price} />
+					</IconButton>
+				</CardActions>
+			)}
 		</Card>
 	);
 }

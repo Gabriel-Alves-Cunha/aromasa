@@ -1,12 +1,26 @@
+import { GetServerSideProps } from "node_modules/next";
+import { useRouter } from "next/router";
 import { Image } from "cloudinary-react";
+import Marquee from "react-fast-marquee";
 import Head from "next/head";
 
-import { Cart, LayoutWithFooter, Header } from "components";
+import { Cart, LayoutWithFooter, Header, ProductCard } from "components";
+import { Product, ProductModel } from "models/Product";
 import { NewArrivals } from "modules/NewArrivals";
+import connectToMongoDB from "utils/connectToMongoDB";
 
 import { HeroContainer, Container } from "styles/pages";
 
-export default function Home() {
+type Props = {
+	products: Product[];
+};
+
+export default function Home({ products }: Props) {
+	const router = useRouter();
+
+	const gotoProductPage = async (product: Product) =>
+		await router.push(`/${product._id}`);
+
 	return (
 		<>
 			<Head>
@@ -40,9 +54,39 @@ export default function Home() {
 				</HeroContainer>
 
 				<NewArrivals />
+
+				<Marquee gradient={false} style={{ marginTop: "3em" }}>
+					{products.map(product => (
+						<ProductCard
+							gotoProductPage={gotoProductPage}
+							key={product.title}
+							product={product}
+						/>
+					))}
+				</Marquee>
 			</Container>
 		</>
 	);
 }
 
 Home.getLayout = LayoutWithFooter;
+
+export const getServerSideProps: GetServerSideProps = async ctx => {
+	try {
+		await connectToMongoDB();
+
+		const products: Product[] = await ProductModel.find({}).batchSize(3);
+
+		console.log(
+			`Products from getServerSideProps in 'pages/products/index.tsx' = ${products}`
+		);
+
+		return {
+			props: { products },
+		};
+	} catch (errorGetServerSideProps) {
+		throw new Error(
+			`There was an error on 'pages/index': ${errorGetServerSideProps}`
+		);
+	}
+};

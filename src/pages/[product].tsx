@@ -24,7 +24,7 @@ type Props = {
 	product: Product;
 };
 
-export default function ProductCard({ product }: Props) {
+export default function ProductPage({ product }: Props) {
 	console.log("Client-side product =", product);
 	// TODO: add carts for more products
 	const router = useRouter();
@@ -57,7 +57,7 @@ export default function ProductCard({ product }: Props) {
 	);
 }
 
-ProductCard.getLayout = LayoutWithFooter;
+ProductPage.getLayout = LayoutWithFooter;
 
 export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
