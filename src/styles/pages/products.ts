@@ -1,5 +1,5 @@
-import makeStyles from '@mui/styles/makeStyles';
-import styled from "styled-components";
+import makeStyles from "@mui/styles/makeStyles";
+import styled from "@emotion/styled";
 
 export const Container = styled.div`
 	width: 100%;

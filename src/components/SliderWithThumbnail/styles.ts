@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 export const Container = styled.div`
 	.embla__slide--thumb {
@@ -92,7 +92,7 @@ export const EmblaSlide = styled.div`
 	position: relative;
 `;
 
-export const EmblaSlideButton = styled.button.attrs({ type: "button" })`
+export const EmblaSlideButton = styled.button`
 	position: relative;
 	overflow: hidden;
 	height: 190px;

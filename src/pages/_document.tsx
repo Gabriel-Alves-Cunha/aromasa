@@ -1,5 +1,4 @@
-import { ServerStyleSheets as MUIServerStyleSheets } from "@mui/styles";
-import { ServerStyleSheet } from "styled-components";
+import { ServerStyleSheets } from "@mui/styles";
 import Document, {
 	DocumentInitialProps,
 	DocumentContext,
@@ -13,16 +12,14 @@ export default class MyDocument extends Document {
 	static async getInitialProps(
 		ctx: DocumentContext
 	): Promise<DocumentInitialProps> {
-		const muiSheet = new MUIServerStyleSheets();
-		const sheet = new ServerStyleSheet();
+		const sheet = new ServerStyleSheets();
 
 		const originalRenderPage = ctx.renderPage;
 
 		try {
 			ctx.renderPage = () =>
 				originalRenderPage({
-					enhanceApp: App => props =>
-						sheet.collectStyles(muiSheet.collect(<App {...props} />)),
+					enhanceApp: App => props => sheet.collect(<App {...props} />),
 				});
 
 			const initialProps = await Document.getInitialProps(ctx);
@@ -33,12 +30,10 @@ export default class MyDocument extends Document {
 					<>
 						{initialProps.styles}
 						{sheet.getStyleElement()}
-						{muiSheet.getStyleElement()}
 					</>
 				),
 			};
 		} finally {
-			sheet.seal();
 		}
 	}
 

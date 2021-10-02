@@ -1,6 +1,6 @@
 {
 	"name": "aromasa",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"private": true,
 	"scripts": {
 		"dev": "NODE_OPTIONS='--trace-exit --trace-warnings' node_modules/next/dist/bin/next",
@@ -10,17 +10,14 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
-		"@emotion/react": "^11.4.1",
-		"@emotion/styled": "^11.3.0",
+		"@emotion/react": "latest",
+		"@emotion/styled": "latest",
 		"@hookform/resolvers": "latest",
-		"@linaria/core": "^3.0.0-beta.13",
-		"@linaria/react": "^3.0.0-beta.13",
-		"@mui/material": "^5.0.2",
-		"@mui/styled-engine-sc": "^5.0.0",
-		"@mui/styles": "^5.0.1",
+		"@mui/material": "latest",
+		"@mui/styles": "latest",
 		"@stripe/react-stripe-js": "^1.5.0",
-		"@stripe/stripe-js": "^1.18.0",
-		"@vercel/node": "^1.12.1",
+		"@stripe/stripe-js": "^1.19.0",
+		"@vercel/node": "latest",
 		"axios": "latest",
 		"cep-promise": "latest",
 		"cloudinary": "latest",
@@ -44,18 +41,14 @@
 		"react-hook-form": "latest",
 		"react-icons": "latest",
 		"react-is": "^17.0.2",
-		"react-router-dom": "^5.3.0",
+		"react-router-dom": "latest",
 		"react-toastify": "latest",
 		"stripe": "latest",
-		"styled-components": "latest",
 		"validations-br": "latest",
 		"vercel": "^23.1.2"
 	},
 	"devDependencies": {
 		"@babel/core": "latest",
-		"@linaria/babel-preset": "^3.0.0-beta.13",
-		"@linaria/shaker": "^3.0.0-beta.13",
-		"@linaria/webpack-loader": "^3.0.0-beta.13",
 		"@types/cookie": "latest",
 		"@types/formidable": "latest",
 		"@types/node": "^14.17.6",
@@ -63,13 +56,9 @@
 		"@types/react": "latest",
 		"@types/react-dom": "latest",
 		"@types/react-is": "^17.0.2",
-		"@types/styled-components": "latest",
-		"babel-plugin-inline-react-svg": "latest",
-		"babel-plugin-styled-components": "latest",
 		"case-sensitive-paths-webpack-plugin": "latest",
 		"eslint": "latest",
 		"eslint-config-next": "latest",
-		"next-linaria": "1.0.0-beta",
 		"typescript": "latest"
 	}
 }

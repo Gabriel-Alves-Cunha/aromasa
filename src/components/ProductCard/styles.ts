@@ -1,6 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 
-import theme from "../../styles/theme";
+import theme from "styles/theme";
 
 const { primary } = theme.colors.light;
 

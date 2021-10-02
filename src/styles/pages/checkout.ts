@@ -1,6 +1,6 @@
 import createStyles from '@mui/styles/createStyles';
 import makeStyles from '@mui/styles/makeStyles';
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 import theme from "styles/theme";
 

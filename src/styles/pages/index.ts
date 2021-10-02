@@ -1,6 +1,6 @@
-import { HEADER_HEIGHT } from "components/Header/styles";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
+import { HEADER_HEIGHT } from "components/Header/styles";
 import theme from "../theme";
 
 const { primary: f_primary } = theme.fonts;

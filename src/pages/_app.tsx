@@ -1,4 +1,3 @@
-import { ThemeProvider as SCThemeProvider } from "styled-components";
 import { CloudinaryContext } from "cloudinary-react";
 import React, { ReactNode } from "react";
 import { CookiesProvider } from "react-cookie";
@@ -8,8 +7,8 @@ import { Provider } from "next-auth/client";
 
 import { CartProvider } from "hooks/useCart";
 
-import theme, { muiTheme } from "styles/theme";
-import GlobalStyle from "styles/global";
+import { GlobalStyle } from "styles/global";
+import { muiTheme } from "styles/theme";
 
 export const cloudName =
 	process.env.NODE_ENV === "development" ? "demo" : "aromasa-decor";
@@ -19,19 +18,17 @@ export default function MyApp({ Component, pageProps }: AppLayoutProps) {
 
 	return getLayout(
 		<ThemeProvider theme={muiTheme}>
-			<SCThemeProvider theme={theme}>
-				<GlobalStyle />
+			<GlobalStyle />
 
+			<CloudinaryContext cloudName={cloudName} secure={true}>
 				<Provider session={pageProps.session}>
 					<CookiesProvider>
 						<CartProvider>
-							<CloudinaryContext cloudName={cloudName} secure={true}>
-								<Component {...pageProps} />
-							</CloudinaryContext>
+							<Component {...pageProps} />
 						</CartProvider>
 					</CookiesProvider>
 				</Provider>
-			</SCThemeProvider>
+			</CloudinaryContext>
 		</ThemeProvider>
 	);
 }

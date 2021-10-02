@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
-import { HEADER_HEIGHT } from "./../../components/Header/styles";
-import { NAVBAR_WIDTH } from "./../../components/Navbar/styles";
+import { HEADER_HEIGHT } from "components/Header/styles";
+import { NAVBAR_WIDTH } from "components/Navbar/styles";
 
-import theme from "../../styles/theme";
+import theme from "styles/theme";
 
 const { primary: f_primary } = theme.fonts;
 const { primary } = theme.colors.light;
