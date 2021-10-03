@@ -5,7 +5,7 @@ import theme from "styles/theme";
 export const FOOTER_HEIGHT = "46vh" as const;
 
 export const Wrapper = styled.footer`
-	width: 100%;
+	width: 100vw;
 	height: ${FOOTER_HEIGHT};
 
 	border-top: 1px solid #e5e7eb;

@@ -9,6 +9,7 @@ export const DrawerContainer = styled.aside`
 	font-family: ${theme.fonts.secondary};
 
 	width: 45vw;
+	height: 100%;
 
 	span {
 		color: ${primary};
@@ -19,12 +20,14 @@ export const DrawerContainer = styled.aside`
 `;
 
 export const Header = styled.div`
-	font-weight: 300;
+	font-weight: 400;
 
 	margin: 20px 40px;
+	color: #999;
 
 	text-align: center;
 	line-height: 1.8rem;
+	letter-spacing: 0.025em;
 `;
 
 export const ImgContainer = styled.div`
@@ -85,12 +88,46 @@ export const Amount = styled.h3`
 	margin-right: 10px;
 `;
 
-export const NoItems = styled.div`
+export const NoItemsStyle = styled.div`
+	// Center stuff
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
 	font-family: ${theme.fonts.secondary};
+	text-align: center;
 
 	margin: 2rem;
+	height: 75%;
 
-	text-align: center;
+	/* border: 1px solid red;
+	background: linear-gradient(red, red) no-repeat center/1px 100%; */
+
+	p {
+		font-family: Poppins;
+		font-size: 1.3rem;
+		line-height: 2rem;
+		font-weight: 700;
+		letter-spacing: 0.03em;
+		padding-top: 1.5rem;
+	}
+`;
+
+export const Span = styled.span`
+	width: 100px;
+	height: 100px;
+	background-color: ${primary};
+	border-style: dashed;
+	border-radius: 50%;
+	border-width: 1px;
+	border-color: #fff;
+
+	// Center stuff
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 `;
 
 export const ConfirmButton = styled.button`

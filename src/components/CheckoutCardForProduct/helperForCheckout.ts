@@ -1,7 +1,4 @@
-import { loadStripe } from "@stripe/stripe-js";
 import Nope from "nope-validator";
-
-import { envVariables } from "utils/env";
 
 export type FrenetForm = {
 	sendEmailConfirmation: boolean;
@@ -11,7 +8,7 @@ export type FrenetForm = {
 	stateDocument: string;
 	addressNumber: string;
 	neighborhood: string;
-	phoneNumber?: number;
+	phoneNumber?: string;
 	companyName: string;
 	platformId: number;
 	logradouro: string;
@@ -30,12 +27,6 @@ export type FrenetForm = {
 	type: number;
 	name: string;
 };
-
-const typeFor_stripePromise = () =>
-	loadStripe(envVariables.stripePublishableKey);
-let notToUseDirectly_stripePromise: ReturnType<
-	typeof typeFor_stripePromise
-> | null = null;
 
 export const urlDeNãoSeiMeuCep =
 	"https://buscacepinter.correios.com.br/app/endereco/index.php?t";
@@ -128,7 +119,7 @@ export const nopeSchema = Nope.object().shape({
 
 export const defaultValues: FrenetForm = {
 	sendEmailConfirmation: true,
-	phoneNumber: undefined,
+	phoneNumber: "",
 	addressComplement: "",
 	federalDocument: "",
 	stateDocument: "",
@@ -152,25 +143,3 @@ export const defaultValues: FrenetForm = {
 	type: 1,
 	name: "",
 };
-
-export const getStripe = () => {
-	if (!notToUseDirectly_stripePromise)
-		notToUseDirectly_stripePromise = loadStripe(
-			envVariables.stripePublishableKey
-		);
-
-	return notToUseDirectly_stripePromise;
-};
-
-export const cpfFormatado = (cpf: string) =>
-	cpf.replace(/(\d{3})?(\d{3})?(\d{3})?(\d{2})/, "$1.$2.$3-$4");
-
-export const cepFormatado = (cep: string) =>
-	cep.replace(/(\d{5})?(\d{3})/, "$1-$2");
-
-export const foneFormatado = (fone: string) =>
-	fone.replace(/(\d{2})?(\d{1})?(\d{4})?(\d{4})/, "($1) $2 $3-$4");
-
-// console.log(`\n\n${cepFormatado("56320700")}`);
-// console.log(`\n\n${cpfFormatado("04174360170")}`);
-// console.log(`\n\n${foneFormatado("87999633141")}`);

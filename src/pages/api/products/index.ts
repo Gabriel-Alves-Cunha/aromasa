@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import cloudinary from "cloudinary";
 import formidable from "formidable";
-import Stripe from "stripe";
 
 import { ProductToAddToTheServer } from "modules/AddAProduct";
 import { envVariables } from "utils/env";
@@ -10,10 +9,6 @@ import { Compute } from "utils/types";
 import connectToMongoDB from "utils/connectToMongoDB";
 
 const isTesting = false;
-
-const stripe = new Stripe(envVariables.stripeSecretKey, {
-	apiVersion: "2020-08-27",
-});
 
 cloudinary.v2.config({
 	cname: envVariables.cloudinaryURL,
@@ -131,21 +126,9 @@ export default async function talkToDbToGetProducts(
 						);
 
 						if (productCreatedOnDB[0]) {
-							const productCreatedOnStripe = await stripe.products.create({
-								active: productCreatedOnDB[0].isAvailableToSell,
-								description: productCreatedOnDB[0].description,
-								name: productCreatedOnDB[0].title,
-								id: productCreatedOnDB[0].id,
-							});
-
-							console.log(
-								"\nret from productCreatedOnStripe.create() =",
-								productCreatedOnStripe
-							);
-
 							return res.status(201).json({
 								success: true,
-								data: { productCreatedOnDB, productCreatedOnStripe },
+								data: { productCreatedOnDB },
 							});
 						} else
 							return res.status(400).json({

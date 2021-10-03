@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
 
-import { ProductCard, Header, LayoutWithFooter } from "components";
+import { ProductCard, Header, LayoutWithFooter, Cart } from "components";
 import { ProductModel, Product } from "models/Product";
 import { useCart } from "hooks/useCart";
 import connectToMongoDB from "utils/connectToMongoDB";
@@ -28,13 +28,10 @@ export default function Products({ products }: Props) {
 		);
 	}, [cartProducts]);
 
-	async function gotoProductPage(product: Product) {
-		console.log("gotoProductPage");
-
+	const gotoProductPage = async (product: Product) =>
 		await router.push(`/product/${product._id.toString()}`);
-	}
 
-	function handleAddToCart(product: Product) {
+	const handleAddToCart = (product: Product) => {
 		handleAddPossibleNewProductToCart(product);
 
 		toast.success("🦄 Produto adicionado ao carrinho!", {
@@ -46,13 +43,15 @@ export default function Products({ products }: Props) {
 			autoClose: 3000,
 			draggable: true,
 		});
-	}
+	};
 
 	console.log("\nProducts client-side =", products);
 
 	return (
 		<>
-			<Header currentPage="Produtos" />
+			<Header currentPage="Produtos">
+				<Cart />
+			</Header>
 			<ToastContainer />
 
 			<div className={classes.content}>

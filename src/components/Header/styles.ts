@@ -74,6 +74,12 @@ export const LogoContainer = styled.div`
 
 	.logo {
 		cursor: pointer;
+		transition: transform 0.2s ease-in-out;
+
+		&:hover {
+			transition: transform 0.2s ease-in-out;
+			transform: scale(0.9);
+		}
 	}
 `;
 

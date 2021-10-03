@@ -1,5 +1,6 @@
 import { Drawer, Badge, IconButton } from "@mui/material";
 import { FiShoppingCart } from "react-icons/fi";
+import { IoBagOutline } from "react-icons/io5";
 import { useReducer } from "react";
 import { makeStyles } from "@mui/styles";
 import { useRouter } from "next/router";
@@ -8,7 +9,13 @@ import { CardContainer } from "./CardContainer";
 import { Divider } from "components";
 import { useCart } from "hooks/useCart";
 
-import { DrawerContainer, ConfirmButton, NoItems, Header } from "./styles";
+import {
+	DrawerContainer,
+	ConfirmButton,
+	NoItemsStyle,
+	Header,
+	Span,
+} from "./styles";
 import theme from "styles/theme";
 
 export function Cart() {
@@ -32,7 +39,9 @@ export function Cart() {
 		false
 	);
 
-	const handleBuyProducts = async (event: React.MouseEvent<HTMLButtonElement>) => {
+	const handleBuyProducts = async (
+		event: React.MouseEvent<HTMLButtonElement>
+	) => {
 		event.preventDefault();
 
 		await router.push("/checkout");
@@ -69,29 +78,42 @@ export function Cart() {
 					<Divider />
 
 					{cartProducts.length > 0 ? (
-						cartProducts.map(product => (
-							<CardContainer
-								handleAddOneMoreToCart={handleAddOneMoreToCart}
-								handleSubtractAmount={handleSubtractAmount}
-								handleRemoveFromCart={handleRemoveFromCart}
-								key={product._id.toString()}
-								product={product}
-							/>
-						))
-					) : (
-						<NoItems>Não há nenhum item no seu carrinho...</NoItems>
-					)}
+						<>
+							{cartProducts.map(product => (
+								<CardContainer
+									handleAddOneMoreToCart={handleAddOneMoreToCart}
+									handleSubtractAmount={handleSubtractAmount}
+									handleRemoveFromCart={handleRemoveFromCart}
+									key={product._id.toString()}
+									product={product}
+								/>
+							))}
 
-					<ConfirmButton
-						disabled={cartProducts.length === 0}
-						onClick={handleBuyProducts}
-						type="button"
-					>
-						Checkout
-					</ConfirmButton>
+							<ConfirmButton
+								disabled={cartProducts.length === 0}
+								onClick={handleBuyProducts}
+								type="button"
+							>
+								Checkout
+							</ConfirmButton>
+						</>
+					) : (
+						<NoItems />
+					)}
 				</DrawerContainer>
 			</Drawer>
 		</>
+	);
+}
+
+function NoItems() {
+	return (
+		<NoItemsStyle>
+			<Span>
+				<IoBagOutline size={26} color="#fff" />
+			</Span>
+			<p>Carrinho vazio...</p>
+		</NoItemsStyle>
 	);
 }
 

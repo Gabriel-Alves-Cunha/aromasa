@@ -1,13 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "node_modules/next";
-import Stripe from "stripe";
 
-import { envVariables } from "utils/env";
 import { ProductModel } from "models/Product";
 import connectToMongoDB from "utils/connectToMongoDB";
-
-const stripe = new Stripe(envVariables.stripeSecretKey, {
-	apiVersion: "2020-08-27",
-});
 
 export default async function talkToDbWithId(
 	req: NextApiRequest,
@@ -19,6 +13,8 @@ export default async function talkToDbWithId(
 		query: { _id },
 		method,
 	} = req;
+
+	res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate");
 
 	switch (method) {
 		// GET a product with id
@@ -81,16 +77,12 @@ export default async function talkToDbWithId(
 			try {
 				const deletedProductOnDB = await ProductModel.findByIdAndRemove(_id);
 
-				if (deletedProductOnDB) {
-					const deletedProductOnStripe = await stripe.products.del(
-						_id.toString()
-					);
-
+				if (deletedProductOnDB)
 					return res.status(204).json({
 						success: true,
-						data: { deletedProductOnDB, deletedProductOnStripe },
+						data: { deletedProductOnDB },
 					});
-				} else
+				else
 					return res
 						.status(400)
 						.json({ success: false, data: "deletedProductOnDB returned null" });

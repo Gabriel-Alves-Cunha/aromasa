@@ -17,7 +17,7 @@ export const GlobalStyle = () => (
 					-webkit-font-smoothing: antialiased;
 					text-rendering: optimizeLegibility;
 					scroll-behavior: smooth;
-					height: 100%;
+					height: 100vh;
 				}
 
 				a {
@@ -35,7 +35,7 @@ export const GlobalStyle = () => (
 
 					display: flex;
 					flex-direction: column;
-					height: 100%;
+					height: 100vh;
 
 					overflow-y: scroll; /* Show vertical scrollbar */
 					overflow-x: hidden; /* Show horizontal scrollbar */

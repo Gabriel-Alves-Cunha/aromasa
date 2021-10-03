@@ -62,6 +62,7 @@ ProductPage.getLayout = LayoutWithFooter;
 export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
 		const products = await getProductsFromDB();
+		console.log("\nFrom 'pages/[product].tsx: products =", products);
 
 		return {
 			paths: products.map(product => ({
@@ -93,10 +94,7 @@ async function getProductsFromDB() {
 	try {
 		await connectToMongoDB();
 
-		const products = await ProductModel.find({});
-		console.log("\nFrom 'pages/[product].tsx: products =", products);
-
-		return products;
+		return await ProductModel.find({});
 	} catch (errorGetProductsFromDB) {
 		throw new Error(
 			`File: 'pages/[product].tsx'\nLine:106\n${typeof errorGetProductsFromDB}: 'errorGetProductsFromDB' = ${json2str(

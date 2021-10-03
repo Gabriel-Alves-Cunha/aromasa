@@ -15,29 +15,33 @@ export default function Result() {
 		query: { session_id },
 	} = useRouter();
 
-	const [success, setSuccess] = useState(false);
-	const [loading, setLoading] = useState(true);
+	const [successAndLoading, setSuccessAndLoading] = useState({
+		success: false,
+		loading: true,
+	});
 
 	useEffect(() => {
 		(async function talkToServer() {
 			try {
 				const { data } = await axiosInstance.get(`/api/payment/${session_id}`);
 				console.log("\nThe data =", data);
-				data ? setSuccess(true) : setSuccess(false);
+				data
+					? setSuccessAndLoading({ success: true, loading: false })
+					: setSuccessAndLoading({ success: false, loading: true });
 			} catch (error) {
 				console.error(error);
-				setSuccess(false);
-			} finally {
-				setLoading(false);
+				setSuccessAndLoading({ success: false, loading: false });
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// return <Success />;
-	if (loading) return <Loading_ />;
-	else if (success && !loading) return <Success />;
-	else if (!success && !loading) return <Error />;
+	if (successAndLoading.loading) return <Loading_ />;
+	else if (successAndLoading.success && !successAndLoading.loading)
+		return <Success />;
+	else if (!successAndLoading.success && !successAndLoading.loading)
+		return <Error />;
 }
 
 function Success() {

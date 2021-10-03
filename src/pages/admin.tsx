@@ -9,8 +9,8 @@ import {
 	DeleteAProduct,
 	AlterAProduct,
 	AddAProduct,
-	Dashboard,
 	AdminHeader,
+	Dashboard,
 } from "modules/index";
 import connectToMongoDB from "utils/connectToMongoDB";
 

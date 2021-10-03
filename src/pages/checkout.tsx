@@ -1,27 +1,35 @@
 import { Grid, InputAdornment, TextField, Typography } from "@mui/material";
-import { validateCep, validateCPF } from "validations-br";
 import { toast, ToastContainer } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import { nopeResolver } from "@hookform/resolvers/nope";
+import { IoBagOutline } from "react-icons/io5";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import {
+	validateCep as isValidCep,
+	validateCPF as isValidCPF,
+} from "validations-br";
+import InputMask from "react-input-mask";
 import Head from "next/head";
 import cep from "cep-promise";
 
-import { CheckoutCardForProduct, LayoutWithFooter, Header, Cart } from "components";
 import { ClientChosenProduct } from "models/Product";
 import { axiosInstance } from "utils/axiosInstance";
 import { useCart } from "hooks/useCart";
 import {
+	CheckoutCardForProduct,
+	LayoutWithFooter,
+	Header,
+	Cart,
+} from "components";
+import {
 	urlDeNãoSeiMeuCep,
 	defaultValues,
-	cepFormatado,
-	cpfFormatado,
 	FrenetForm,
 	nopeSchema,
-	getStripe,
 } from "components/CheckoutCardForProduct/helperForCheckout";
 
-import useStyles, { ConfirmButton } from "styles/pages/checkout";
+import useStyles, { ConfirmButton, NoItems, Span } from "styles/pages/checkout";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Checkout() {
@@ -30,34 +38,51 @@ export default function Checkout() {
 	const classes = useStyles();
 	const router = useRouter();
 
-	const [canGoToBuyPage, setCanGoToBuyPage] = useState(false);
-
-	const [isLoading, setIsLoading] = useState(false);
+	const [cepResponse, setCepResponse] = useState({} as CepResponse);
 	const [shipData, setShipData] = useState({} as FrenetForm);
+	const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(() => {
+		setValue("neighborhood", cepResponse.neighborhood);
+		setValue("logradouro", cepResponse.street);
+		setValue("state", cepResponse.state);
+		setValue("city", cepResponse.city);
+
+		setShipData(oldValue => ({
+			...oldValue,
+			neighborhood: cepResponse.neighborhood,
+			logradouro: cepResponse.street,
+			state: cepResponse.state,
+			city: cepResponse.city,
+		}));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cepResponse]);
 
 	const {
 		formState: { errors },
 		handleSubmit,
 		setValue,
 		control,
-	} = useForm<FrenetForm>({ defaultValues });
+	} = useForm<FrenetForm>({
+		resolver: nopeResolver(nopeSchema),
+		defaultValues,
+	});
 
 	const onSubmit = (data: FrenetForm) => {
 		console.log(
-			`[LOG]\n\tFile: 'pages/checkout/index.tsx'\n\tLine:47\n\t${typeof data}: 'data' =`,
+			`[LOG]\n\tFile: 'pages/checkout/index.tsx'\n\tLine:49\n\t${typeof data}: 'data' =`,
 			data
 		);
 	};
 
-	async function searchAddressWithCEP(
+	const searchAddressWithCEP = async (
 		event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-	) {
-		const str = event.target.value;
-		if (str.length < 8) return;
+	) => {
+		errors.zipCode = undefined;
+		const CEP = event.target.value;
+		if (CEP.length < 8) return;
 
-		const cepStr = cepFormatado(str);
-		const isValid = validateCep(cepStr);
-		if (!isValid) {
+		if (!isValidCep(CEP)) {
 			errors.zipCode = {
 				type: "CEP inválido",
 				message: "CEP inválido!",
@@ -67,51 +92,56 @@ export default function Checkout() {
 		}
 
 		try {
-			const cepRes = await cep(cepStr);
-
-			setValue("neighborhood", cepRes.neighborhood);
-			setValue("logradouro", cepRes.street);
-			setValue("state", cepRes.state);
-			setValue("city", cepRes.city);
-
-			setShipData(oldValue => ({
-				...oldValue,
-				neighborhood: cepRes.neighborhood,
-				logradouro: cepRes.street,
-				state: cepRes.state,
-				city: cepRes.city,
-			}));
+			const cepRes: CepResponse = await cep(CEP);
+			console.log("cepRes =", cepRes);
+			setCepResponse(cepRes);
 		} catch (error: any) {
-			console.log("error from cep =", error);
+			console.error("Error from cep =", error);
 
 			errors.zipCode = error.message;
 		}
-	}
+	};
 
-	function validateFederalDocument(
+	const validateFederalDocument = (
 		event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-	) {
-		const str = event.target.value;
-		if (str.length < 14) return;
+	) => {
+		errors.federalDocument = undefined;
+		const CPF = event.target.value;
+		if (CPF.length < 14) return;
 
-		const cpfStr = cpfFormatado(str);
-		const isValid = validateCPF(cpfStr);
-		if (!isValid) {
+		if (!isValidCPF(CPF))
 			errors.federalDocument = {
 				type: "CPF inválido",
 				message: "CPF inválido!",
 			};
-
-			return;
-		}
-	}
+	};
 
 	async function handleCheckout(event: React.MouseEvent<HTMLInputElement>) {
 		event.preventDefault();
 
 		setIsLoading(true);
+		let canGoToBuyPage = true;
 
-		checkIfAmountOfProductsIsAvailable();
+		(function checkIfAmountOfProductsIsAvailable() {
+			cartProducts.forEach(product => {
+				if (parseFloat(product.bottle.amountThatWillBeBought) > 50) {
+					toast.error(
+						`🦄 Você está comprando produtos mais de 50 produtos!! Por favor, entre em contato por email (está no rodapé da página no 'Fale conosco') para realizar compras grandes!`,
+						{
+							hideProgressBar: false,
+							position: "top-right",
+							progress: undefined,
+							closeOnClick: true,
+							pauseOnHover: true,
+							autoClose: 10_000,
+							draggable: true,
+						}
+					);
+
+					canGoToBuyPage = false;
+				}
+			});
+		})();
 
 		if (!canGoToBuyPage) {
 			toast.error(`🦄 Houve um ou mais erros ao comprar o(s) produto(s)!`, {
@@ -130,18 +160,11 @@ export default function Checkout() {
 
 		const productsInfo = cartProducts.map(product => ({
 			price_data: {
-				currency: "brl",
-				product_data: {
-					name: product.title,
-				},
+				name: product.title,
 				unit_amount: parseFloat(product.price) * 100, // centavos
+				quantity: parseFloat(product.bottle.amountThatWillBeBought),
 			},
-			quantity: parseFloat(product.bottle.amountThatWillBeBought),
 		}));
-		// const productsInfo = () => [
-		// 	// for test only
-		// 	{ price: "price_1JMZHdBQSnJH4whOHTPPCdJv", quantity: 2 },
-		// ];
 
 		try {
 			// Call the backend to create the Checkout session.
@@ -149,23 +172,17 @@ export default function Checkout() {
 				"/api/payment",
 				{
 					products: productsInfo,
-					metadata: shipData,
-				},
-				{
-					headers: {
-						"content-type": "application/json",
-					},
+					shipData,
 				}
 			);
 
-			const stripe = await getStripe();
-			// When the customer clicks on the button, redirect them to Checkout.
-			//@ts-ignore
-			const { error } = await stripe?.redirectToCheckout({
-				sessionId: data.sessionId,
-			});
+			console.log(
+				"data from calling the backend to create a checkout session =",
+				data
+			);
 
-			if (error) {
+			const error = { message: "Simulating an error" };
+			if (error.message) {
 				console.log("redirectToCheckout error:", error);
 
 				toast.error(
@@ -193,9 +210,9 @@ export default function Checkout() {
 				autoClose: 5000,
 				draggable: true,
 			});
-		} finally {
-			setIsLoading(false);
 		}
+
+		setIsLoading(false);
 	}
 
 	async function gotoProductPage(product: ClientChosenProduct) {
@@ -203,31 +220,6 @@ export default function Checkout() {
 
 		await router.push(`/product/${product._id.toString()}`);
 	}
-
-	function checkIfAmountOfProductsIsAvailable() {
-		setCanGoToBuyPage(true);
-
-		cartProducts.forEach(product => {
-			if (parseFloat(product.bottle.amountThatWillBeBought) > 50) {
-				toast.error(
-					`🦄 Você está comprando produtos mais de 50 produtos!! Por favor, entre em contato por email (está no rodapé da página) para realizar compras grandes!`,
-					{
-						hideProgressBar: false,
-						position: "top-right",
-						progress: undefined,
-						closeOnClick: true,
-						pauseOnHover: true,
-						autoClose: 7000,
-						draggable: true,
-					}
-				);
-
-				setCanGoToBuyPage(false);
-			}
-		});
-	}
-
-	const Empty = () => <div>No items in cart!!</div>;
 
 	function Filled() {
 		return (
@@ -249,14 +241,14 @@ export default function Checkout() {
 					))}
 				</Grid>
 
-				<div className={classes.totalDetails}>
+				<section className={classes.totalDetails}>
 					<Typography variant="h6">Subtotal: R$ {getSubtotal()}</Typography>
-				</div>
+				</section>
 
-				<div className={classes.formWrapper}>
+				<section className={classes.formWrapper}>
 					Dados para sua entrega
 					<Form />
-				</div>
+				</section>
 			</div>
 		);
 	}
@@ -272,35 +264,36 @@ export default function Checkout() {
 					control={control}
 					defaultValue=""
 					name="zipCode"
-					render={({ field }) => (
-						<TextField
-							{...field}
-							onChange={e => {
-								field.onChange(e);
-								searchAddressWithCEP(e);
-							}}
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										<a
-											href={urlDeNãoSeiMeuCep}
-											className={classes.a}
-											rel="noreferrer"
-											target="_blank"
-										>
-											Não sei meu CEP
-										</a>
-									</InputAdornment>
-								),
-							}}
-							helperText={errors.zipCode?.message}
-							placeholder="Digite o CEP"
-							error={!!errors.zipCode}
-							label="Digite seu CEP"
-							variant="standard"
-							type="number"
-							required
-						/>
+					render={({ field: { ref, ...rest } }) => (
+						<InputMask mask="99999-999" onChange={searchAddressWithCEP}>
+							{(inputProps: typeof rest) => (
+								<TextField
+									{...inputProps}
+									InputProps={{
+										endAdornment: (
+											<InputAdornment position="end">
+												<a
+													href={urlDeNãoSeiMeuCep}
+													className={classes.a}
+													rel="noreferrer"
+													target="_blank"
+												>
+													Não sei meu CEP
+												</a>
+											</InputAdornment>
+										),
+									}}
+									ref={ref}
+									helperText={errors.zipCode?.message}
+									placeholder="Digite o CEP"
+									error={!!errors.zipCode}
+									label="Digite seu CEP"
+									variant="standard"
+									type="text"
+									required
+								/>
+							)}
+						</InputMask>
 					)}
 				/>
 
@@ -329,7 +322,7 @@ export default function Checkout() {
 						<TextField
 							{...field}
 							helperText={errors.name?.message}
-							placeholder="Entregar a(o)"
+							placeholder="Entregar a"
 							error={!!errors.name}
 							label="Destinatário"
 							variant="standard"
@@ -394,20 +387,20 @@ export default function Checkout() {
 					name="federalDocument"
 					defaultValue=""
 					render={({ field }) => (
-						<TextField
-							{...field}
-							onChange={e => {
-								field.onChange(e);
-								validateFederalDocument(e);
-							}}
-							helperText={errors.federalDocument?.message}
-							error={!!errors.federalDocument}
-							placeholder="Digite o seu CPF"
-							variant="standard"
-							type="number"
-							label="CPF"
-							required
-						/>
+						<InputMask mask="999.999.999-99" onChange={validateFederalDocument}>
+							{(inputProps: typeof field) => (
+								<TextField
+									{...inputProps}
+									helperText={errors.federalDocument?.message}
+									error={!!errors.federalDocument}
+									placeholder="Digite o seu CPF"
+									variant="standard"
+									type="text"
+									label="CPF"
+									required
+								/>
+							)}
+						</InputMask>
 					)}
 				/>
 
@@ -447,18 +440,22 @@ export default function Checkout() {
 
 				<Controller
 					control={control}
-					defaultValue={undefined}
 					name="phoneNumber"
+					defaultValue=""
 					render={({ field }) => (
-						<TextField
-							{...field}
-							helperText={errors.phoneNumber?.message}
-							error={!!errors.phoneNumber}
-							placeholder="(87) 9 9876-5432"
-							label="Número de telefone"
-							variant="standard"
-							type="number"
-						/>
+						<InputMask mask="(99) 9 9999-9999">
+							{(inputProps: typeof field) => (
+								<TextField
+									{...inputProps}
+									helperText={errors.phoneNumber?.message}
+									error={!!errors.phoneNumber}
+									placeholder="(87) 9 9876-5432"
+									label="Número de telefone"
+									variant="standard"
+									type="text"
+								/>
+							)}
+						</InputMask>
 					)}
 				/>
 
@@ -490,3 +487,23 @@ export default function Checkout() {
 }
 
 Checkout.getLayout = LayoutWithFooter;
+
+function Empty() {
+	return (
+		<NoItems>
+			<Span>
+				<IoBagOutline size={26} strokeWidth="1" />
+			</Span>
+			<p>Sem itens para fazer checkout</p>
+		</NoItems>
+	);
+}
+
+type CepResponse = {
+	neighborhood: string;
+	service: string;
+	street: string;
+	state: string;
+	city: string;
+	cep: string;
+};

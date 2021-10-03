@@ -1,7 +1,8 @@
-import createStyles from '@mui/styles/createStyles';
-import makeStyles from '@mui/styles/makeStyles';
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
 import styled from "@emotion/styled";
 
+import { HEADER_HEIGHT } from "components/Header/styles";
 import theme from "styles/theme";
 
 const { primary: f_primary } = theme.fonts;
@@ -11,6 +12,7 @@ export default makeStyles(theme =>
 	createStyles({
 		root: {
 			marginRight: "2%",
+			marginBottom: 90,
 			marginLeft: "2%",
 			marginTop: 90,
 			flexGrow: 1,
@@ -30,7 +32,7 @@ export default makeStyles(theme =>
 		},
 		emptyButton: {
 			minWidth: "150px",
-			[theme.breakpoints.down('sm')]: {
+			[theme.breakpoints.down("sm")]: {
 				marginBottom: "5px",
 			},
 			[theme.breakpoints.up("xs")]: {
@@ -100,4 +102,47 @@ export const ConfirmButton = styled.input`
 	&:active {
 		opacity: 0.3;
 	}
+`;
+
+export const NoItems = styled.section`
+	// Center stuff
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	height: calc(100vh - ${HEADER_HEIGHT}px);
+
+	font-family: ${theme.fonts.secondary};
+	text-align: center;
+
+	margin-top: ${HEADER_HEIGHT}px;
+
+	border: 1px solid red;
+	background: linear-gradient(red, red) no-repeat center/1px 100%;
+
+	p {
+		font-family: Poppins;
+		font-size: 1.3rem;
+		line-height: 2rem;
+		font-weight: 700;
+		letter-spacing: 0.03em;
+		padding-top: 1.5rem;
+	}
+`;
+
+export const Span = styled.span`
+	width: 100px;
+	height: 100px;
+	border-style: dashed;
+	border-radius: 5%;
+	border-width: 1px;
+	border-color: ${primary};
+	stroke-width: 10px;
+
+	// Center stuff
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 `;
