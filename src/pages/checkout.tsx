@@ -10,6 +10,7 @@ import {
 	validateCPF as isValidCPF,
 } from "validations-br";
 import InputMask from "react-input-mask";
+import Script from "next/script";
 import Head from "next/head";
 import cep from "cep-promise";
 
@@ -31,6 +32,10 @@ import {
 
 import useStyles, { ConfirmButton, NoItems, Span } from "styles/pages/checkout";
 import "react-toastify/dist/ReactToastify.css";
+import { envVariables } from "utils/env";
+import { PreferenceItem } from "mercadopago/models/preferences/create-payload.model";
+
+const mercadopagoPublicKey = envVariables.mercadoPagoPublicKey;
 
 export default function Checkout() {
 	const { cartProducts, getSubtotal } = useCart();
@@ -38,9 +43,33 @@ export default function Checkout() {
 	const classes = useStyles();
 	const router = useRouter();
 
+	const [script, setScript] = useState({ script: ``, prefence_id: "" });
 	const [cepResponse, setCepResponse] = useState({} as CepResponse);
 	const [shipData, setShipData] = useState({} as FrenetForm);
 	const [isLoading, setIsLoading] = useState(false);
+
+	useEffect(() => {
+		setScript(oldValue => ({
+			script: `
+			// Adicione as credenciais do SDK
+			const mp = new MercadoPago(${mercadopagoPublicKey}, {
+        locale: 'pt-BR'
+			});
+
+  		// Inicialize o checkout
+			mp.checkout({
+					preference: {
+					id: ${script.prefence_id},
+				},
+				render: {
+					container: "open-checkout-modal", // Indique o nome da class onde será exibido o botão de pagamento
+					label: 'Pagar', // Muda o texto do botão de pagamento (opcional)
+				}
+			});
+			`,
+			prefence_id: oldValue.prefence_id,
+		}));
+	}, [script.prefence_id]);
 
 	useEffect(() => {
 		setValue("neighborhood", cepResponse.neighborhood);
@@ -120,6 +149,7 @@ export default function Checkout() {
 		event.preventDefault();
 
 		setIsLoading(true);
+
 		let canGoToBuyPage = true;
 
 		(function checkIfAmountOfProductsIsAvailable() {
@@ -158,46 +188,40 @@ export default function Checkout() {
 			return;
 		}
 
-		const productsInfo = cartProducts.map(product => ({
-			price_data: {
-				name: product.title,
-				unit_amount: parseFloat(product.price) * 100, // centavos
-				quantity: parseFloat(product.bottle.amountThatWillBeBought),
-			},
+		const items: PreferenceItem[] = cartProducts.map(product => ({
+			quantity: parseFloat(product.bottle.amountThatWillBeBought),
+			unit_price: parseFloat(product.price) * 100, // centavos,
+			title: product.title,
+			currency_id: "BRL",
 		}));
 
 		try {
 			// Call the backend to create the Checkout session.
-			const { data } = await axiosInstance.post<{ sessionId: string }>(
-				"/api/payment",
-				{
-					products: productsInfo,
-					shipData,
-				}
-			);
+			const res = await axiosInstance.post<{ id: string }>("/api/payment", {
+				infoDoPagador: {
+					// Nome do comprador.
+					name: shipData.name,
+					// Endereço de e-mail do comprador.
+					email: shipData.email,
+					// Telefone do comprador.
+					phone: shipData.phoneNumber,
+					// Endereço do comprador.
+					address:
+						shipData.addressComplement + `, nº ${shipData.addressNumber}`,
+				},
+				shipData,
+				items,
+			});
+
+			setScript(oldValue => ({
+				prefence_id: res.data.id,
+				script: oldValue.script,
+			}));
 
 			console.log(
-				"data from calling the backend to create a checkout session =",
-				data
+				"res from calling the backend to create a checkout session =",
+				res
 			);
-
-			const error = { message: "Simulating an error" };
-			if (error.message) {
-				console.log("redirectToCheckout error:", error);
-
-				toast.error(
-					`🦄 Houve um erro ao comprar o produto! Por favor, tente novamente.\n${error.message}`,
-					{
-						hideProgressBar: false,
-						position: "top-right",
-						progress: undefined,
-						closeOnClick: true,
-						pauseOnHover: true,
-						autoClose: 5000,
-						draggable: true,
-					}
-				);
-			}
 		} catch (error: any) {
 			console.error(error);
 
@@ -215,11 +239,11 @@ export default function Checkout() {
 		setIsLoading(false);
 	}
 
-	async function gotoProductPage(product: ClientChosenProduct) {
+	const gotoProductPage = async (product: ClientChosenProduct) => {
 		console.log("gotoProductPage with product:", product._id);
 
 		await router.push(`/product/${product._id.toString()}`);
-	}
+	};
 
 	function Filled() {
 		return (
@@ -460,6 +484,7 @@ export default function Checkout() {
 				/>
 
 				<ConfirmButton
+					className="open-checkout-modal"
 					onClick={handleCheckout}
 					disabled={isLoading}
 					value="Checkout"
@@ -482,6 +507,13 @@ export default function Checkout() {
 			<ToastContainer />
 
 			{isCartEmpty ? <Empty /> : <Filled />}
+
+			<Script
+				id="mercadopago-checkoutpro"
+				src="https://sdk.mercadopago.com/js/v2"
+			>
+				{`${script}`}
+			</Script>
 		</>
 	);
 }
