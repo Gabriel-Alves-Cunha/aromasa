@@ -85,17 +85,16 @@ export default async function talkToDbToGetProducts(
 						([key, file]) => file as formidable.File
 					);
 
-					const promisesFromCloudinary = files.map(
-						async file =>
-							await cloudinary.v2.uploader.upload(
-								file.path,
-								undefined,
-								(error, result) => console.log(error, result)
-							)
-					);
-
 					const cloudinaryUploadApiResponses = await Promise.all(
-						promisesFromCloudinary
+						files.map(
+							async file =>
+								await cloudinary.v2.uploader.upload(
+									file.path,
+									undefined,
+									(error, result) =>
+										console.log(`Error = ${error}\nResult = ${result}`)
+								)
+						)
 					);
 
 					console.log(
