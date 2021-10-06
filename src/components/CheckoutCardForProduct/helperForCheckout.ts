@@ -1,5 +1,7 @@
 import Nope from "nope-validator";
 
+import { envVariables } from "utils/env";
+
 export type FrenetForm = {
 	sendEmailConfirmation: boolean;
 	totalPriceChosen?: string;
@@ -8,7 +10,7 @@ export type FrenetForm = {
 	stateDocument: string;
 	addressNumber: string;
 	neighborhood: string;
-	phoneNumber?: string;
+	phoneNumber: string;
 	companyName: string;
 	platformId: number;
 	logradouro: string;
@@ -21,6 +23,7 @@ export type FrenetForm = {
 	zipCode: string;
 	timeout: number;
 	agency: string;
+	total: string;
 	state: string;
 	email: string;
 	city: string;
@@ -39,7 +42,7 @@ export const nopeSchema = Nope.object().shape({
 		.required(
 			"E-mail do cliente, este campo é o mais importante de toda a API, será usado como chave para autenticação no painel administrativo e para os comunicados enviados pelo Frenet"
 		),
-	type: Nope.string().required(
+	type: Nope.number().required(
 		"Identifica o tipo do cliente, por enquanto aceita apenas o valor 1 (Clientes)"
 	),
 	// TODO: RESOLVE THIS: .default("1"),
@@ -52,14 +55,13 @@ export const nopeSchema = Nope.object().shape({
 		"Nome completo da pessoa física ou a Razão Social da pessoa Jurídica, o campo é utilizado para exibição do nome do cliente dentro do painel administrativo do Frenet"
 	),
 	pessoa: Nope.string()
-
 		.required(
 			"Pessoa física ou jurídica, onde F identifica uma pessoa física e J uma pessoa jurídica"
 		)
 		.oneOf(["F", "J"]),
-	companyName: Nope.string().required(
-		"Nome completo da pessoa física ou a Razão Social da pessoa Jurídica, o campo é utilizado na geração de boletos e comunicados via e-mail"
-	),
+	companyName: Nope.string(), //.required(
+	// 	"Nome completo da pessoa física ou a Razão Social da pessoa Jurídica, o campo é utilizado na geração de boletos e comunicados via e-mail"
+	// ),
 	federalDocument: Nope.string().required(
 		"CPF da pessoa física ou CNPJ da pessoa jurídica"
 	),
@@ -72,7 +74,7 @@ export const nopeSchema = Nope.object().shape({
 		.required(
 			"CEP da empresa ou pessoa física, este campo é usado como CEP de origem no momento da cotação de Frete"
 		)
-		.min(8),
+		.min(6),
 	city: Nope.string().required(
 		"Cidade da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
 	),
@@ -89,7 +91,7 @@ export const nopeSchema = Nope.object().shape({
 	neighborhood: Nope.string().required(
 		"Bairro da empresa ou residência da pessoa física, este campo é usado na geração das faturas de cobrança"
 	),
-	phoneNumber: Nope.number().min(10).max(11),
+	phoneNumber: Nope.string().min(10).max(18),
 	platformId: Nope.string().required(
 		"Código da plataforma, o valor para este campo será informado pela equipe de integração do Frenet"
 	),
@@ -115,11 +117,12 @@ export const nopeSchema = Nope.object().shape({
 		.required(
 			"Flag informando se após a chamada da API um e-mail para confirmação/validação será enviado para o cliente, é necessário para confirmação do e-mail informado no campo E-mail"
 		),
+	total: Nope.string(),
 });
 
 export const defaultValues: FrenetForm = {
+	urlSite: envVariables.aromasaUrl,
 	sendEmailConfirmation: true,
-	phoneNumber: "",
 	addressComplement: "",
 	federalDocument: "",
 	stateDocument: "",
@@ -127,19 +130,33 @@ export const defaultValues: FrenetForm = {
 	neighborhood: "",
 	timeout: 10_000,
 	companyName: "",
-	platformId: 0,
+	phoneNumber: "",
 	logradouro: "",
-	pessoa: "F",
+	platformId: 0,
 	password: "",
-	plancode: 0,
 	platform: "",
+	pessoa: "F",
+	plancode: 0,
 	agencyId: 0,
-	urlSite: "",
 	zipCode: "",
 	agency: "",
 	state: "",
+	total: "",
 	email: "",
 	city: "",
-	type: 1,
 	name: "",
+	type: 1,
 };
+
+export const cpfFormatado = (cpf: string) =>
+	cpf.length === 11
+		? cpf.replace(/(\d{3})?(\d{3})?(\d{3})?(\d{2})/, "$1.$2.$3-$4")
+		: cpf;
+
+export const cepFormatado = (cep: string) =>
+	cep.length === 8 ? cep.replace(/(\d{5})?(\d{3})/, "$1-$2") : cep;
+
+export const foneFormatado = (fone: string) =>
+	fone.length === 11
+		? fone.replace(/(\d{2})?(\d{1})?(\d{4})?(\d{4})/, "($1) $2 $3-$4")
+		: fone;

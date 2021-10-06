@@ -84,7 +84,7 @@ export function Cart() {
 									handleAddOneMoreToCart={handleAddOneMoreToCart}
 									handleSubtractAmount={handleSubtractAmount}
 									handleRemoveFromCart={handleRemoveFromCart}
-									key={product._id.toString()}
+									key={product.title}
 									product={product}
 								/>
 							))}

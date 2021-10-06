@@ -118,8 +118,8 @@ export const NoItems = styled.section`
 
 	margin-top: ${HEADER_HEIGHT}px;
 
-	border: 1px solid red;
-	background: linear-gradient(red, red) no-repeat center/1px 100%;
+	/* border: 1px solid red;
+	background: linear-gradient(red, red) no-repeat center/1px 100%; */
 
 	p {
 		font-family: Poppins;

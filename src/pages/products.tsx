@@ -65,7 +65,7 @@ export default function Products({ products }: Props) {
 				>
 					{products.map(product => (
 						<Grid
-							key={product._id.toString()}
+							key={product.title}
 							xs={12}
 							sm={6}
 							md={4}

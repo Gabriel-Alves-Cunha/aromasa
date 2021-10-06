@@ -1,5 +1,7 @@
+import type { FrenetForm } from "components/CheckoutCardForProduct/helperForCheckout";
 import type {
 	CreatePreferencePayload,
+	PreferencePayer,
 	PreferenceItem,
 } from "mercadopago/models/preferences/create-payload.model";
 
@@ -12,41 +14,50 @@ import { json2str } from "utils/json2str";
 
 mercadopago.configure({
 	access_token: envVariables.mercadoPagoAccessToken,
+	sandbox: process.env.NODE_ENV === "development",
 });
 
 export default async function talkToServer(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	console.log("req =", req);
+	console.log("req.body =", req.body);
+	const back_url = req.headers.origin + "/payment-result";
+	console.log("back_url =", back_url);
 
 	switch (req.method) {
 		case "POST":
 			try {
 				const itemsFromClientSide: PreferenceItem[] = req.body.items;
-				console.log("\nitems =", itemsFromClientSide);
-				const frete = req.body.shipData;
-				console.log("\nfrete =", frete);
-				const infoDoPagador = req.body.payer;
+				const infoDoPagador: PreferencePayer = req.body.infoDoPagador;
+				const frete: FrenetForm = req.body.shipData;
+
 				console.log("\ninfoDoPagador =", infoDoPagador);
+				console.log("\nitems =", itemsFromClientSide);
+				console.log("\nfrete =", frete);
 
 				// mercado pago /////////////////////////////////////////
 				const preference: CreatePreferencePayload = {
 					items: [
 						...itemsFromClientSide,
 						{
-							unit_price: frete.preço,
+							unit_price: parseFloat(frete.total) || 100,
 							currency_id: "BRL",
 							title: "Frete",
 							quantity: 1,
 						},
 					],
 					statement_descriptor: "Aromasa Decor",
-					payer: infoDoPagador,
+					// payer: infoDoPagador,
 					binary_mode: true,
 					payment_methods: {
 						default_installments: 1,
 						installments: 3,
+					},
+					back_urls: {
+						success: back_url,
+						pending: back_url,
+						failure: back_url,
 					},
 				};
 
@@ -62,10 +73,11 @@ export default async function talkToServer(
 
 				return res
 					.status(error.statusCode || 500)
-					.json(
-						"Erro no método POST em 'pages/api/payment/index.tsx':" +
-							json2str(error)
-					);
+					.json({
+						message:
+							"Erro no método POST em 'pages/api/payment/index.tsx':" +
+							json2str(error),
+					});
 			}
 			break;
 		case "GET":
