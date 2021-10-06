@@ -60,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 		);
 
 		if (userIsAllowed) return { props: {} };
-		else return { notFound: true };
+		return { notFound: true };
 	} catch (error) {
 		console.error(
 			`❗ File: index.tsx\nLine:69\n${typeof error}: 'error' =`,

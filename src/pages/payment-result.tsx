@@ -63,6 +63,7 @@ function Success() {
 					src="https://res.cloudinary.com/aromasa-decor/image/upload/v1633532414/pexels-alleksana-7248762_krxinr.jpg"
 					alt="Foto de alleksana no Pexels. Muito obrigado por comprar conosco!"
 					className="thanks"
+					quality="auto"
 				/>
 				<p>
 					<span>Muito obrigado por comprar conosco!</span>

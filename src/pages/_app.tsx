@@ -21,13 +21,13 @@ export default function MyApp({ Component, pageProps }: AppLayoutProps) {
 			<GlobalStyle />
 
 			<CloudinaryContext cloudName={cloudName} secure={true}>
-				<Provider session={pageProps.session}>
-					<CookiesProvider>
+				<CookiesProvider>
+					<Provider session={pageProps.session}>
 						<CartProvider>
 							<Component {...pageProps} />
 						</CartProvider>
-					</CookiesProvider>
-				</Provider>
+					</Provider>
+				</CookiesProvider>
 			</CloudinaryContext>
 		</ThemeProvider>
 	);

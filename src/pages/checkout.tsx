@@ -52,9 +52,9 @@ export default function Checkout() {
 	const classes = useStyles();
 	const router = useRouter();
 
-	const [cepResponse, setCepResponse] = useState({} as CepResponse);
-	const [shipData, setShipData] = useState(defaultValues);
+	const [formData, setFormData] = useState(defaultValues);
 	const [preferenceId, setPreferenceId] = useState("");
+	const [setValues, setSetValues] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
@@ -72,21 +72,14 @@ export default function Checkout() {
 	}, [preferenceId]);
 
 	useEffect(() => {
-		setValue("neighborhood", cepResponse.neighborhood);
-		setValue("logradouro", cepResponse.street);
-		setValue("zipCode", cepResponse.cep);
-		setValue("state", cepResponse.state);
-		setValue("city", cepResponse.city);
+		setValue("neighborhood", formData.neighborhood);
+		setValue("logradouro", formData.logradouro);
+		setValue("zipCode", formData.zipCode);
+		setValue("state", formData.state);
+		setValue("city", formData.city);
 
-		setShipData(oldValue => ({
-			...oldValue,
-			neighborhood: cepResponse.neighborhood,
-			logradouro: cepResponse.street,
-			state: cepResponse.state,
-			city: cepResponse.city,
-		}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cepResponse]);
+	}, [setValues]);
 
 	const {
 		formState: { errors },
@@ -127,9 +120,18 @@ export default function Checkout() {
 		}
 
 		try {
-			const cepRes: CepResponse = await cep(CEP);
-			console.log("cepRes =", cepRes);
-			setCepResponse(cepRes);
+			const cepResponse: CepResponse = await cep(CEP);
+			console.log("cepRes =", cepResponse);
+
+			setFormData(oldValue => ({
+				...oldValue,
+				neighborhood: cepResponse.neighborhood,
+				logradouro: cepResponse.street,
+				zipCode: cepResponse.cep,
+				state: cepResponse.state,
+				city: cepResponse.city,
+			}));
+			setSetValues(true);
 		} catch (error: any) {
 			console.error("Error from cep =", error);
 
@@ -204,21 +206,21 @@ export default function Checkout() {
 
 		const infoDoPagador: PreferencePayer = {
 			address: {
-				street_name: `${shipData.logradouro}, ${shipData.addressComplement}`,
+				street_name: `${formData.logradouro}, ${formData.addressComplement}`,
 				// @ts-ignore mercadopago tá dizendo que tem que ser number
-				street_number: parseFloat(shipData.addressNumber),
-				zip_code: shipData.zipCode,
+				street_number: parseFloat(formData.addressNumber),
+				zip_code: formData.zipCode,
 			},
-			phone: { number: shipData.phoneNumber, area_code: "" },
-			email: shipData.email,
-			name: shipData.name,
+			phone: { number: formData.phoneNumber, area_code: "" },
+			email: formData.email,
+			name: formData.name,
 		};
 
 		try {
 			// Call the backend to create the Checkout session.
 			const res = await axiosInstance.post<{ id: string }>("/api/payment", {
 				infoDoPagador,
-				shipData,
+				formData,
 				items,
 			});
 
@@ -263,238 +265,229 @@ export default function Checkout() {
 			{!isCartEmpty ? (
 				<Empty />
 			) : (
-				<>
-					<div className={classes.root}>
-						<Grid
-							justifyContent="center"
-							alignItems="stretch"
-							direction="row"
-							spacing={3}
-							container
-						>
-							{cartProducts.map(product => (
-								<Grid item key={product.title} xs={12}>
-									<CheckoutCardForProduct
-										gotoProductPage={gotoProductPage}
-										product={product}
-									/>
-								</Grid>
-							))}
-						</Grid>
-
-						<section className={classes.totalDetails}>
-							<Typography variant="h6">Subtotal: R$ {getSubtotal()}</Typography>
-						</section>
-
-						<section className={classes.formWrapper}>
-							Dados para sua entrega
-							<form
-								onSubmit={handleSubmit(onSubmit)}
-								className={classes.form}
-								id="address-form"
-							>
-								<Controller
-									control={control}
-									name="zipCode"
-									defaultValue=""
-									render={({ field }) => (
-										<TextField
-											{...field}
-											onChange={e => {
-												field.onChange(e);
-												searchAddressWithCEP(e);
-											}}
-											// value={cepFormatado(field.value)}
-											InputProps={{
-												endAdornment: (
-													<InputAdornment position="end">
-														<a
-															href={urlDeNãoSeiMeuCep}
-															className={classes.a}
-															rel="noreferrer"
-															target="_blank"
-														>
-															Não sei meu CEP
-														</a>
-													</InputAdornment>
-												),
-											}}
-											helperText={errors.zipCode?.message}
-											placeholder="Digite o CEP"
-											error={!!errors.zipCode}
-											label="Digite seu CEP"
-											variant="standard"
-											required
-										/>
-									)}
+				<div className={classes.root}>
+					<Grid
+						justifyContent="center"
+						alignItems="stretch"
+						direction="row"
+						spacing={3}
+						container
+					>
+						{cartProducts.map(product => (
+							<Grid item key={product.title} xs={12}>
+								<CheckoutCardForProduct
+									gotoProductPage={gotoProductPage}
+									product={product}
 								/>
+							</Grid>
+						))}
+					</Grid>
 
-								<Controller
-									control={control}
-									name="logradouro"
-									defaultValue=""
-									render={({ field }) => (
-										<TextField
-											{...field}
-											helperText={errors.logradouro?.message}
-											error={!!errors.logradouro}
-											variant="standard"
-											placeholder="Rua"
-											label="Rua"
-											required
-										/>
-									)}
-								/>
-
-								<Controller
-									control={control}
-									defaultValue=""
-									name="name"
-									render={({ field }) => (
-										<TextField
-											{...field}
-											helperText={errors.name?.message}
-											placeholder="Entregar a"
-											error={!!errors.name}
-											label="Destinatário"
-											variant="standard"
-											required
-										/>
-									)}
-								/>
-
-								<Controller
-									control={control}
-									defaultValue=""
-									name="city"
-									render={({ field }) => (
-										<TextField
-											{...field}
-											helperText={errors.city?.message}
-											error={!!errors.city}
-											placeholder="Cidade"
-											variant="standard"
-											label="Cidade"
-											required
-										/>
-									)}
-								/>
-
-								<Controller
-									control={control}
-									name="neighborhood"
-									defaultValue=""
-									render={({ field }) => (
-										<TextField
-											{...field}
-											helperText={errors.neighborhood?.message}
-											error={!!errors.neighborhood}
-											placeholder="Bairro"
-											variant="standard"
-											label="Bairro"
-											required
-										/>
-									)}
-								/>
-
-								<Controller
-									control={control}
-									defaultValue=""
-									name="state"
-									render={({ field }) => (
-										<TextField
-											{...field}
-											helperText={errors.state?.message}
-											error={!!errors.state}
-											placeholder="Estado"
-											variant="standard"
-											label="Estado"
-											required
-										/>
-									)}
-								/>
-
-								<Controller
-									control={control}
-									name="federalDocument"
-									defaultValue=""
-									render={({ field }) => (
-										<TextField
-											{...field}
-											onChange={e => {
-												field.onChange(e);
-												validateFederalDocument(e);
-											}}
-											helperText={errors.federalDocument?.message}
-											// value={cpfFormatado(field.value)}
-											error={!!errors.federalDocument}
-											placeholder="Digite o seu CPF"
-											variant="standard"
-											label="CPF"
-											required
-										/>
-									)}
-								/>
-
-								<Controller
-									control={control}
-									name="addressNumber"
-									defaultValue=""
-									render={({ field }) => (
-										<TextField
-											{...field}
-											placeholder="Digite o número da sua morada"
-											helperText={errors.addressNumber?.message}
-											error={!!errors.addressNumber}
-											variant="standard"
-											label="Número da sua morada"
-											required
-										/>
-									)}
-								/>
-
-								<Controller
-									control={control}
-									name="addressComplement"
-									defaultValue=""
-									render={({ field }) => (
-										<TextField
-											{...field}
-											helperText={errors.addressComplement?.message}
-											error={!!errors.addressComplement}
-											placeholder="Apartamento nº 10"
-											label="Complemento"
-											variant="standard"
-										/>
-									)}
-								/>
-
-								<Controller
-									control={control}
-									name="phoneNumber"
-									defaultValue=""
-									render={({ field }) => (
-										<TextField
-											{...field}
-											helperText={errors.phoneNumber?.message}
-											// value={foneFormatado(field.value)}
-											placeholder="(87) 9 9876-5432"
-											error={!!errors.phoneNumber}
-											label="Número de telefone"
-											variant="standard"
-										/>
-									)}
-								/>
-
-								<ConfirmButton
-									disabled={isLoading}
-									value="Checkout"
-									type="submit"
-								/>
-							</form>
-						</section>
+					<div className={classes.totalDetails}>
+						<Typography variant="h6">Subtotal: R$ {getSubtotal()}</Typography>
 					</div>
-				</>
+
+					<section className={classes.formWrapper}>
+						Dados para sua entrega
+						<form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+							<Controller
+								control={control}
+								defaultValue=""
+								name="zipCode"
+								render={({ field }) => (
+									<TextField
+										{...field}
+										onChange={e => {
+											field.onChange(e);
+											searchAddressWithCEP(e);
+										}}
+										InputProps={{
+											endAdornment: (
+												<InputAdornment position="end">
+													<a
+														href={urlDeNãoSeiMeuCep}
+														className={classes.a}
+														rel="noreferrer"
+														target="_blank"
+													>
+														Não sei meu CEP
+													</a>
+												</InputAdornment>
+											),
+										}}
+										helperText={errors.zipCode?.message}
+										placeholder="Digite o CEP"
+										error={!!errors.zipCode}
+										label="Digite seu CEP"
+										variant="standard"
+										required
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								name="logradouro"
+								defaultValue=""
+								render={({ field }) => (
+									<TextField
+										{...field}
+										helperText={errors.logradouro?.message}
+										error={!!errors.logradouro}
+										variant="standard"
+										placeholder="Rua"
+										label="Rua"
+										required
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								defaultValue=""
+								name="name"
+								render={({ field }) => (
+									<TextField
+										{...field}
+										helperText={errors.name?.message}
+										placeholder="Entregar a"
+										error={!!errors.name}
+										label="Destinatário"
+										variant="standard"
+										required
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								defaultValue=""
+								name="city"
+								render={({ field }) => (
+									<TextField
+										{...field}
+										helperText={errors.city?.message}
+										error={!!errors.city}
+										placeholder="Cidade"
+										variant="standard"
+										label="Cidade"
+										required
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								name="neighborhood"
+								defaultValue=""
+								render={({ field }) => (
+									<TextField
+										{...field}
+										helperText={errors.neighborhood?.message}
+										error={!!errors.neighborhood}
+										placeholder="Bairro"
+										variant="standard"
+										label="Bairro"
+										required
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								defaultValue=""
+								name="state"
+								render={({ field }) => (
+									<TextField
+										{...field}
+										helperText={errors.state?.message}
+										error={!!errors.state}
+										placeholder="Estado"
+										variant="standard"
+										label="Estado"
+										required
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								name="federalDocument"
+								defaultValue=""
+								render={({ field }) => (
+									<TextField
+										{...field}
+										onChange={e => {
+											field.onChange(e);
+											validateFederalDocument(e);
+										}}
+										helperText={errors.federalDocument?.message}
+										error={!!errors.federalDocument}
+										placeholder="Digite o seu CPF"
+										variant="standard"
+										label="CPF"
+										required
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								name="addressNumber"
+								defaultValue=""
+								render={({ field }) => (
+									<TextField
+										{...field}
+										placeholder="Digite o número da sua morada"
+										helperText={errors.addressNumber?.message}
+										error={!!errors.addressNumber}
+										variant="standard"
+										label="Número da sua morada"
+										required
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								name="addressComplement"
+								defaultValue=""
+								render={({ field }) => (
+									<TextField
+										{...field}
+										helperText={errors.addressComplement?.message}
+										error={!!errors.addressComplement}
+										placeholder="Apartamento nº 10"
+										label="Complemento"
+										variant="standard"
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								name="phoneNumber"
+								defaultValue=""
+								render={({ field }) => (
+									<TextField
+										{...field}
+										helperText={errors.phoneNumber?.message}
+										placeholder="(87) 9 9876-5432"
+										error={!!errors.phoneNumber}
+										label="Número de telefone"
+										variant="standard"
+									/>
+								)}
+							/>
+
+							<ConfirmButton
+								disabled={isLoading}
+								value="Checkout"
+								type="submit"
+							/>
+						</form>
+					</section>
+				</div>
 			)}
 		</>
 	);

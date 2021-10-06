@@ -154,7 +154,7 @@ function CartProvider({ children }: CartProviderProps) {
 		);
 
 		if (subtotal >= 0) return subtotal.toFixed(2).replace(".", ",");
-		else throw new Error("Houve um erro na contabilização do preço subtotal!");
+		throw new Error("Houve um erro na contabilização do preço subtotal!");
 	}
 
 	return (
@@ -176,7 +176,7 @@ function CartProvider({ children }: CartProviderProps) {
 const useCart = () => {
 	const context = useContext(CartContext);
 
-	if (context === undefined)
+	if (!context)
 		throw new Error("useCart must be used within a CartProvider");
 
 	return context;

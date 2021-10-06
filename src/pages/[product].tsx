@@ -2,13 +2,13 @@ import { GetStaticPaths, GetStaticProps } from "node_modules/next";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-import { Product, ProductModel } from "models/Product";
-import { json2str } from "utils/json2str";
 import {
 	ProductSlider_WithThumbnail,
 	LayoutWithFooter,
 	Header,
 } from "components";
+import { Product, ProductModel } from "models/Product";
+import { json2str } from "utils/json2str";
 import connectToMongoDB from "utils/connectToMongoDB";
 
 import {

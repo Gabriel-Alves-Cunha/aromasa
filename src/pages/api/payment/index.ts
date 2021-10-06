@@ -8,7 +8,6 @@ import type {
 import { NextApiRequest, NextApiResponse } from "node_modules/next";
 import mercadopago from "mercadopago";
 
-import { axiosInstance } from "utils/axiosInstance";
 import { envVariables } from "utils/env";
 import { json2str } from "utils/json2str";
 
@@ -21,16 +20,14 @@ export default async function talkToServer(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	console.log("req.body =", req.body);
 	const back_url = req.headers.origin + "/payment-result";
-	console.log("back_url =", back_url);
 
 	switch (req.method) {
 		case "POST":
 			try {
 				const itemsFromClientSide: PreferenceItem[] = req.body.items;
 				const infoDoPagador: PreferencePayer = req.body.infoDoPagador;
-				const frete: FrenetForm = req.body.shipData;
+				const frete: FrenetForm = req.body.formData;
 
 				console.log("\ninfoDoPagador =", infoDoPagador);
 				console.log("\nitems =", itemsFromClientSide);
@@ -71,13 +68,11 @@ export default async function talkToServer(
 			} catch (error: any) {
 				console.error(error);
 
-				return res
-					.status(error.statusCode || 500)
-					.json({
-						message:
-							"Erro no método POST em 'pages/api/payment/index.tsx':" +
-							json2str(error),
-					});
+				return res.status(error.statusCode || 500).json({
+					message:
+						"Erro no método POST em 'pages/api/payment/index.tsx':" +
+						json2str(error),
+				});
 			}
 			break;
 		case "GET":
