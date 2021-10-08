@@ -1,11 +1,11 @@
 export type Ok<T> = {
 	readonly isOk: boolean; // true for `Ok`
-	readonly value: T;
+	readonly value: NonNullable<T>;
 };
 
 export type Err<E> = {
 	readonly isOk: boolean; // false for `Err`
-	readonly value: E;
+	readonly value: NonNullable<E>;
 };
 
 export type Result<T, E> = Ok<T> | Err<E>;
@@ -28,7 +28,7 @@ export function isOk<T, E>(self: Result<T, E>): boolean {
 	return self.isOk;
 }
 
-export function Ok<T>(value: T): Ok<T> {
+export function Ok<T>(value: NonNullable<T>): Ok<T> {
 	const ok: Ok<T> = Object.freeze({ isOk: true, value });
 
 	ok.toString = () => `Ok(${ok.value})`;
@@ -36,7 +36,7 @@ export function Ok<T>(value: T): Ok<T> {
 	return ok;
 }
 
-export function Err<E>(value: E): Err<E> {
+export function Err<E>(value: NonNullable<E>): Err<E> {
 	const err: Err<E> = Object.freeze({ isOk: false, value });
 
 	err.toString = () => `Error(${JSON.stringify(err.value as E, null, 2)})`;

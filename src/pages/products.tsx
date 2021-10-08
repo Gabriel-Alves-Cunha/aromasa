@@ -1,5 +1,6 @@
+import type { GetServerSideProps } from "node_modules/next";
+
 import { toast, ToastContainer } from "react-toastify";
-import { GetServerSideProps } from "node_modules/next";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
@@ -23,7 +24,7 @@ export default function Products({ products }: Props) {
 
 	useEffect(() => {
 		console.log(
-			`[LOG]\n\tFile: index.tsx\n\tLine:26\n\t${typeof cartProducts}: 'cartProducts' =`,
+			`[LOG]\n\tFile: index.tsx\n\tLine:27\n\t${typeof cartProducts}: 'cartProducts' =`,
 			cartProducts
 		);
 	}, [cartProducts]);
@@ -64,14 +65,7 @@ export default function Products({ products }: Props) {
 					container
 				>
 					{products.map(product => (
-						<Grid
-							key={product.title}
-							xs={12}
-							sm={6}
-							md={4}
-							lg={3}
-							item
-						>
+						<Grid key={product.title} xs={12} sm={6} md={4} lg={3} item>
 							<ProductCard
 								gotoProductPage={gotoProductPage}
 								handleAddToCart={handleAddToCart}

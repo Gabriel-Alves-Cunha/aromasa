@@ -28,8 +28,8 @@ export function isNone<T>(self: Option<T>): boolean {
 	return !self.isSome;
 }
 
-export function Some<T>(val: NonNullable<T>): Some<T> {
-	const some: Some<T> = Object.freeze({ isSome: true, value: val });
+export function Some<T>(value: NonNullable<T>): Some<T> {
+	const some: Some<T> = Object.freeze({ isSome: true, value });
 
 	some.toString = () => `Some(${some.value})`;
 

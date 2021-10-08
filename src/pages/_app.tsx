@@ -10,8 +10,7 @@ import { CartProvider } from "hooks/useCart";
 import { GlobalStyle } from "styles/global";
 import { muiTheme } from "styles/theme";
 
-export const cloudName =
-	process.env.NODE_ENV === "development" ? "demo" : "aromasa-decor";
+export const cloudName = "aromasa-decor" as const;
 
 export default function MyApp({ Component, pageProps }: AppLayoutProps) {
 	const getLayout = Component.getLayout ?? ((page: ReactNode) => page);

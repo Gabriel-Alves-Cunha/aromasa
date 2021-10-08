@@ -36,7 +36,7 @@ const nopeSchema = Nope.object().shape({
 			})
 			.required("A quantidade disponível deste produto é necessária!"),
 		bottle_format: Nope.string().max(
-			50,
+			100,
 			"O volume não pode ter mais 50 caracteres!"
 		),
 		volume: Nope.string().test(value =>

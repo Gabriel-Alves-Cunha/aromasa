@@ -38,8 +38,17 @@ import {
 	FrenetForm,
 } from "components/CheckoutCardForProduct/helperForCheckout";
 
-import useStyles, { ConfirmButton, NoItems, Span } from "styles/pages/checkout";
+import useStyles, {
+	ConfirmButton,
+	NoItems,
+	PayButton,
+	Span,
+	ValorDoFrete,
+} from "styles/pages/checkout";
 import "react-toastify/dist/ReactToastify.css";
+import { Quote } from "./api/get-shipping-quote";
+
+const dev = process.env.NODE_ENV === "development";
 
 // todo: useCallback
 export default function Checkout() {
@@ -56,6 +65,7 @@ export default function Checkout() {
 	const [preferenceId, setPreferenceId] = useState("");
 	const [setValues, setSetValues] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+	const [quote, setQuote] = useState({} as Quote);
 
 	useEffect(() => {
 		if (mercadopago && preferenceId)
@@ -95,10 +105,35 @@ export default function Checkout() {
 
 	const onSubmit = async (data: FrenetForm) => {
 		console.log(
-			`[LOG]\n\tFile: 'pages/checkout/index.tsx'\n\tLine:49\n\t${typeof data}: 'data' =`,
+			`[LOG]\n\tFile: 'pages/checkout/index.tsx'\n\tLine:108\n\t${typeof data}: 'data' =`,
 			data
 		);
-		await handleCheckout();
+
+		const ShippingItemArray: ShippingItem[] = cartProducts.map(product => ({
+			Quantity: parseFloat(product.bottle.amountThatWillBeBought),
+			Height: parseFloat(product.packageDimensions.height),
+			Length: parseFloat(product.packageDimensions.length),
+			Weight: parseFloat(product.packageDimensions.weight),
+			Width: parseFloat(product.packageDimensions.width),
+		}));
+
+		const shipData: ShipData = dev
+			? testShippingData(formData)
+			: {
+					ShipmentInvoiceValue: parseFloat(getSubtotal().replace(",", ".")),
+					SellerCEP: envVariables.sellerCEP,
+					RecipientCEP: formData.zipCode,
+					ShippingServiceCode: null,
+					RecipientCountry: "BR",
+					ShippingItemArray,
+			  };
+
+		const quote = await axiosInstance.post<Quote>(
+			"/api/get-shipping-quote",
+			shipData
+		);
+
+		setQuote(quote.data);
 	};
 
 	const searchAddressWithCEP = async (
@@ -127,8 +162,8 @@ export default function Checkout() {
 				...oldValue,
 				neighborhood: cepResponse.neighborhood,
 				logradouro: cepResponse.street,
-				zipCode: cepResponse.cep,
 				state: cepResponse.state,
+				zipCode: cepResponse.cep,
 				city: cepResponse.city,
 			}));
 			setSetValues(true);
@@ -156,7 +191,11 @@ export default function Checkout() {
 			};
 	};
 
-	async function handleCheckout() {
+	async function handleCheckout(
+		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) {
+		e.preventDefault();
+
 		setIsLoading(true);
 
 		let canGoToBuyPage = true;
@@ -204,7 +243,7 @@ export default function Checkout() {
 			currency_id: "BRL",
 		}));
 
-		const infoDoPagador: PreferencePayer = {
+		const payer: PreferencePayer = {
 			address: {
 				street_name: `${formData.logradouro}, ${formData.addressComplement}`,
 				// @ts-ignore mercadopago tá dizendo que tem que ser number
@@ -219,9 +258,9 @@ export default function Checkout() {
 		try {
 			// Call the backend to create the Checkout session.
 			const res = await axiosInstance.post<{ id: string }>("/api/payment", {
-				infoDoPagador,
 				formData,
 				items,
+				payer,
 			});
 
 			console.log(
@@ -402,9 +441,9 @@ export default function Checkout() {
 										{...field}
 										helperText={errors.state?.message}
 										error={!!errors.state}
-										placeholder="Estado"
+										placeholder="SP"
 										variant="standard"
-										label="Estado"
+										label="Estado (abreviado)"
 										required
 									/>
 								)}
@@ -481,13 +520,29 @@ export default function Checkout() {
 							/>
 
 							<ConfirmButton
+								value="Calcular frete"
 								disabled={isLoading}
-								value="Checkout"
 								type="submit"
 							/>
 						</form>
 					</section>
 				</div>
+			)}
+
+			{quote.ShippingSevicesArray.length && (
+				<ValorDoFrete>
+					<p>
+						O valor do frete é:{" "}
+						<span>
+							R$ {quote.ShippingSevicesArray[0].ShippingPrice.replace(".", ",")}
+						</span>
+					</p>
+
+					<PayButton
+						onClick={async e => await handleCheckout(e)}
+						value="Pagar"
+					/>
+				</ValorDoFrete>
 			)}
 		</>
 	);
@@ -506,6 +561,23 @@ function Empty() {
 	);
 }
 
+const testShippingData = (formData: FrenetForm) => ({
+	SellerCEP: envVariables.sellerCEP,
+	RecipientCEP: formData.zipCode,
+	ShipmentInvoiceValue: 320,
+	ShippingServiceCode: null,
+	RecipientCountry: "BR",
+	ShippingItemArray: [
+		{
+			Weight: 1.18,
+			Quantity: 1,
+			Length: 33,
+			Height: 2,
+			Width: 47,
+		},
+	],
+});
+
 type CepResponse = {
 	neighborhood: string;
 	service: string;
@@ -513,4 +585,21 @@ type CepResponse = {
 	state: string;
 	city: string;
 	cep: string;
+};
+
+export type ShipData = {
+	ShippingItemArray: ShippingItem[];
+	ShipmentInvoiceValue: number;
+	ShippingServiceCode: null;
+	RecipientCountry: string; // "BR"
+	RecipientCEP: string;
+	SellerCEP: string;
+};
+
+type ShippingItem = {
+	Quantity: number;
+	Height: number; // em cm
+	Length: number; // em cm
+	Weight: number; // em kg
+	Width: number; // em cm
 };

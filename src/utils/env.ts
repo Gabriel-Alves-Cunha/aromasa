@@ -5,10 +5,14 @@ const envVariables = {
 	googleClientSecret: "",
 	db_normalUser_uri: "",
 	nextAuthSecret: "",
+	frenetPassword: "",
 	googleClientId: "",
 	cloudinaryURL: "",
 	contactEmail: "",
+	frenetToken: "",
 	aromasaUrl: "",
+	sellerCEP: "",
+	frenetKey: "",
 	db_name: "",
 	db_uri: "",
 };
@@ -29,6 +33,12 @@ if (process.env.NODE_ENV === "development") {
 
 	envVariables.cloudinaryURL = process.env.CLOUDINARY_URL ?? "";
 
+	envVariables.sellerCEP = process.env.NEXT_PUBLIC_SELLER_CEP ?? "";
+
+	envVariables.frenetPassword = process.env.FRENET_PASSWORD ?? "";
+	envVariables.frenetToken = process.env.FRENET_TOKEN ?? "";
+	envVariables.frenetKey = process.env.FRENET_KEY ?? "";
+
 	envVariables.mercadoPagoAccessToken =
 		process.env.MERCADOPAGO_ACCESS_TOKEN_DEVELOPMENT ?? "";
 	envVariables.mercadoPagoPublicKey =
@@ -48,6 +58,10 @@ if (process.env.NODE_ENV === "development") {
 	envVariables.nextAuthSecret = process.env.NEXTAUTH_SECRET ?? "";
 
 	envVariables.cloudinaryURL = process.env.CLOUDINARY_URL ?? "";
+
+	envVariables.frenetPassword = process.env.FRENET_PASSWORD ?? "";
+	envVariables.frenetToken = process.env.FRENET_TOKEN ?? "";
+	envVariables.frenetKey = process.env.FRENET_KEY ?? "";
 
 	envVariables.mercadoPagoAccessToken =
 		process.env.MERCADOPAGO_ACCESS_TOKEN_PRODUCTION ?? "";

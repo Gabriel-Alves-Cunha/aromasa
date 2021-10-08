@@ -31,6 +31,12 @@ export type ClientChosenProduct = {
 		volume?: string;
 		weight?: string;
 	};
+	packageDimensions: {
+		height: string;
+		length: string;
+		weight: string;
+		width: string;
+	};
 	categories: string[];
 	ingredients?: string;
 	description: string;
@@ -100,7 +106,7 @@ const productSchema = new Schema<Product>({
 		bottle_format: {
 			type: String,
 			trim: true,
-			maxLength: [50, "O volume não pode ter mais 50 caracteres!"],
+			maxLength: [100, "O volume não pode ter mais 100 caracteres!"],
 			required: false,
 		},
 		available_quantity: {

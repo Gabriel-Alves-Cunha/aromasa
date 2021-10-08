@@ -146,3 +146,7 @@ export const Span = styled.span`
 	justify-content: center;
 	align-items: center;
 `;
+
+export const PayButton = styled.button``;
+
+export const ValorDoFrete = styled.section``;

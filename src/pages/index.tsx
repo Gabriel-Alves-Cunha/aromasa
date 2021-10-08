@@ -1,4 +1,5 @@
-import { GetServerSideProps } from "node_modules/next";
+import type { GetServerSideProps } from "node_modules/next";
+
 import { useRouter } from "next/router";
 import { Image } from "cloudinary-react";
 import Marquee from "react-fast-marquee";
@@ -19,7 +20,7 @@ export default function Home({ products }: Props) {
 	const router = useRouter();
 
 	const gotoProductPage = async (product: Product) =>
-		await router.push(`/${product._id}`);
+		await router.push(`/api/products/${product._id}`);
 
 	return (
 		<>
@@ -78,7 +79,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 		const products: Product[] = await ProductModel.find({}).batchSize(3);
 
 		console.log(
-			`Products from getServerSideProps in 'pages/products/index.tsx' = ${products}`
+			`Products from 'getServerSideProps()' in 'pages/products/index.tsx' = ${products}`
 		);
 
 		return {

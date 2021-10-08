@@ -1,14 +1,15 @@
-import { GetStaticPaths, GetStaticProps } from "node_modules/next";
+import type { GetStaticPaths, GetStaticProps } from "node_modules/next";
+
 import { useRouter } from "next/router";
 import Head from "next/head";
 
+import { Product, ProductModel } from "models/Product";
+import { json2str } from "utils/json2str";
 import {
 	ProductSlider_WithThumbnail,
 	LayoutWithFooter,
 	Header,
 } from "components";
-import { Product, ProductModel } from "models/Product";
-import { json2str } from "utils/json2str";
 import connectToMongoDB from "utils/connectToMongoDB";
 
 import {
@@ -74,7 +75,7 @@ export const getStaticPaths: GetStaticPaths = async ctx => {
 		};
 	} catch (errorGetStaticPaths) {
 		throw new Error(
-			`File: 'pages/products/[product].tsx'\nLine:72\n${typeof errorGetStaticPaths}: 'error' = ${errorGetStaticPaths}\nHouve um problema ao pegar os produtos da base de dados.`
+			`Houve um problema ao pegar os produtos da base de dados.\nFile: 'pages/products/[product].tsx'\nLine:78\n${typeof errorGetStaticPaths}: 'errorGetStaticPaths' = ${errorGetStaticPaths}\n`
 		);
 	}
 };
@@ -97,9 +98,9 @@ async function getProductsFromDB() {
 		return await ProductModel.find({});
 	} catch (errorGetProductsFromDB) {
 		throw new Error(
-			`File: 'pages/[product].tsx'\nLine:106\n${typeof errorGetProductsFromDB}: 'errorGetProductsFromDB' = ${json2str(
+			`Houve um problema ao pegar os produtos da base de dados:\nFile: 'pages/[product].tsx'\nLine:101\n${typeof errorGetProductsFromDB}: 'errorGetProductsFromDB' = ${json2str(
 				errorGetProductsFromDB
-			)}\nHouve um problema ao pegar os produtos da base de dados.`
+			)}\n`
 		);
 	}
 }

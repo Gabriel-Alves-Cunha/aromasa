@@ -1,5 +1,6 @@
+import type { GetServerSideProps } from "node_modules/next";
+
 import { useState, useReducer } from "react";
-import { GetServerSideProps } from "node_modules/next";
 import { getSession } from "next-auth/client";
 
 import { NavbarOptions } from "components/Navbar/navabar.data";
@@ -63,7 +64,7 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
 		return { notFound: true };
 	} catch (error) {
 		console.error(
-			`❗ File: index.tsx\nLine:69\n${typeof error}: 'error' =`,
+			`❗ File: index.tsx\nLine:66\n${typeof error}: 'error' =`,
 			error
 		);
 

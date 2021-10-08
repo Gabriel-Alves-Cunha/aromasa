@@ -26,27 +26,42 @@ export default async function talkToServer(
 		case "POST":
 			try {
 				const itemsFromClientSide: PreferenceItem[] = req.body.items;
-				const infoDoPagador: PreferencePayer = req.body.infoDoPagador;
+				const payer: PreferencePayer = req.body.payer;
 				const frete: FrenetForm = req.body.formData;
 
-				console.log("\ninfoDoPagador =", infoDoPagador);
-				console.log("\nitems =", itemsFromClientSide);
-				console.log("\nfrete =", frete);
+				// const registerNewClientOnFrenet =
+				// 	await axios.post<ResponseRegisterNewClientOnFrenet>(
+				// 		"http://api.frenet.com.br/partner/register",
+				// 		frete,
+				// 		{
+				// 			headers: {
+				// 				"x-partner-token": envVariables.frenetToken,
+				// 				"Content-Type": "application/json",
+				// 			},
+				// 		}
+				// 	);
+				// const frenetToken = registerNewClientOnFrenet.data.Token;
+
+				// if (!frenetToken)
+				// 	return res.status(400).json({
+				// 		message: "registerNewClientOnFrenet failed.",
+				// 		data: registerNewClientOnFrenet,
+				// 	});
 
 				// mercado pago /////////////////////////////////////////
 				const preference: CreatePreferencePayload = {
 					items: [
 						...itemsFromClientSide,
 						{
-							unit_price: parseFloat(frete.total) || 100,
+							unit_price: parseFloat(frete.total) || 100, // `|| 100` is for testing.
 							currency_id: "BRL",
 							title: "Frete",
 							quantity: 1,
 						},
 					],
 					statement_descriptor: "Aromasa Decor",
-					// payer: infoDoPagador,
 					binary_mode: true,
+					// payer,
 					payment_methods: {
 						default_installments: 1,
 						installments: 3,
@@ -58,19 +73,21 @@ export default async function talkToServer(
 					},
 				};
 
-				const response = await mercadopago.preferences.create(preference);
+				const {
+					body: { id },
+				} = await mercadopago.preferences.create(preference);
 
 				// Este valor substituirá a string "<%= global.id %>" no seu HTML
 				// @ts-ignore
-				global.id = response.body.id;
+				global.id = id;
 
-				return res.status(200).json({ id: response.body.id });
+				return res.status(200).json({ id });
 			} catch (error: any) {
 				console.error(error);
 
 				return res.status(error.statusCode || 500).json({
 					message:
-						"Erro no método POST em 'pages/api/payment/index.tsx':" +
+						"Error on POST method in 'pages/api/payment/index.tsx':" +
 						json2str(error),
 				});
 			}
@@ -83,3 +100,9 @@ export default async function talkToServer(
 			break;
 	}
 }
+
+type ResponseRegisterNewClientOnFrenet = {
+	Success: boolean;
+	Message?: string;
+	Token?: string;
+};
