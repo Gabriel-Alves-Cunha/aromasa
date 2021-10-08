@@ -70,6 +70,12 @@ function CartProvider({ children }: CartProviderProps) {
 						weight: newProduct.bottle.weight,
 						amountThatWillBeBought: "1",
 					},
+					packageDimensions: {
+						height: newProduct.packageDimensions.height,
+						length: newProduct.packageDimensions.length,
+						weight: newProduct.packageDimensions.weight,
+						width: newProduct.packageDimensions.width,
+					},
 					imagePath: newProduct.imagesPaths[0],
 					ingredients: newProduct.ingredients,
 					description: newProduct.description,
@@ -176,8 +182,7 @@ function CartProvider({ children }: CartProviderProps) {
 const useCart = () => {
 	const context = useContext(CartContext);
 
-	if (!context)
-		throw new Error("useCart must be used within a CartProvider");
+	if (!context) throw new Error("useCart must be used within a CartProvider");
 
 	return context;
 };
