@@ -160,7 +160,9 @@ function CartProvider({ children }: CartProviderProps) {
 		);
 
 		if (subtotal >= 0) return subtotal.toFixed(2).replace(".", ",");
-		throw new Error("Houve um erro na contabilização do preço subtotal!");
+		throw new Error(
+			`Houve um erro na contabilização do preço (subtotal = ${subtotal})`
+		);
 	}
 
 	return (

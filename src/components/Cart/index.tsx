@@ -30,7 +30,7 @@ export function Cart() {
 	} = useCart();
 
 	console.log(
-		`[LOG]\n\tFile: 'components/Cart/index.tsx'\n\tLine:26\n\t${typeof cartProducts}: 'cartProducts' =`,
+		`[LOG]\n\tFile: 'components/Cart/index.tsx'\n\tLine:33\n\t${typeof cartProducts}: 'cartProducts' =`,
 		cartProducts
 	);
 

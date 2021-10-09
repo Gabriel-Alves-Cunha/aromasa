@@ -63,7 +63,7 @@ ProductPage.getLayout = LayoutWithFooter;
 export const getStaticPaths: GetStaticPaths = async ctx => {
 	try {
 		const products = await getProductsFromDB();
-		console.log("\nFrom 'pages/[product].tsx: products =", products);
+		console.log("\nFrom 'pages/[product].tsx': products =", products);
 
 		return {
 			paths: products.map(product => ({

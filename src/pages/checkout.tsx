@@ -529,7 +529,7 @@ export default function Checkout() {
 				</div>
 			)}
 
-			{quote.ShippingSevicesArray.length && (
+			{quote.ShippingSevicesArray && quote.ShippingSevicesArray.length && (
 				<ValorDoFrete>
 					<p>
 						O valor do frete é:{" "}
